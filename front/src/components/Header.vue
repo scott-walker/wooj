@@ -1,5 +1,5 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink } from 'vue-router'
 </script>
 
 <template>
@@ -29,6 +29,18 @@ import { RouterLink, RouterView } from 'vue-router'
             <a :href="href" @click="navigate">Заметки</a>
           </div>
         </RouterLink>
+
+        <RouterLink :to="{ name: 'Auth' }" custom v-slot="{ isActive, href, navigate }">
+          <div class="nav-item" :class="{ 'active': isActive }">
+            <a :href="href" @click="navigate">Войти</a>
+          </div>
+        </RouterLink>
+
+        <!-- <RouterLink :to="{ name: 'SignUp' }" custom v-slot="{ isActive, href, navigate }">
+          <div class="nav-item" :class="{ 'active': isActive }">
+            <a :href="href" @click="navigate">Заметки</a>
+          </div>
+        </RouterLink> -->
       </div>
     </div>
   </div>
