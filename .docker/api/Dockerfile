@@ -1,18 +1,12 @@
 FROM php:8.4-fpm
 
-# COPY php.ini /usr/local/etc/php/
-# COPY docker.conf /usr/local/etc/php-fpm.d/docker.conf
-# COPY .bashrc /root/
-
-# Copy the entrypoint script
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# mix
 RUN apt-get update && apt-get install -y \
     build-essential \
     zlib1g-dev \
-    # default-mysql-client \
+    nginx \
     curl \
     gnupg \
     procps \
@@ -21,11 +15,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libzip-dev \
     libpq-dev \
-  && docker-php-ext-install \
-    zip \
-    # pgsql \
-    # pdo_mysql \
-    pdo_pgsql
+    && docker-php-ext-install zip pdo_pgsql
 
 # intl
 RUN apt-get install -y libicu-dev \
@@ -51,16 +41,10 @@ RUN docker-php-ext-install pcntl
 # && docker-php-ext-enable xdebug \
 # && echo ";zend_extension=xdebug" > /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
-# Node.js, NPM, Yarn
-RUN curl -sL https://deb.nodesource.com/setup_22.x | bash -
-RUN apt-get install -y nodejs
-RUN npm install npm@latest -g
-RUN npm install yarn -g
-
 # Composer
-RUN php -r "copy('https://getcomposer.org/installer', '/tmp/composer-setup.php');"
-RUN php /tmp/composer-setup.php
-RUN php -r "unlink('/tmp/composer-setup.php');"
+RUN curl https://getcomposer.org/installer > /tmp/composer-install.php
+RUN php /tmp/composer-install.php
+RUN rm -rf /tmp/composer-install.php
 RUN mv composer.phar /usr/local/bin/composer
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
@@ -72,9 +56,6 @@ RUN composer global require "laravel/installer"
 WORKDIR /root
 RUN git clone https://github.com/seebi/dircolors-solarized
 
-EXPOSE 5173
 WORKDIR /var/www
-
-#entrypoint
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["php-fpm"]
