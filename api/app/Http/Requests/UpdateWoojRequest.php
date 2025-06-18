@@ -11,7 +11,7 @@ class UpdateWoojRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class UpdateWoojRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => ['string', 'max:50'],
+            'content' => ['string', 'max:500'],
+            'topic_id' => ['exists:topics,id'],
         ];
     }
 }
