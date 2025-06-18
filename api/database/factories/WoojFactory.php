@@ -3,12 +3,12 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\Category;
+use App\Models\Topic;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Note>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Wooj>
  */
-class NoteFactory extends Factory
+class WoojFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -20,7 +20,7 @@ class NoteFactory extends Factory
         return [
             'title' => fake()->realText(20),
             'content' => fake()->realText(70),
-            'category_id' => Category::inRandomOrder()->first()->id,
+            'topic_id' => Topic::inRandomOrder()->first()->id,
         ];
     }
 }

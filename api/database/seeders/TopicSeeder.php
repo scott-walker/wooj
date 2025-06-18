@@ -4,22 +4,22 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Category;
+use App\Models\Topic;
 
-class CategorySeeder extends Seeder
+class TopicSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Category::factory()->create([
+        Topic::factory()->create([
             'name' => 'Саморазвитие',
         ]);
-        Category::factory()->create([
+        Topic::factory()->create([
             'name' => 'Заметки',
         ]);
-        Category::factory()->create([
+        Topic::factory()->create([
             'name' => 'Доступы',
         ]);
     }

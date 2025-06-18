@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('notes', function (Blueprint $table) {
+        Schema::create('woojs', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->text('content');
             $table->integer('position')->default(0);
             $table->boolean('is_pinned')->default(false);
-            // $table->foreignId('note_category_id')->constrained()->onDelete('cascade');
-            $table->foreignId('category_id')->nullable()->nullOnDelete();
+            // $table->foreignId('note_topic_id')->constrained()->onDelete('cascade');
+            $table->foreignId('topic_id')->nullable()->nullOnDelete();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('notes');
+        Schema::dropIfExists('woojs');
     }
 };
