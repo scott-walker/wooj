@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreWoojRequest;
 use App\Http\Requests\UpdateWoojRequest;
+use App\Http\Resources\WoojResource;
 use App\Models\Wooj;
-use Database\Factories\WoojFactory;
 
 class WoojController extends Controller
 {
@@ -14,10 +14,12 @@ class WoojController extends Controller
      */
     public function index()
     {
-        return Wooj::with('topic')
+        $woojs = Wooj::with('topic')
             ->whereNotNull('topic_id')
             ->orderByDesc('id')
-            ->get();
+            ->paginate(5);
+
+        return WoojResource::collection($woojs);
     }
 
     /**
@@ -25,7 +27,9 @@ class WoojController extends Controller
      */
     public function store(StoreWoojRequest $request)
     {
-        return Wooj::create($request->all());
+        $wooj = Wooj::create($request->all());
+
+        return new WoojResource($wooj);
     }
 
     /**
@@ -33,7 +37,7 @@ class WoojController extends Controller
      */
     public function show(Wooj $wooj)
     {
-        return Wooj::findOrFail($wooj->id);
+        return new WoojResource($wooj);
     }
 
     /**
@@ -43,7 +47,7 @@ class WoojController extends Controller
     {
         $wooj->update($request->all());
 
-        return $wooj;
+        return new WoojResource($wooj);
     }
 
     /**
@@ -53,6 +57,6 @@ class WoojController extends Controller
     {
         $wooj->delete();
 
-        return $wooj;
+        return new WoojResource($wooj);
     }
 }
