@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 // use Illuminate\Http\Request;
 
-class DefaultController extends Controller
+class IndexController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function version()
     {
         return [
             'version' => '0.1'

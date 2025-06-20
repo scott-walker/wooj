@@ -2,7 +2,7 @@
 
 // use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DefaultController;
+use App\Http\Controllers\IndexController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\WoojController;
 
@@ -11,7 +11,7 @@ use App\Http\Controllers\WoojController;
 // })->middleware('auth:sanctum');
 
 Route::middleware(['throttle:api'])->group(function () {
-    Route::get('/', [DefaultController::class, 'index']);
+    Route::get('/version', [IndexController::class, 'version']);
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
 
