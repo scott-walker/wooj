@@ -13,18 +13,21 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": PATH_SRC,
+      "@utils": `${PATH_SRC}/utils`,
+      "@services": `${PATH_SRC}/services`,
+      "@plugins": `${PATH_SRC}/plugins`,
       "@components": `${PATH_SRC}/components`,
       "@views": `${PATH_SRC}/views`,
       "@styles": PATH_STYLES,
     },
   },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: `
-          // @import "${PATH_STYLES}/_common.scss";
-        `,
-      },
-    },
-  },
+  // css: {
+  //   preprocessorOptions: {
+  //     scss: {
+  //       additionalData: `
+  //         @import "${PATH_STYLES}/_common.scss";
+  //       `,
+  //     },
+  //   },
+  // },
 })
