@@ -13,7 +13,13 @@ https://router.vuejs.org/
 
 ## Styles
 
-https://cirrus-ui.com
+_Fonts_
+https://fonts.google.com/?lang=ru_Cyrl&script=Cyrl&categoryFilters=Sans+Serif:%2FSans%2F*
+_Icons_
+https://docs.fontawesome.com/web/setup/get-started
+_Bulma_
+https://bulma.io/documentation/
+
 https://sass-lang.com/documentation/
 https://cssgradient.io/
 
