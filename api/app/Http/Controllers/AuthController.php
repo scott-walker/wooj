@@ -8,6 +8,7 @@ use Laravel\Sanctum\PersonalAccessToken;
 use App\Http\Requests\RegisterUserRequest;
 use App\Http\Requests\LoginUserRequest;
 use App\Models\User;
+use App\Helpers\User as UserHelper;
 
 /**
  * Контроллер авторизации
@@ -21,7 +22,11 @@ class AuthController extends Controller
      */
     public function register(RegisterUserRequest $request): JsonResponse
     {
-        $user = User::create($request->all());
+        $user = User::create([
+            'name' => UserHelper::emailToName($request->email),
+            'email' => $request->email,
+            'password' => $request->password,
+        ]);
 
         return response()->json([
             'user' => $user,

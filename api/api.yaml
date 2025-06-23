@@ -1,0 +1,96 @@
+openapi: 3.0.0
+info:
+  title: WOOJ API
+  version: "0.1"
+servers:
+  - url: http://localhost:7070/api/
+    description: Dev Server
+paths:
+  /woojs:
+    get:
+      summary: Получить коллекцию вуджей
+      tags:
+        - Woojs
+      operationId: getWoojs
+      responses:
+        "200":
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Woojs"
+        "default":
+          description: Ошибка в запросе
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /woojs/{id}:
+    get:
+      summary: Получить одного вуджа по ID
+      tags:
+        - Woojs
+      operationId: getWooj
+      responses:
+        "200":
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Wooj"
+        "default":
+          description: Ошибка в запросе
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Wooj:
+      type: object
+      required:
+        - title
+        - content
+        - topic_id
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "Title of wooj"
+        content:
+          type: string
+          example: "Content of wooj"
+        position:
+          type: integer
+          example: 1
+        is_pinned:
+          type: boolean
+          example: true
+        topic_id:
+          type: integer
+          example: 1
+        created_at:
+          type: string
+          example: "2025-06-18 13:18:09"
+        updated_at:
+          type: string
+          example: "2025-06-18 13:18:09"
+    Woojs:
+      type: array
+      items:
+        $ref: "#/components/schemas/Wooj"
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: "Not Found"
