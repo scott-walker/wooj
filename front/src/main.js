@@ -1,4 +1,4 @@
-import "cirrus-ui"
+import "bulma"
 import "@styles/app.scss"
 
 import { createApp } from "vue"

@@ -11,14 +11,8 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div id="splash-img" class="hero fullscreen hero-img parallax-img">
-    <div class="hero-body">
-      <div class="content u-text-center">
-        <h1 class="uppercase">WOOJ v{{ version }}</h1>
-        <h3 class="uppercase u-opacity-70">Создавайте быстро простые заметки</h3>
-        <!-- <p>{{ version }}</p> -->
-        <!-- <pre class="u-text-left">{{ version }}</pre> -->
-      </div>
-    </div>
+  <div class="view-index">
+    <p class="title">WOOJ v{{ version }}</p>
+    <p class="subtitle">Создавай быстро простые заметки</p>
   </div>
 </template>

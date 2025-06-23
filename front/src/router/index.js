@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router"
 import Index from "@views/Index.vue"
 import Notes from "@views/Notes.vue"
 import Auth from "@views/Auth.vue"
+// import Clean from "../layouts/Clean.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

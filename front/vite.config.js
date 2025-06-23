@@ -17,6 +17,7 @@ export default defineConfig({
       "@services": `${PATH_SRC}/services`,
       "@plugins": `${PATH_SRC}/plugins`,
       "@components": `${PATH_SRC}/components`,
+      "@layouts": `${PATH_SRC}/layouts`,
       "@views": `${PATH_SRC}/views`,
       "@styles": PATH_STYLES,
     },

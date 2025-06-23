@@ -2,7 +2,9 @@ import axios from "axios"
 
 /**
  * HTTP клиент
- * @param instance {AxiosInstance}
+ * @property instance {AxiosInstance}
+ * @property options {Object}
+ * @property token {String}
  */
 export default class HttpClient {
   /**
