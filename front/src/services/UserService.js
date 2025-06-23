@@ -12,6 +12,21 @@ export default class UserService {
   }
 
   /**
+   * Установить токен
+   * @param {String} token
+   */
+  setToken(token) {
+    this.http.setToken(token)
+  }
+
+  /**
+   * Сбросить токен
+   */
+  unsetToken() {
+    this.http.unsetToken()
+  }
+
+  /**
    * Войти в систему
    * @param {String} email
    * @param {String} password
@@ -24,11 +39,24 @@ export default class UserService {
         password,
       })
 
-      this.http.setToken(token)
+      this.setToken(token)
 
       return { user, token }
     } catch {
       throw "Не удалось войти"
+    }
+  }
+
+  /**
+   * Выйти из системы
+   */
+  async logout() {
+    try {
+      await this.http.post("logout")
+
+      this.unsetToken()
+    } catch {
+      throw "Не удалось выйти"
     }
   }
 

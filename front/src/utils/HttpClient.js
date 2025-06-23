@@ -48,7 +48,7 @@ export default class HttpClient {
    */
   setToken(token) {
     this.token = token || null
-    this.instance.defaults.headers.common["Authorization"] = this.token
+    this.instance.defaults.headers.common["Authorization"] = this.token ? `Bearer ${this.token}` : null
   }
 
   /**

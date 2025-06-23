@@ -1,21 +1,10 @@
 <script setup>
-import { reactive, inject } from "vue";
+import { reactive } from "vue";
 
-const { user: userService } = inject("services")
 const form = reactive({
   email: "",
   password: "",
 })
-
-const submit = async () => {
-  try {
-    const { user } = await userService.login(form.email, form.password)
-
-    console.log(user)
-  } catch (message) {
-    alert(message)
-  }
-}
 </script>
 
 <template>
@@ -57,7 +46,7 @@ const submit = async () => {
           </div>
           <div class="field">
             <p class="control is-flex is-justify-content-center">
-              <button class="button is-link is-rounded" @click="submit">
+              <button class="button is-link is-rounded" @click="$emit('submit', form)">
                 Погнали
               </button>
             </p>
