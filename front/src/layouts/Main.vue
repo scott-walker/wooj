@@ -1,20 +1,23 @@
 <script setup>
 import { computed } from "vue"
-import { RouterView } from 'vue-router'
-import { useAuthStore } from '@stores/auth'
+import { RouterView } from "vue-router"
+import { useAuthStore } from "@stores/auth"
+// import { useWoojStore } from "@stores/wooj"
+import Sidebar from "@components/Sidebar.vue"
 
-const store = useAuthStore()
-const user = computed(() => store.user)
-// import Header from '@components/Header.vue'
+const authStore = useAuthStore()
+// const woojStore = useWoojStore()
+const user = computed(() => authStore.user)
+// const hasActiveWooj = computed(() => !!woojStore.activeId)
 </script>
 
 <template>
-  <div class="fixed-grid has-4-cols">
+  <div class="layout fixed-grid has-4-cols">
     <div class="grid">
       <div class="cell">
         <p class="title">WOOJ</p>
       </div>
-      <div class="cell is-col-span-2">Cell 2</div>
+      <div class="cell is-col-span-2"></div>
       <div class="cell">
         <div class="media">
           <div class="media-left">
@@ -25,16 +28,26 @@ const user = computed(() => store.user)
           <div class="media-content">
             <p class="title is-4">{{ user.name }}</p>
             <p class="subtitle is-6">
-              <a href="#" @click.prevent="store.logout">Выйти</a>
+              <a @click.prevent="authStore.logout">Выйти</a>
             </p>
           </div>
         </div>
       </div>
 
-      <div class="cell">Sidebar</div>
+      <div class="cell">
+        <Sidebar />
+      </div>
       <div class="cell is-col-span-3">
         <RouterView />
       </div>
     </div>
   </div>
 </template>
+
+<style lang="scss">
+.layout {
+  .cell {
+    padding: 20px;
+  }
+}
+</style>
