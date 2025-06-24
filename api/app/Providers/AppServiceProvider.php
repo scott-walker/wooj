@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class AppServiceProvider extends ServiceProvider
 {
-    const int REQUEST_LIMIT = 60;
+    protected const int REQUEST_LIMIT = 60;
 
     /**
      * Register any application services.

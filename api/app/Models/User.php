@@ -13,6 +13,8 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasApiTokens;
 
+    public const int SCOTT_ID = 2;
+
     /**
      * The attributes that are mass assignable.
      *

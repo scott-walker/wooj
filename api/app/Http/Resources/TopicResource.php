@@ -18,8 +18,9 @@ class TopicResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'createdAt' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),
-            'updatedAt' => Carbon::parse($this->updated_at)->format('Y-m-d H:i:s'),
+            'woojs' => WoojResource::collection($this->woojs),
+            'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i:s'),
         ];
     }
 }

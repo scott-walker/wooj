@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreWoojRequest;
 use App\Http\Requests\UpdateWoojRequest;
 use App\Http\Resources\WoojResource;
@@ -9,15 +10,18 @@ use App\Models\Wooj;
 
 class WoojController extends Controller
 {
+    protected const int ITEMS_PER_PAGE = 100;
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $woojs = Wooj::with('topic')
-            ->whereNotNull('topic_id')
+        $user = Auth::user();
+        $woojs = Wooj::with('topics')
+            ->where('author_id', $user->id)
             ->orderByDesc('id')
-            ->paginate(5);
+            ->paginate(self::ITEMS_PER_PAGE);
 
         return WoojResource::collection($woojs);
     }
@@ -27,7 +31,12 @@ class WoojController extends Controller
      */
     public function store(StoreWoojRequest $request)
     {
-        $wooj = Wooj::create($request->all());
+        $user = Auth::user();
+        $wooj = Wooj::create([
+            'title' => $request->title,
+            'content' => $request->content,
+            'author_id' => $user->id,
+        ]);
 
         return new WoojResource($wooj);
     }

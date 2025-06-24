@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\WoojController;
+use App\Http\Controllers\TopicController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -17,6 +18,7 @@ Route::middleware(['throttle:api'])->group(function () {
 
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::apiResource('/woojs', WoojController::class);
+        Route::apiResource('/topics', TopicController::class);
         Route::post('/logout', [AuthController::class, 'logout']);
     });
 });

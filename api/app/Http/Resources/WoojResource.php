@@ -19,13 +19,11 @@ class WoojResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'content' => $this->content,
-            'position' => $this->position,
-            'isPinned' => $this->is_pinned,
-            'topicId' => $this->topic_id,
-            'topic' => new TopicResource($this->topic),
-            'createdAt' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),
-            'updatedAt' => Carbon::parse($this->updated_at)->format('Y-m-d H:i:s'),
-            'customField' => "Topic ID: {$this->topic_id}",
+            'author_id' => $this->author_id,
+            // 'author' => $this->author,
+            // 'topics' => TopicResource::collection($this->topics),
+            'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i:s'),
         ];
     }
 }
