@@ -12,12 +12,12 @@ const user = computed(() => authStore.user)
 </script>
 
 <template>
-  <div class="layout fixed-grid has-4-cols">
+  <div class="layout fixed-grid has-5-cols">
     <div class="grid">
       <div class="cell">
         <p class="title">WOOJ</p>
       </div>
-      <div class="cell is-col-span-2"></div>
+      <div class="cell is-col-span-3"></div>
       <div class="cell">
         <div class="media">
           <div class="media-left">
@@ -39,6 +39,9 @@ const user = computed(() => authStore.user)
       </div>
       <div class="cell is-col-span-3">
         <RouterView />
+      </div>
+      <div class="cell">
+        <!-- <Sidebar /> -->
       </div>
     </div>
   </div>
