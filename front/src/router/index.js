@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router"
 import Index from "@views/Index.vue"
+import Topic from "@views/Topic.vue"
 import Wooj from "@views/Wooj.vue"
 // import Auth from "@views/Auth.vue"
 // import Clean from "../layouts/Clean.vue"
@@ -11,6 +12,12 @@ const router = createRouter({
       path: "/",
       name: "Index",
       component: Index,
+    },
+    {
+      path: "/topic/:topicId(\\d+)",
+      name: "Topic",
+      component: Topic,
+      props: true,
     },
     {
       path: "/wooj/:woojId(\\d+)",

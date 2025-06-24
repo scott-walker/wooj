@@ -6,13 +6,13 @@ const store = useWoojStore()
 </script>
 
 <template>
-  <aside v-if="store.woojs.length" class="menu">
+  <aside v-if="store.topics.length" class="menu">
     <p class="menu-label">Топики</p>
     <ul class="menu-list">
-      <li v-for="wooj of store.woojs">
-        <RouterLink :to="{ name: 'Wooj', params: { woojId: wooj.id } }" custom v-slot="{ isActive, href, navigate }">
+      <li v-for="topic of store.topics">
+        <RouterLink :to="{ name: 'Topic', params: { topicId: topic.id } }" custom v-slot="{ isActive, href, navigate }">
           <a :class="isActive ? 'is-active' : ''" :href="href" @click="navigate">
-            <span class="icon mr-2 has-text-grey-light"><i class="fas fa-tag"></i></span>{{ wooj.title }}
+            <span class="icon mr-2 has-text-grey-light"><i class="fas fa-tag"></i></span>{{ topic.name }}
           </a>
         </RouterLink>
       </li>

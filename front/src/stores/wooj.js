@@ -5,17 +5,30 @@ import { defineStore } from "pinia"
  * Стор вуджей
  */
 export const useWoojStore = defineStore("wooj", () => {
-  const { wooj: woojService } = inject("services")
+  const { wooj: woojService, topic: topicService } = inject("services")
 
+  const topics = ref([])
   const woojs = ref([])
-  const activeId = ref(null)
-  const activeWooj = computed(() => woojs.value.find(({ id }) => id === activeId.value))
-  const hasActiveWooj = computed(() => !!activeWooj.value)
+  const activeTopicId = ref(null)
+  const activeWoojId = ref(null)
+  const activeTopic = computed(() => topics.value.find(({ id }) => id === activeTopicId.value))
+  const activeWooj = computed(() => woojs.value.find(({ id }) => id === activeWoojId.value))
+
+  /**
+   * Получить список топиков
+   */
+  async function getTopics() {
+    try {
+      topics.value = await topicService.getAll()
+    } catch (message) {
+      alert(message)
+    }
+  }
 
   /**
    * Получить список вуджей
    */
-  async function getAll() {
+  async function getWoojs() {
     try {
       woojs.value = await woojService.getAll()
     } catch (message) {
@@ -27,12 +40,20 @@ export const useWoojStore = defineStore("wooj", () => {
    * Получить вудж по ID
    * @param {Number} id
    */
-  async function get(id) {
-    try {
-      return await woojService.get(id)
-    } catch (message) {
-      alert(message)
-    }
+  // async function get(id) {
+  //   try {
+  //     return await woojService.get(id)
+  //   } catch (message) {
+  //     alert(message)
+  //   }
+  // }
+
+  /**
+   * Активировать топик
+   * @param {Number} topicId
+   */
+  function activateTopic(topicId) {
+    activeTopicId.value = Number(topicId)
   }
 
   /**
@@ -40,39 +61,44 @@ export const useWoojStore = defineStore("wooj", () => {
    * @param {Number} woojId
    */
   function activateWooj(woojId) {
-    activeId.value = Number(woojId)
+    activeWoojId.value = Number(woojId)
+  }
 
-    // console.log({
-    //   activeId: activeId.value,
-    //   activeWooj: activeWooj.value,
-    // })
+  /**
+   * Деактивировать топик
+   */
+  function deactivateTopic() {
+    activateTopic(null)
   }
 
   /**
    * Деактивировать вудж
    */
   function deactivateWooj() {
-    activeId.value = null
+    activateWooj(null)
   }
 
   /**
    * Инициализация
    */
   async function init() {
-    await getAll()
+    await getTopics()
+    await getWoojs()
   }
 
   // Инициализировать
   init()
 
   return {
+    topics,
     woojs,
-    activeId,
+    activeTopicId,
+    activeWoojId,
+    activeTopic,
     activeWooj,
-    hasActiveWooj,
+    activateTopic,
     activateWooj,
+    deactivateTopic,
     deactivateWooj,
-    get,
-    getAll,
   }
 })

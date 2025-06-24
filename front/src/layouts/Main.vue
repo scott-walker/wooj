@@ -2,13 +2,10 @@
 import { computed } from "vue"
 import { RouterView } from "vue-router"
 import { useAuthStore } from "@stores/auth"
-// import { useWoojStore } from "@stores/wooj"
 import Sidebar from "@components/Sidebar.vue"
 
 const authStore = useAuthStore()
-// const woojStore = useWoojStore()
 const user = computed(() => authStore.user)
-// const hasActiveWooj = computed(() => !!woojStore.activeId)
 </script>
 
 <template>

@@ -27,8 +27,6 @@ export const useAuthStore = defineStore("auth", () => {
    * @param {Object} data - email, password
    */
   async function login({ email, password }) {
-    console.log({ email, password })
-
     try {
       const data = await userService.login(email, password)
 
@@ -46,8 +44,6 @@ export const useAuthStore = defineStore("auth", () => {
    * Выйти из системы
    */
   async function logout() {
-    console.log("logout")
-
     try {
       await userService.logout()
 
