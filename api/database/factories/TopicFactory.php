@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\User;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Topic>
@@ -17,7 +18,8 @@ class TopicFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->city(),
+            'author_id' => User::SCOTT_ID,
         ];
     }
 }

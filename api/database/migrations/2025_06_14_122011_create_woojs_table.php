@@ -17,7 +17,6 @@ return new class extends Migration
             $table->text('content');
             $table->integer('position')->default(0);
             $table->boolean('is_pinned')->default(false);
-            // $table->foreignId('note_topic_id')->constrained()->onDelete('cascade');
             $table->foreignId('topic_id')->nullable()->nullOnDelete();
             $table->timestamps();
         });
