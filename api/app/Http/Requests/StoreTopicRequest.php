@@ -22,9 +22,7 @@ class StoreTopicRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'title' => ['required', 'string', 'max:50'],
-            // 'content' => ['required', 'string', 'max:500'],
-            // 'topic_id' => ['required', 'exists:topics,id'],
+            'name' => ['required', 'string', 'max:255'],
         ];
     }
 }

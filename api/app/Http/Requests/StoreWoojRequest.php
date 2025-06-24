@@ -22,9 +22,9 @@ class StoreWoojRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'max:50'],
-            'content' => ['required', 'string', 'max:500'],
-            'topic_id' => ['required', 'exists:topics,id'],
+            'title' => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string'],
+            // 'topic_id' => ['required', 'exists:topics,id'],
         ];
     }
 }
