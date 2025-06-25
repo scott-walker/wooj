@@ -1,59 +1,57 @@
 <script setup>
-import { RouterLink } from "vue-router"
+import SidebarLink from "@components/SidebarLink.vue"
 import { useWoojStore } from "@stores/wooj"
 
 const store = useWoojStore()
 </script>
 
 <template>
-  <aside v-if="store.topics.length" class="menu">
-    <p class="menu-label">Топики</p>
+  <aside class="menu">
+    <p class="menu-label">Вуджи</p>
     <ul class="menu-list">
-      <li v-for="topic of store.topics">
-        <RouterLink :to="{ name: 'Topic', params: { topicId: topic.id } }" custom v-slot="{ isActive, href, navigate }">
-          <a :class="isActive ? 'is-active' : ''" :href="href" @click="navigate">
-            <span class="icon mr-2 has-text-grey-light"><i class="fas fa-tag"></i></span>{{ topic.name }}
-          </a>
-        </RouterLink>
+      <li>
+        <SidebarLink :route="{ name: 'All' }" text="Все" icon="tags" />
+      </li>
+      <!-- <li>
+        <SidebarLink :route="{ name: 'Recent' }" text="Недавние" icon="clock" />
+      </li> -->
+      <li>
+        <SidebarLink :route="{ name: 'Liked' }" text="Любимые" icon="heart" />
+      </li>
+      <li>
+        <SidebarLink :route="{ name: 'Published' }" text="Опубликованные" icon="link" />
       </li>
     </ul>
-    <!-- <p class="menu-label">Administration</p>
-    <ul class="menu-list">
-      <li><a>Team Settings</a></li>
-      <li>
-        <a class="is-active">Manage Your Team</a>
-        <ul>
-          <li><a>Members</a></li>
-          <li><a>Plugins</a></li>
-          <li><a>Add a member</a></li>
-        </ul>
+
+    <p class="menu-label">Топики</p>
+    <ul v-if="store.topics.length" class="menu-list">
+      <li v-for="topic of store.topics">
+        <SidebarLink :route="{ name: 'Topic', params: { topicId: topic.id } }" :text="topic.name" icon="tag" />
       </li>
-      <li><a>Invitations</a></li>
-      <li><a>Cloud Storage Environment Settings</a></li>
-      <li><a>Authentication</a></li>
-    </ul> -->
+    </ul>
+    <div v-else class="skeleton-lines p-4">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+
     <p class="menu-label">Другое</p>
     <ul class="menu-list">
-      <li><a><span class="icon mr-2 has-text-grey-light"><i class="fas fa-clock"></i></span>Недавние</a></li>
-      <li><a><span class="icon mr-2 has-text-grey-light"><i class="fas fa-link"></i></span>Расшаренные</a></li>
-      <li><a><span class="icon mr-2 has-text-grey-light"><i class="fas fa-heart"></i></span>Любимые</a></li>
-      <li><a><span class="icon mr-2 has-text-grey-light"><i class="fas fa-box"></i></span>Архив</a></li>
-      <li><a><span class="icon mr-2 has-text-grey-light"><i class="fas fa-trash"></i></span>Корзина</a></li>
+      <li>
+        <SidebarLink :route="{ name: 'Drafts' }" text="Черновики" icon="sticky-note" />
+      </li>
+      <li>
+        <SidebarLink :route="{ name: 'Archive' }" text="Архив" icon="box" />
+      </li>
+      <li>
+        <SidebarLink :route="{ name: 'Trash' }" text="Корзина" icon="trash" />
+      </li>
     </ul>
   </aside>
-  <div v-else class="skeleton-lines">
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
 </template>
 
-<style lang="scss">
-.menu-list {
-  .icon {
-    // color: ;
-  }
-}
-</style>
+<!-- <style lang="scss"></style> -->

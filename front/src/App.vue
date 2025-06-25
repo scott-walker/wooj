@@ -14,13 +14,12 @@ import MainLayout from '@layouts/Main.vue'
 import Auth from '@views/Auth.vue'
 
 const store = useAuthStore()
-const user = computed(() => store.user)
 const isLogged = computed(() => store.isLogged)
 </script>
 
 <template>
   <!-- <Notifies /> -->
-  <MainLayout v-if="isLogged" :user="user" @logout="" />
+  <MainLayout v-if="isLogged" />
   <Auth v-else @submit="store.login" />
   <!-- <Notify message="Test message" /> -->
   <!-- <Header /> -->

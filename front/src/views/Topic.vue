@@ -1,11 +1,13 @@
 <script setup>
 import { computed, onBeforeMount, onBeforeUpdate } from "vue"
+import WoojList from "@components/WoojList.vue"
 import { useWoojStore } from "@stores/wooj"
 
 const store = useWoojStore()
 
 const props = defineProps(["topicId"])
 const topic = computed(() => store.activeTopic)
+const listId = computed(() => `topic-${props.topicId}`)
 
 function init() {
   store.activateTopic(props.topicId)
@@ -17,15 +19,6 @@ onBeforeUpdate(init)
 
 <template>
   <div class="view-topic">
-    <h1 class="title">{{ topic.name }}</h1>
-
-    <div class="grid is-col-min-10 is-gap-0">
-      <div v-for="wooj of topic.woojs" class="cell p-2">
-        <div class="box">
-          <p class="title is-4">{{ wooj.title }}</p>
-          <p class="content">{{ wooj.content }}</p>
-        </div>
-      </div>
-    </div>
+    <WoojList :id="listId" :title="topic.name" :woojs="topic.woojs" />
   </div>
 </template>

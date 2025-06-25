@@ -5,12 +5,17 @@ import vue from "@vitejs/plugin-vue"
 import vueDevTools from "vite-plugin-vue-devtools"
 
 const PATH_SRC = fileURLToPath(new URL("./src", import.meta.url))
-const PATH_ASSETS = `${PATH_SRC}/assets`
-const PATH_STYLES = `${PATH_ASSETS}/styles`
+const vueOptions = {
+  template: {
+    compilerOptions: {
+      isCustomElement: (tag) => tag.startsWith("swiper-"),
+    },
+  },
+}
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueDevTools()],
+  plugins: [vue(vueOptions), vueDevTools()],
   resolve: {
     alias: {
       "@": PATH_SRC,
@@ -18,11 +23,12 @@ export default defineConfig({
       "@services": `${PATH_SRC}/services`,
       "@plugins": `${PATH_SRC}/plugins`,
       "@components": `${PATH_SRC}/components`,
+      "@ui": `${PATH_SRC}/components/ui`,
       "@stores": `${PATH_SRC}/stores`,
       "@layouts": `${PATH_SRC}/layouts`,
       "@views": `${PATH_SRC}/views`,
-      "@assets": PATH_ASSETS,
-      "@styles": PATH_STYLES,
+      "@assets": `${PATH_SRC}/assets`,
+      "@styles": `${PATH_SRC}/assets/styles`,
     },
   },
   // css: {
