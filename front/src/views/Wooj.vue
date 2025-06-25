@@ -1,7 +1,7 @@
 <script setup>
 import { computed, onBeforeMount, onBeforeUpdate } from "vue"
 import { useWoojStore } from "@stores/wooj"
-import Wooj from "@components/Wooj.vue"
+// import Wooj from "@components/Wooj.vue"
 
 const props = defineProps(["woojId"])
 
@@ -18,6 +18,6 @@ onBeforeUpdate(init)
 
 <template>
   <div class="view-wooj">
-    <Wooj v-if="wooj" :data="wooj" />
+    <!-- <Wooj v-if="wooj" :data="wooj" /> -->
   </div>
 </template>

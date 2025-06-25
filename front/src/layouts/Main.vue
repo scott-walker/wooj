@@ -9,12 +9,13 @@ const user = computed(() => authStore.user)
 </script>
 
 <template>
-  <div class="layout fixed-grid has-5-cols">
-    <div class="grid">
-      <div class="cell">
+  <div class="layout fixed-grid has-6-cols">
+    <div class="grid is-gapless">
+      <!-- Header -->
+      <div class="layout__header layout__header-left cell">
         <p class="title">WOOJ</p>
       </div>
-      <div class="cell is-col-span-3">
+      <div class="layout__header layout__header-center cell is-col-span-4">
         <div class="block">
           <p class="control has-icons-left">
             <input class="input" type="text" placeholder="Search" />
@@ -24,7 +25,7 @@ const user = computed(() => authStore.user)
           </p>
         </div>
       </div>
-      <div class="cell">
+      <div class="layout__header layout__header-right cell">
         <div class="media">
           <div class="media-left">
             <figure class="image is-48x48">
@@ -40,10 +41,11 @@ const user = computed(() => authStore.user)
         </div>
       </div>
 
-      <div class="cell">
+      <!-- Body -->
+      <div class="layout__body layout__body-sidebar cell">
         <Sidebar />
       </div>
-      <div class="cell is-col-span-4">
+      <div class="layout__body layout__body-content cell is-col-span-5">
         <nav class="breadcrumb" aria-label="breadcrumbs">
           <ul>
             <li><a href="#">Bulma</a></li>
@@ -55,17 +57,43 @@ const user = computed(() => authStore.user)
 
         <RouterView />
       </div>
-      <div class="cell">
-        <!-- <Sidebar /> -->
-      </div>
     </div>
   </div>
 </template>
 
 <style lang="scss">
 .layout {
+  &__header {
+    height: 80px;
+    overflow: hidden;
+
+    &-left {
+      padding: 20px 20px 0px 20px;
+    }
+
+    &-center {
+      padding: 20px 0px 0px 0px;
+    }
+
+    &-right {
+      padding: 20px 20px 0px 20px;
+    }
+  }
+
+  &__body {
+    height: calc(100vh - 80px);
+
+    &-sidebar {
+      padding: 20px 20px 0px 20px;
+    }
+
+    &-content {
+      padding: 20px 20px 0px 0px;
+    }
+  }
+
   .cell {
-    padding: 20px;
+    // padding: 20px;
   }
 }
 </style>

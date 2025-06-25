@@ -19,9 +19,13 @@ _Icons_
 https://docs.fontawesome.com/web/setup/get-started
 _Bulma_
 https://bulma.io/documentation/
+_Swiper_
+https://swiperjs.com/element#usage
 
+_Helpers_
 https://sass-lang.com/documentation/
 https://cssgradient.io/
+https://angrytools.com/css-flex/
 
 ## Editors
 

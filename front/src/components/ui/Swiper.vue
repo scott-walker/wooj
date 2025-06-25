@@ -12,8 +12,12 @@ const init = () => {
   const swiper = document.querySelector(`#${props.id}`)
 
   Object.assign(swiper, {
-    slidesPerView: 4,
+    slidesPerView: 1,
+    // grid: {
+    //   rows: 2,
+    // },
     spaceBetween: 10,
+    grabCursor: true,
     pagination: {
       clickable: true,
       // renderBullet: function (index, className) {
@@ -29,7 +33,7 @@ const init = () => {
         width: 15px;
         height: 15px;
         opacity: 1;
-        background: rgba(0, 0, 0, 0.1);
+        background: hsla(232, 31%, 85%, 0.7);
         border: 2px solid transparent;
         transition: all .3s;
       }
@@ -41,20 +45,20 @@ const init = () => {
       }
     `],
     breakpoints: {
-      0: {
-        slidesPerView: 1,
-      },
-      820: {
+      940: {
         slidesPerView: 2,
       },
-      1024: {
+      1330: {
         slidesPerView: 3,
       },
-      1400: {
-        slidesPerView: 3,
-      },
-      1600: {
+      1690: {
         slidesPerView: 4,
+      },
+      2500: {
+        slidesPerView: 5,
+      },
+      3000: {
+        slidesPerView: 6,
       },
     },
     ...options,
@@ -76,7 +80,7 @@ onMounted(init)
     <swiper-container :id="id" class="ui-swiper__items" init="false">
       <swiper-slide v-for="i of props.itemsNum" :key="i" class="ui-swiper__item">
         <div class="ui-swiper__item-content">
-          <slot name="item" :index="i"></slot>
+          <slot name="item" :index="i - 1"></slot>
         </div>
       </swiper-slide>
     </swiper-container>
@@ -89,7 +93,8 @@ onMounted(init)
 
   &__item {
     &-content {
-      padding: 5px;
+      // background: rgba(16, 0, 75, 0.1);
+      // padding: 5px;
     }
   }
 }

@@ -19,6 +19,6 @@ onBeforeUpdate(init)
 
 <template>
   <div class="view-topic">
-    <WoojList :id="listId" :title="topic.name" :woojs="topic.woojs" />
+    <WoojList v-if="topic" :id="listId" :title="topic.name" :woojs="topic.woojs" />
   </div>
 </template>
