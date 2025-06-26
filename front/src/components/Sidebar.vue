@@ -45,7 +45,7 @@ const store = useWoojStore()
         <SidebarLink :route="{ name: 'Drafts' }" text="Черновики" icon="sticky-note" />
       </li>
       <li>
-        <SidebarLink :route="{ name: 'Archive' }" text="Архив" icon="box" />
+        <SidebarLink :route="{ name: 'Archive' }" text="Архив" icon="archive" />
       </li>
       <li>
         <SidebarLink :route="{ name: 'Trash' }" text="Корзина" icon="trash" />

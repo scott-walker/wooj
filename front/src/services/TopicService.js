@@ -39,4 +39,35 @@ export default class TopicService {
       throw "Не удалось получить топик"
     }
   }
+
+  /**
+   * Создать топик
+   * @param {Object} data
+   * @returns {Object} топик
+   */
+  async create({ name }) {
+    try {
+      const { data } = await this.http.post("topics", { name })
+
+      return data
+    } catch {
+      throw "Не удалось создать топик"
+    }
+  }
+
+  /**
+   * Обновить топик
+   * @param {Number} id
+   * @param {Object} data
+   * @returns {Object} топик
+   */
+  async update(id, { name }) {
+    try {
+      const { data } = await this.http.put(`topics/${id}`, { name })
+
+      return data
+    } catch {
+      throw "Не удалось обновить топик"
+    }
+  }
 }

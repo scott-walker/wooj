@@ -63,8 +63,8 @@ export default class HttpClient {
    * @param {Object} config
    */
   handleRequest(config) {
-    console.log("XHR REQUEST")
-    console.log(config)
+    // console.log("XHR REQUEST")
+    // console.log(config)
 
     return config
   }
@@ -74,8 +74,8 @@ export default class HttpClient {
    * @param {Object} response
    */
   handleResponse(response) {
-    console.log("XHR RESPONSE")
-    console.log(response)
+    // console.log("XHR RESPONSE")
+    // console.log(response)
 
     return response.data
   }
@@ -85,8 +85,8 @@ export default class HttpClient {
    * @param {Object} error
    */
   handleRequestError(error) {
-    console.log("XHR REQUEST ERROR")
-    console.log(error)
+    // console.log("XHR REQUEST ERROR")
+    // console.log(error)
 
     return Promise.reject(error)
   }
@@ -96,8 +96,8 @@ export default class HttpClient {
    * @param {Object} error
    */
   handleResponseError(error) {
-    console.log("XHR RESPONSE ERROR")
-    console.log(error)
+    // console.log("XHR RESPONSE ERROR")
+    // console.log(error)
 
     return Promise.reject(error)
   }

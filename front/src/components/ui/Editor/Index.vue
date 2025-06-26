@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, inject } from 'vue'
 import { Color } from '@tiptap/extension-color'
 import ListItem from '@tiptap/extension-list-item'
 import TextStyle from '@tiptap/extension-text-style'
@@ -14,6 +14,7 @@ const props = defineProps({
   placeholder: { type: String, default: null },
 })
 const content = defineModel()
+const emit = defineEmits(["update", "save"])
 
 const editor = ref(null)
 const isMouseOver = ref(false)
@@ -38,6 +39,8 @@ const onMouseLeave = () => {
   }
 }
 
+const deferredTimer = inject("createDeferredTimer")()
+
 onMounted(() => {
   editor.value = new Editor({
     extensions: [
@@ -49,9 +52,18 @@ onMounted(() => {
       Underline,
       StarterKit,
     ],
+    editorProps: {
+      attributes: {
+        spellcheck: "false",
+      },
+    },
     content: content.value,
     onUpdate({ editor }) {
       content.value = editor.getContent()
+
+      emit("update", content.value)
+
+      deferredTimer.start(1000, () => emit("save", content.value))
     },
     onFocus({ editor, event }) {
       isContentFocused.value = true
@@ -116,6 +128,8 @@ onBeforeUnmount(() => {
   padding: 20px;
   transition: all .2s;
   font-size: 1.2rem;
+  max-height: calc(100vh - 400px);
+  overflow-y: auto;
 
   &.ProseMirror-focused {
     outline: none;

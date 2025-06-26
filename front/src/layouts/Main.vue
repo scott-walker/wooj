@@ -12,11 +12,21 @@ const user = computed(() => authStore.user)
   <div class="layout fixed-grid has-6-cols">
     <div class="grid is-gapless">
       <!-- Header -->
-      <div class="layout__header layout__header-left cell">
+      <div class="layout__header layout__header-left cell pl-5">
         <p class="title">WOOJ</p>
+        <p class="subtitle pl-3 is-6">Просто заметки</p>
       </div>
       <div class="layout__header layout__header-center cell is-col-span-4">
         <div class="block">
+          <button class="button is-link">
+            <span class="icon">
+              <i class="fas fa-plus"></i>
+            </span>
+            <span>Вудж</span>
+          </button>
+        </div>
+
+        <div class="block" :style="{ width: '100%' }">
           <p class="control has-icons-left">
             <input class="input" type="text" placeholder="Search" />
             <span class="icon is-left">
@@ -47,14 +57,14 @@ const user = computed(() => authStore.user)
       </div>
       <div class="layout__body layout__body-content cell is-col-span-5">
         <!-- <div class="layout__body layout__body-content cell is-col-span-5 has-background-white-bis"> -->
-        <nav class="breadcrumb" aria-label="breadcrumbs">
+        <!-- <nav class="breadcrumb" aria-label="breadcrumbs">
           <ul>
             <li><a href="#">Bulma</a></li>
             <li><a href="#">Documentation</a></li>
             <li><a href="#">Components</a></li>
             <li class="is-active"><a href="#" aria-current="page">Breadcrumb</a></li>
           </ul>
-        </nav>
+        </nav> -->
 
         <RouterView />
       </div>
@@ -73,6 +83,8 @@ const user = computed(() => authStore.user)
     }
 
     &-center {
+      display: flex;
+      gap: 10px;
       padding: 20px 0px 0px 0px;
     }
 
@@ -90,7 +102,7 @@ const user = computed(() => authStore.user)
 
     &-content {
       // padding: 20px 40px 0px 40px;
-      // padding: 20px 20px 0px 0px;
+      padding: 15px 40px 0px 10px;
     }
   }
 

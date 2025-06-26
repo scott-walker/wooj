@@ -1,10 +1,14 @@
 <script setup>
-import { computed } from "vue"
+import { ref, onMounted, inject } from "vue"
 import WoojList from "@components/WoojList.vue"
-import { useWoojStore } from "@stores/wooj"
 
-const store = useWoojStore()
-const woojs = computed(() => store.woojs)
+const { wooj: woojService } = inject("services")
+
+const woojs = ref(null)
+
+onMounted(async () => {
+  woojs.value = await woojService.getAll()
+})
 </script>
 
 <template>

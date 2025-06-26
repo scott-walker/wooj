@@ -39,4 +39,35 @@ export default class WoojService {
       throw "Не удалось получить вудж"
     }
   }
+
+  /**
+   * Создать вудж
+   * @param {Object} data
+   * @returns {Object} вудж
+   */
+  async create({ title, content }) {
+    try {
+      const { data } = await this.http.post("woojs", { title, content })
+
+      return data
+    } catch {
+      throw "Не удалось создать вудж"
+    }
+  }
+
+  /**
+   * Обновить вудж
+   * @param {Number} id
+   * @param {Object} data
+   * @returns {Object} вудж
+   */
+  async update(id, { title, content }) {
+    try {
+      const { data } = await this.http.put(`woojs/${id}`, { title, content })
+
+      return data
+    } catch {
+      throw "Не удалось обновить вудж"
+    }
+  }
 }

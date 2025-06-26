@@ -10,7 +10,7 @@ const props = defineProps({
 })
 const title = computed(() => props.title)
 const woojs = computed(() => props.woojs)
-const woojNums = computed(() => woojs.value.length)
+const woojNums = computed(() => woojs.value ? woojs.value.length : null)
 const sliderId = computed(() => `wooj-list-${props.id}`)
 const slideItems = computed(() => _.chunk(woojs.value, 3))
 const slideNums = computed(() => slideItems.value.length)
@@ -18,9 +18,9 @@ const slideNums = computed(() => slideItems.value.length)
 
 <template>
   <div class="wooj-list">
-    <h1 class="title">{{ title }} <span class="tag is-light ml-2">{{ woojNums }}</span></h1>
+    <h1 class="title">{{ title }} <span v-if="woojNums" class="tag is-light ml-2">{{ woojNums }}</span></h1>
 
-    <div v-if="woojs.length" class="wooj-list__board has-background-white-bis">
+    <div v-if="woojs" class="wooj-list__board has-background-white-ter">
       <Swiper :id="sliderId" :itemsNum="slideNums">
         <template #item="{ index }">
           <div class="wooj-list__items">
@@ -43,7 +43,7 @@ const slideNums = computed(() => slideItems.value.length)
   &__board {
     padding: 20px;
     border: 2px solid transparent;
-    border-radius: 10px;
+    border-radius: 20px;
     transition: all .5s;
 
     &:hover {
@@ -57,7 +57,7 @@ const slideNums = computed(() => slideItems.value.length)
     flex-wrap: wrap;
     justify-content: flex-start;
     align-items: stretch;
-    min-height: calc(100vh - 400px);
+    min-height: calc(100vh - 320px);
     // max-height: calc(100vh - 300px);
   }
 

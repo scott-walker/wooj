@@ -1,15 +1,27 @@
 <script setup>
+import { inject } from 'vue'
+
 const props = defineProps({
   cssClass: { type: String, default: "" },
-  placeholder: { type: String, default: "" }
+  placeholder: { type: String, default: "" },
+  max: { type: Number, default: 255 },
 })
 const content = defineModel()
+const emit = defineEmits(["update", "save"])
+
+const deferredTimer = inject("createDeferredTimer")()
+
+const onChange = () => {
+  emit("update", content.value)
+
+  deferredTimer.start(1000, () => emit("save", content.value))
+}
 </script>
 
 <template>
   <div class="ui-light-input">
     <input class="ui-light-input__field" :class="cssClass" type="text" v-model="content"
-      :placeholder="props.placeholder" />
+      :placeholder="props.placeholder" :maxlength="props.max" @input="onChange" />
   </div>
 </template>
 
