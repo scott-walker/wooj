@@ -1,16 +1,18 @@
 <script setup>
+import { useRouter } from "vue-router"
 import { computed } from "vue"
 
 const props = defineProps({
   data: Object
 })
+const router = useRouter()
 const wooj = computed(() => props.data)
 
 const onLike = () => {
   alert("On Like")
 }
 const onEdit = () => {
-
+  router.push({ name: "Wooj", params: { woojId: wooj.value.id } })
 }
 const onRemove = () => {
   alert("On Remove")

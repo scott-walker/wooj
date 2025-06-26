@@ -21,6 +21,7 @@ const app = createApp(App)
 
 app.use(InjectPlugin, { utils, services })
 app.use(SwiperPlugin)
+
 app.use(createPinia())
 app.use(router)
 

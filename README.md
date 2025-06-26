@@ -21,15 +21,13 @@ _Bulma_
 https://bulma.io/documentation/
 _Swiper_
 https://swiperjs.com/element#usage
+_Editor_
+https://tiptap.dev/docs/editor/getting-started/overview
+
+_Lodash_
+https://lodash.com/
 
 _Helpers_
 https://sass-lang.com/documentation/
 https://cssgradient.io/
 https://angrytools.com/css-flex/
-
-## Editors
-
-https://element-tiptap.vercel.app
-https://github.com/Leecason/element-tiptap
-
-https://vueup.github.io/vue-quill/
