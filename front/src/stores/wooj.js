@@ -40,13 +40,13 @@ export const useWoojStore = defineStore("wooj", () => {
    * Получить вудж по ID
    * @param {Number} id
    */
-  // async function get(id) {
-  //   try {
-  //     return await woojService.get(id)
-  //   } catch (message) {
-  //     alert(message)
-  //   }
-  // }
+  async function get(id) {
+    try {
+      return await woojService.get(id)
+    } catch (message) {
+      alert(message)
+    }
+  }
 
   /**
    * Активировать топик
@@ -100,5 +100,6 @@ export const useWoojStore = defineStore("wooj", () => {
     activateWooj,
     deactivateTopic,
     deactivateWooj,
+    get,
   }
 })

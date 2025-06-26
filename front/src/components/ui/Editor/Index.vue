@@ -4,14 +4,28 @@ import { Color } from '@tiptap/extension-color'
 import ListItem from '@tiptap/extension-list-item'
 import TextStyle from '@tiptap/extension-text-style'
 import Underline from '@tiptap/extension-underline'
+import Placeholder from '@tiptap/extension-placeholder'
 import StarterKit from '@tiptap/starter-kit'
-import { Editor, EditorContent } from '@tiptap/vue-3'
+import { EditorContent } from '@tiptap/vue-3'
+import Editor from "./CustomEditor"
 import EditorPanel from "./Panel.vue"
+
+const props = defineProps({
+  placeholder: { type: String, default: null },
+})
+const content = defineModel()
 
 const editor = ref(null)
 const isMouseOver = ref(false)
 const isContentFocused = ref(false)
 const isFocused = computed(() => isMouseOver.value || isContentFocused.value)
+const placeholder = computed(() => {
+  if (props.placeholder !== null) {
+    return props.placeholder
+  }
+
+  return isFocused.value ? "Напиши текст..." : "Кликни сюда и напиши текст..."
+})
 
 const onMouseOver = () => {
   if (isContentFocused.value) {
@@ -29,47 +43,29 @@ onMounted(() => {
     extensions: [
       Color.configure({ types: [TextStyle.name, ListItem.name] }),
       TextStyle.configure({ types: [ListItem.name] }),
+      Placeholder.configure({
+        placeholder: placeholder.value,
+      }),
       Underline,
       StarterKit,
     ],
-    content: " Wow, that’s amazing. Good work, boy! 👏",
-    // onBeforeCreate({ editor }) {
-    //   // Before the view is created.
-    // },
-    // onCreate({ editor }) {
-    //   // The editor is ready.
-    // },
-    // onUpdate({ editor }) {
-    //   // The content has changed.
-    // },
-    // onSelectionUpdate({ editor }) {
-    //   // The selection has changed.
-    // },
-    // onTransaction({ editor, transaction }) {
-    //   // The editor state has changed.
-    // },
+    content: content.value,
+    onUpdate({ editor }) {
+      content.value = editor.getContent()
+    },
     onFocus({ editor, event }) {
       isContentFocused.value = true
+
+      editor.setExtensionOptions("placeholder", { placeholder: placeholder.value })
     },
     onBlur({ editor, event }) {
       isContentFocused.value = false
-    },
-    // onDestroy() {
-    //   // The editor is being destroyed.
-    // },
-    // onPaste(event: ClipboardEvent, slice: Slice) {
-    //   // The editor is being pasted into.
-    // },
-    // onDrop(event: DragEvent, slice: Slice, moved: boolean) {
-    //   // The editor is being pasted into.
-    // },
-    // onContentError({ editor, error, disableCollaboration }) {
-    //   // The editor content does not match the schema.
-    // },
-  })
 
-  console.log(editor.value)
+      editor.setExtensionOptions("placeholder", { placeholder: placeholder.value })
+    },
+  })
 })
+
 onBeforeUnmount(() => {
   editor.value.destroy()
   editor.value = null
@@ -92,6 +88,10 @@ onBeforeUnmount(() => {
   border: 2px solid transparent;
   border-radius: 10px;
   transition: all .2s;
+
+  &:hover {
+    border-color: rgba(16, 0, 75, 0.05);
+  }
 
   &.focused {
     border-color: rgba(16, 0, 75, 0.05);
@@ -123,6 +123,15 @@ onBeforeUnmount(() => {
 
   :first-child {
     margin-top: 0;
+  }
+
+  p.is-empty:first-child::before {
+    color: #adb5bd;
+    font-style: italic;
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
   }
 
   /* List styles */

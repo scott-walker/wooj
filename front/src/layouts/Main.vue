@@ -46,6 +46,7 @@ const user = computed(() => authStore.user)
         <Sidebar />
       </div>
       <div class="layout__body layout__body-content cell is-col-span-5">
+        <!-- <div class="layout__body layout__body-content cell is-col-span-5 has-background-white-bis"> -->
         <nav class="breadcrumb" aria-label="breadcrumbs">
           <ul>
             <li><a href="#">Bulma</a></li>
@@ -88,7 +89,8 @@ const user = computed(() => authStore.user)
     }
 
     &-content {
-      padding: 20px 20px 0px 0px;
+      // padding: 20px 40px 0px 40px;
+      // padding: 20px 20px 0px 0px;
     }
   }
 

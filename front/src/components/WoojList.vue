@@ -19,29 +19,6 @@ const slideNums = computed(() => slideItems.value.length)
 <template>
   <div class="wooj-list">
     <h1 class="title">{{ title }} <span class="tag is-light ml-2">{{ woojNums }}</span></h1>
-    <!-- <pre>
-      {{ slideNums }}
-      {{ slideItems }}
-    </pre> -->
-    <!-- <div v-if="woojs.length" class="grid is-col-min-10 is-gap-0">
-      <div v-for="wooj of woojs" :key="wooj.id" class="cell pr-4 pt-2 pb-2 pl-0">
-        <div class="box">
-          <p class="title is-4">{{ wooj.title }}</p>
-          <p class="content">{{ wooj.content }}</p>
-        </div>
-      </div>
-    </div> -->
-    <!-- <div v-if="woojs.length" class="wooj-list__items">
-      <div v-for="wooj of woojs" :key="wooj.id" class="wooj-list__item">
-        <div class="wooj-list__item-card box">
-          <p class="title is-4">{{ wooj.title }}</p>
-          <p class="content">{{ wooj.content }}</p>
-        </div>
-      </div>
-    </div>
-    <div v-else class="skeleton grid is-col-min-10 is-gap-2">
-      <div v-for="i of 8" :key="i" class="cell skeleton-block m-0"></div>
-    </div> -->
 
     <div v-if="woojs.length" class="wooj-list__board has-background-white-bis">
       <Swiper :id="sliderId" :itemsNum="slideNums">
@@ -54,6 +31,7 @@ const slideNums = computed(() => slideItems.value.length)
         </template>
       </Swiper>
     </div>
+
     <div v-else class="skeleton grid is-col-min-10 is-gap-2">
       <div v-for="i of 8" :key="i" class="cell skeleton-block m-0"></div>
     </div>

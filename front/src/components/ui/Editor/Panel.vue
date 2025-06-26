@@ -131,16 +131,23 @@ const onRedo = () => {
       <Button @click="onHeading(5)" icon="heading" :disabled="isH5Disabled" :active="isH5Active" />
       <Button @click="onHeading(6)" icon="heading" :disabled="isH6Disabled" :active="isH6Active" /> -->
     </section>
+
+    <div class="ui-editor-pamel__delimiter"></div>
+
     <section class="ui-editor-pamel__group">
       <Button @click="onBulletList" icon="list-ul" :disabled="isBulletListDisabled" :active="isBulletListActive" />
       <Button @click="onOrderedList" icon="list-ol" :disabled="isOrderedListDisabled" :active="isOrderedListActive" />
     </section>
+
+    <div class="ui-editor-pamel__delimiter"></div>
 
     <section class="ui-editor-pamel__group">
       <Button @click="onCode" icon="code" :disabled="isCodeDisabled" :active="isCodeActive" />
       <Button @click="onBlockquote" icon="quote-right" :disabled="isBlockquoteDisabled" :active="isBlockquoteActive" />
       <Button @click="onHorizontalRule" icon="window-minimize" />
     </section>
+
+    <div class="ui-editor-pamel__delimiter"></div>
 
     <section class="ui-editor-pamel__group">
       <Button @click="onColor(null, true)" icon="circle" />
@@ -152,6 +159,8 @@ const onRedo = () => {
         :disabled="isColorGreenDisabled" :active="isColorGreenActive" />
     </section>
 
+    <div class="ui-editor-pamel__delimiter"></div>
+
     <section class="ui-editor-pamel__group">
       <Button @click="onUndo" icon="undo" :disabled="isUndoDisabled" />
       <Button @click="onRedo" icon="redo" :disabled="isRedoDisabled" />
@@ -162,31 +171,36 @@ const onRedo = () => {
 <style lang="scss">
 .ui-editor-pamel {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: stretch;
   flex-wrap: wrap;
   border-radius: 10px;
   overflow: hidden;
   width: fit-content;
   padding: 10px;
-  box-shadow: rgba(16, 0, 75, 0.4) 0px 1px 3px 0px;
+  box-shadow: rgba(16, 0, 75, 0.1) 0px 1px 3px 0px;
   background: #ffffff;
+
+  &__delimiter {
+    width: 1px;
+    background: rgba(16, 0, 75, 0.2);
+  }
 
   &__group {
     display: flex;
     justify-content: flex-start;
     align-items: stretch;
     gap: 5px;
-    padding: 0 15px;
-    border-right: 1px solid rgba(16, 0, 75, 0.2);
+    // padding: 0 15px;
+    // border-right: 1px solid rgba(16, 0, 75, 0.2);
 
     &:first-child {
-      padding-left: 0;
+      // padding-left: 0;
     }
 
     &:last-child {
-      padding-right: 0;
-      border-right: none;
+      // padding-right: 0;
+      // border-right: none;
     }
   }
 }
