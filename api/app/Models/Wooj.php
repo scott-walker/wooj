@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Topic;
@@ -14,7 +16,7 @@ class Wooj extends Model
     protected $fillable = ['title', 'content', 'author_id'];
 
     /** @use HasFactory<\Database\Factories\WoojFactory> */
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     public function author(): BelongsTo
     {
@@ -24,5 +26,10 @@ class Wooj extends Model
     public function topics(): BelongsToMany
     {
         return $this->belongsToMany(Topic::class, 'woojs_topics');
+    }
+
+    public function scopeByAuthor()
+    {
+        return $this->where('author_id', Auth::user()->id);
     }
 }

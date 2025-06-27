@@ -17,6 +17,9 @@ Route::middleware(['throttle:api'])->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
 
     Route::middleware(['auth:sanctum'])->group(function () {
+        Route::get('/woojs/trash', [WoojController::class, 'trash']);
+        Route::delete('/woojs/trash', [WoojController::class, 'destroyTrashed']);
+        Route::put('/woojs/{wooj}/restore', [WoojController::class, 'restore'])->withTrashed();
         Route::apiResource('/woojs', WoojController::class);
         Route::apiResource('/topics', TopicController::class);
         Route::post('/logout', [AuthController::class, 'logout']);

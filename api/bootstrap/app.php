@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Middleware\HandleCors;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -21,10 +22,15 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (NotFoundHttpException $e, Request $request) {
-            if ($request->is('api/*')) {
-                return response()->json([
-                    'message' => 'Not found'
-                ], 404);
-            }
+            return response()->json([
+                'message' => 'Not found'
+            ], $e->getStatusCode());
         });
-    })->create();
+
+        $exceptions->render(function (AccessDeniedHttpException $e, Request $request) {
+            return response()->json([
+                'message' => 'Not access'
+            ], $e->getStatusCode());
+        });
+    })
+    ->create();

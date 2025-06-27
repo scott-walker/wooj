@@ -3,23 +3,27 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\StoreWoojRequest;
-use App\Http\Requests\UpdateWoojRequest;
+use App\Http\Requests\Wooj\StoreRequest;
+use App\Http\Requests\Wooj\UpdateRequest;
+use App\Http\Requests\Wooj\GetRequest;
 use App\Http\Resources\WoojResource;
 use App\Models\Wooj;
 
+/**
+ * Контроллер для работы с вуджами
+ */
 class WoojController extends Controller
 {
+    // Количество записей на странице
     protected const int ITEMS_PER_PAGE = 100;
 
     /**
-     * Display a listing of the resource.
+     * Получить список вуджей
      */
     public function index()
     {
-        $user = Auth::user();
         $woojs = Wooj::with('topics')
-            ->where('author_id', $user->id)
+            ->byAuthor()
             ->orderByDesc('id')
             ->paginate(self::ITEMS_PER_PAGE);
 
@@ -27,32 +31,45 @@ class WoojController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Получить удаленные вуджи
      */
-    public function store(StoreWoojRequest $request)
+    public function trash()
     {
-        $user = Auth::user();
+        $woojs = Wooj::onlyTrashed()
+            ->with('topics')
+            ->byAuthor()
+            ->orderByDesc('id')
+            ->paginate(self::ITEMS_PER_PAGE);
+
+        return WoojResource::collection($woojs);
+    }
+
+    /**
+     * Сохранить вудж
+     */
+    public function store(StoreRequest $request)
+    {
         $wooj = Wooj::create([
             'title' => $request->title,
             'content' => $request->content,
-            'author_id' => $user->id,
+            'author_id' => Auth::user()->id,
         ]);
 
         return new WoojResource($wooj);
     }
 
     /**
-     * Display the specified resource.
+     * Показать вудж
      */
-    public function show(Wooj $wooj)
+    public function show(GetRequest $request, Wooj $wooj)
     {
         return new WoojResource($wooj);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновить вудж
      */
-    public function update(UpdateWoojRequest $request, Wooj $wooj)
+    public function update(UpdateRequest $request, Wooj $wooj)
     {
         $wooj->update($request->all());
 
@@ -60,12 +77,32 @@ class WoojController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Отправить вудж в корзину
      */
-    public function destroy(Wooj $wooj)
+    public function destroy(GetRequest $request, Wooj $wooj)
     {
         $wooj->delete();
 
         return new WoojResource($wooj);
+    }
+
+    /**
+     * Восстановить вудж из корзины
+     */
+    public function restore(GetRequest $request, Wooj $wooj)
+    {
+        $wooj->restore();
+
+        return new WoojResource($wooj);
+    }
+
+    /**
+     * Очистить корзину
+     */
+    public function destroyTrashed()
+    {
+        Wooj::onlyTrashed()->byAuthor()->forceDelete();
+
+        return response()->json(['message' => 'success']);
     }
 }
