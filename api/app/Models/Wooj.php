@@ -11,24 +11,43 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Topic;
 
+/**
+ * Модель вуджа
+ */
 class Wooj extends Model
 {
-    protected $fillable = ['title', 'content', 'author_id'];
-
     /** @use HasFactory<\Database\Factories\WoojFactory> */
     use HasFactory, SoftDeletes;
 
+    protected $fillable = [
+        'title',
+        'content',
+        'author_id'
+    ];
+
+    /**
+     * Автор
+     * @return BelongsTo<User, Wooj>
+     */
     public function author(): BelongsTo
     {
         return $this->belongsTo(related: User::class);
     }
 
+    /**
+     * Топики
+     * @return BelongsToMany<Topic, Wooj, \Illuminate\Database\Eloquent\Relations\Pivot>
+     */
     public function topics(): BelongsToMany
     {
         return $this->belongsToMany(Topic::class, 'woojs_topics');
     }
 
-    public function scopeByAuthor()
+    /**
+     * Получить по автору
+     * @return Wooj
+     */
+    public function scopeByAuthor(): Wooj
     {
         return $this->where('author_id', Auth::user()->id);
     }

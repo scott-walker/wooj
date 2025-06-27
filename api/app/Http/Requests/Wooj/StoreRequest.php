@@ -24,7 +24,14 @@ class StoreRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:60'],
             'content' => ['required', 'string'],
-            // 'topic_id' => ['required', 'exists:topics,id'],
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'title' => 'Заголовок вуджа',
+            'content' => 'Содержимое вуджа',
         ];
     }
 
@@ -36,12 +43,12 @@ class StoreRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'title.required' => 'Поле title обязательно для заполнения',
-            'title.string' => 'Поле title должно быть строкой',
-            'title.max' => 'Поле title не должно быть больше 60 символов',
+            'title.required' => ':attribute обязателен для заполнения',
+            'title.string' => ':attribute должен быть строкой',
+            'title.max' => ':attribute не должен содержать более :max символов',
 
-            'content.required' => 'Поле content обязательно для заполнения',
-            'content.string' => 'Поле content должно быть строкой',
+            'content.required' => ':attribute обязательно для заполнения',
+            'content.string' => ':attribute должно быть строкой',
         ];
     }
 }
