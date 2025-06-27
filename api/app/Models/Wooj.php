@@ -45,9 +45,8 @@ class Wooj extends Model
 
     /**
      * Получить по автору
-     * @return Wooj
      */
-    public function scopeByAuthor(): Wooj
+    public function scopeByAuthor()
     {
         return $this->where('author_id', Auth::user()->id);
     }

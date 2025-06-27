@@ -22,8 +22,8 @@ class WoojController extends Controller
      */
     public function index()
     {
-        $woojs = Wooj::with('topics')
-            ->byAuthor()
+        $woojs = Wooj::byAuthor()
+            // ->with('topics')
             ->orderByDesc('id')
             ->paginate(self::ITEMS_PER_PAGE);
 
@@ -35,10 +35,17 @@ class WoojController extends Controller
      */
     public function trash()
     {
-        $woojs = Wooj::onlyTrashed()
-            ->with('topics')
-            ->byAuthor()
-            ->orderByDesc('id')
+        // $sql1 = Wooj::onlyTrashed()->byAuthor()->toSql();
+        // $sql2 = Wooj::byAuthor()->onlyTrashed()->toSql();
+
+        // return [
+        //     $sql1,
+        //     $sql2
+        // ];
+        $woojs = Wooj::byAuthor()
+            // ->with('topics')
+            ->onlyTrashed()
+            ->orderByDesc('deleted_at')
             ->paginate(self::ITEMS_PER_PAGE);
 
         return WoojResource::collection($woojs);
@@ -101,7 +108,7 @@ class WoojController extends Controller
      */
     public function destroyTrashed()
     {
-        Wooj::onlyTrashed()->byAuthor()->forceDelete();
+        Wooj::byAuthor()->onlyTrashed()->forceDelete();
 
         return response()->json(['message' => 'success']);
     }
