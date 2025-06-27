@@ -1,31 +1,53 @@
 <script setup>
 import _ from "lodash"
-import { computed } from "vue"
+import { ref, computed } from "vue"
 import WoojCard from "@components/WoojCard.vue"
 
 const props = defineProps({
   id: String,
   title: String,
-  woojs: Array
+  woojs: Array,
+  emptyText: { type: String, default: "Тут пусто" },
+  hasLike: { type: Boolean, default: true },
+  hasEdit: { type: Boolean, default: true },
+  hasRemove: { type: Boolean, default: true },
+  hasRestore: { type: Boolean, default: false },
 })
+const hiddenIdsMap = ref({})
 const title = computed(() => props.title)
-const woojs = computed(() => props.woojs)
-const woojNums = computed(() => woojs.value ? woojs.value.length : null)
+const woojs = computed(() => props.woojs && props.woojs.filter(wooj => !hiddenIdsMap.value[wooj.id]))
+const woojNums = computed(() => woojs.value ? woojs.value.length : 0)
 const sliderId = computed(() => `wooj-list-${props.id}`)
 const slideItems = computed(() => _.chunk(woojs.value, 3))
 const slideNums = computed(() => slideItems.value.length)
+const isEmpty = computed(() => woojs.value instanceof Array && !woojs.value.length)
+
+const onHide = woojId => hiddenIdsMap.value[woojId] = true
 </script>
 
 <template>
   <div class="wooj-list">
-    <h1 class="title">{{ title }} <span v-if="woojNums" class="tag is-light ml-2">{{ woojNums }}</span></h1>
+    <div class="wooj-list__header">
+      <h1 class="title mb-0">{{ title }} <span class="tag is-light ml-2">{{ woojNums }}</span></h1>
+      <div class="wooj-list__header-panel">
+        <slot name="panel" :isEmpty="isEmpty" />
+      </div>
+    </div>
 
-    <div v-if="woojs" class="wooj-list__board has-background-white-ter">
+    <div v-if="isEmpty" class="wooj-list__empty has-background-white-ter">
+      <div class="has-text-centered">
+        <p class="title has-text-grey-light">{{ props.emptyText }}</p>
+        <p class="subtitle has-text-grey-light">Вуджей же нет</p>
+      </div>
+    </div>
+
+    <div v-else-if="woojs" class="wooj-list__board has-background-white-ter">
       <Swiper :id="sliderId" :itemsNum="slideNums">
         <template #item="{ index }">
           <div class="wooj-list__items">
             <div v-for="wooj of slideItems[index]" :key="wooj.id" class="wooj-list__item">
-              <WoojCard :data="wooj" />
+              <WoojCard :data="wooj" :hasLike="hasLike" :hasEdit="hasEdit" :hasRemove="hasRemove"
+                :hasRestore="hasRestore" @hide="onHide" />
             </div>
           </div>
         </template>
@@ -40,6 +62,22 @@ const slideNums = computed(() => slideItems.value.length)
 
 <style lang="scss">
 .wooj-list {
+  &__header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 20px;
+  }
+
+  &__empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 200px);
+    border-radius: 20px;
+  }
+
   &__board {
     padding: 20px;
     border: 2px solid transparent;
@@ -58,7 +96,7 @@ const slideNums = computed(() => slideItems.value.length)
     justify-content: flex-start;
     align-items: stretch;
     min-height: calc(100vh - 320px);
-    // max-height: calc(100vh - 300px);
+    max-height: calc(100vh - 200px);
   }
 
   &__item {

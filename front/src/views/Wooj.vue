@@ -67,7 +67,7 @@ onMounted(init)
     background: #ffffff;
     box-shadow: rgba(16, 0, 75, 0.1) 0px 5px 15px 0px;
     min-width: 900px;
-    // max-width: 900px;
+    max-width: 900px;
   }
 
   &__save-status {

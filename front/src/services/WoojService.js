@@ -41,6 +41,20 @@ export default class WoojService {
   }
 
   /**
+   * Получить вуджи из корзины
+   * @returns {Array} список вуджей
+   */
+  async getTrash() {
+    try {
+      const { data } = await this.http.get("woojs/trash")
+
+      return data
+    } catch {
+      throw "Не удалось получить вуджи из корзины"
+    }
+  }
+
+  /**
    * Создать вудж
    * @param {Object} data
    * @returns {Object} вудж
@@ -68,6 +82,47 @@ export default class WoojService {
       return data
     } catch {
       throw "Не удалось обновить вудж"
+    }
+  }
+
+  /**
+   * Отправить вудж в корзину
+   * @param {Number} id
+   * @returns {Object} вудж
+   */
+  async delete(id) {
+    try {
+      const { data } = await this.http.delete(`woojs/${id}`)
+
+      return data
+    } catch {
+      throw "Не удалось удалить вудж"
+    }
+  }
+
+  /**
+   * Восстановить вудж из корзины
+   * @param {Number} id
+   * @returns {Object} вудж
+   */
+  async restore(id) {
+    try {
+      const { data } = await this.http.put(`woojs/${id}/restore`)
+
+      return data
+    } catch {
+      throw "Не удалось восстановить вудж"
+    }
+  }
+
+  /**
+   * Очистить корзину
+   */
+  async clearTrash() {
+    try {
+      await this.http.delete("woojs/trash")
+    } catch {
+      throw "Не удалось очистить корзину"
     }
   }
 }

@@ -1,30 +1,66 @@
 <script setup>
 import { useRouter } from "vue-router"
-import { computed } from "vue"
+import { computed, inject } from "vue"
 
 const props = defineProps({
-  data: Object
+  data: Object,
+  hasLike: { type: Boolean, default: true },
+  hasEdit: { type: Boolean, default: true },
+  hasRemove: { type: Boolean, default: true },
+  hasRestore: { type: Boolean, default: false },
 })
-const router = useRouter()
-const wooj = computed(() => props.data)
+const emit = defineEmits(["hide"])
 
+const router = useRouter()
+const { wooj: woojService } = inject("services")
+
+const wooj = computed(() => props.data)
+const hasPanel = computed(() => props.hasLike || props.hasEdit || props.hasRemove || props.hasRestore)
+
+/**
+ * Лайкнуть
+ */
 const onLike = () => {
-  alert("On Like")
+  // emit("like", wooj.value)
 }
+
+/**
+ * Редактировать
+ */
 const onEdit = () => {
   router.push({ name: "Wooj", params: { woojId: wooj.value.id } })
 }
-const onRemove = () => {
-  alert("On Remove")
+
+/**
+ * Удалить
+ */
+const onRemove = async () => {
+  emit("hide", wooj.value.id)
+
+  await woojService.delete(wooj.value.id)
+}
+
+/**
+ * Восстановить
+ */
+const onRestore = async () => {
+  emit("hide", wooj.value.id)
+
+  await woojService.restore(wooj.value.id)
 }
 </script>
 
 <template>
   <div class="wooj-card">
-    <div class="wooj-card__panel">
-      <span class="wooj-card__panel-button icon is-medium" @click="onLike"><i class="fas fa-heart"></i></span>
-      <span class="wooj-card__panel-button icon is-medium" @click="onEdit"><i class="fas fa-edit"></i></span>
-      <span class="wooj-card__panel-button icon is-medium" @click="onRemove"><i class="fas fa-trash"></i></span>
+    <div v-if="hasPanel" class="wooj-card__panel">
+      <span v-if="hasLike" class="wooj-card__panel-button icon is-medium" @click="onLike"><i
+          class="fas fa-heart"></i></span>
+      <span v-if="hasEdit" class="wooj-card__panel-button icon is-medium" @click="onEdit"><i
+          class="fas fa-edit"></i></span>
+      <span v-if="hasRemove" class="wooj-card__panel-button icon is-medium" @click="onRemove"><i
+          class="fas fa-trash"></i></span>
+      <span v-if="hasRestore" class="wooj-card__panel-button icon is-medium" @click="onRestore"><i
+          class="fa fa-undo"></i></span>
     </div>
 
     <div class="wooj-card__title title is-5 mb-3">{{ wooj.title }}</div>
