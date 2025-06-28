@@ -21,7 +21,7 @@ class WoojResource extends JsonResource
             'content' => $this->content,
             'author_id' => $this->author_id,
             // 'like' => $this->ownLike,
-            'has_like' => (bool) $this->ownLike,
+            'has_like' => (bool) $this->like_id,
             // 'author' => $this->author,
             // 'topics' => TopicResource::collection($this->topics),
             'deleted_at' => $this->deleted_at ? Carbon::parse($this->deleted_at)->format('Y-m-d H:i:s') : null,

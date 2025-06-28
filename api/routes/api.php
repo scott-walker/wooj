@@ -16,8 +16,8 @@ Route::middleware(['throttle:api'])->group(function () {
         Route::delete('/woojs/trash', [WoojController::class, 'destroyTrashed']);
         Route::put('/woojs/{wooj}/restore', [WoojController::class, 'restore'])->withTrashed();
         Route::get('/woojs/likes', [WoojController::class, 'likes']);
-        Route::put('/woojs/{wooj}/like', [WoojController::class, 'like']);
-        Route::put('/woojs/{wooj}/dislike', [WoojController::class, 'dislike']);
+        Route::put('/woojs/{wooj}/set-like', [WoojController::class, 'setLike']);
+        Route::put('/woojs/{wooj}/unset-like', [WoojController::class, 'unsetLike']);
         Route::apiResource('/woojs', WoojController::class);
         Route::apiResource('/topics', TopicController::class);
         Route::post('/logout', [AuthController::class, 'logout']);

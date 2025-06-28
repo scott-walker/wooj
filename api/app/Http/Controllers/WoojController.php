@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Wooj\StoreRequest;
 use App\Http\Requests\Wooj\UpdateRequest;
 use App\Http\Requests\Wooj\GetRequest;
@@ -23,9 +24,16 @@ class WoojController extends Controller
      */
     public function index()
     {
-        $woojs = Wooj::byAuthor()
-            ->with('ownLike')
-            ->orderByDesc('id')
+        $woojs = DB::table('woojs as w')
+            ->leftJoin('likes as l', function ($join) {
+                $join->on('l.wooj_id', '=', 'w.id');
+                $join->on('l.user_id', '=', 'w.author_id');
+            })
+            ->select(['w.*', 'l.id as like_id'])
+            ->where('w.author_id', Auth::user()->id)
+            ->whereNull('w.deleted_at')
+            ->orderBy('l.created_at', 'asc')
+            ->orderBy('w.created_at', 'desc')
             ->paginate(self::ITEMS_PER_PAGE);
 
         return WoojResource::collection($woojs);
@@ -36,10 +44,16 @@ class WoojController extends Controller
      */
     public function likes()
     {
-        $woojs = Wooj::byAuthor()
-            ->liked()
-            ->with('ownLike')
-            ->orderByDesc('id')
+        $woojs = DB::table('woojs as w')
+            ->join('likes as l', function ($join) {
+                $join->on('l.wooj_id', '=', 'w.id');
+                $join->on('l.user_id', '=', 'w.author_id');
+            })
+            ->select(['w.*', 'l.id as like_id'])
+            ->where('w.author_id', Auth::user()->id)
+            ->whereNull('w.deleted_at')
+            ->orderBy('l.created_at', 'asc')
+            ->orderBy('w.created_at', 'desc')
             ->paginate(self::ITEMS_PER_PAGE);
 
         return WoojResource::collection($woojs);
@@ -50,13 +64,6 @@ class WoojController extends Controller
      */
     public function trash()
     {
-        // $sql1 = Wooj::onlyTrashed()->byAuthor()->toSql();
-        // $sql2 = Wooj::byAuthor()->onlyTrashed()->toSql();
-
-        // return [
-        //     $sql1,
-        //     $sql2
-        // ];
         $woojs = Wooj::byAuthor()
             ->onlyTrashed()
             ->orderByDesc('deleted_at')
@@ -130,7 +137,7 @@ class WoojController extends Controller
     /**
      * Поставить лайк вуджу
      */
-    public function like(GetRequest $request, Wooj $wooj)
+    public function setLike(GetRequest $request, Wooj $wooj)
     {
         Like::create([
             'wooj_id' => $wooj->id,
@@ -143,8 +150,9 @@ class WoojController extends Controller
     /**
      * Снять лайк с вуджа
      */
-    public function dislike(GetRequest $request, Wooj $wooj)
+    public function unsetLike(GetRequest $request, Wooj $wooj)
     {
+        // $wooj = Wooj::with('ownLike')->liked()->findOrFail($wooj->id);
         $wooj->ownLike()->delete();
 
         return new WoojResource($wooj);
