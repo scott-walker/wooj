@@ -9,7 +9,7 @@ const props = defineProps({
   hasRemove: { type: Boolean, default: true },
   hasRestore: { type: Boolean, default: false },
 })
-const emit = defineEmits(["hide"])
+const emit = defineEmits(["hide", "setLike", "unsetLike", "remove", "restore", "update"])
 
 const router = useRouter()
 const { wooj: woojService } = inject("services")
@@ -20,8 +20,16 @@ const hasPanel = computed(() => props.hasLike || props.hasEdit || props.hasRemov
 /**
  * Лайкнуть
  */
-const onLike = () => {
-  // emit("like", wooj.value)
+const onLike = async () => {
+  if (wooj.value.has_like) {
+    await woojService.unsetLike(wooj.value.id)
+    emit("unsetLike", wooj.value.id)
+  } else {
+    await woojService.setLike(wooj.value.id)
+    emit("setLike", wooj.value.id)
+  }
+
+  emit("update", wooj.value.id)
 }
 
 /**
@@ -36,8 +44,11 @@ const onEdit = () => {
  */
 const onRemove = async () => {
   emit("hide", wooj.value.id)
+  emit("remove", wooj.value.id)
 
   await woojService.delete(wooj.value.id)
+
+  emit("update", wooj.value.id)
 }
 
 /**
@@ -45,22 +56,41 @@ const onRemove = async () => {
  */
 const onRestore = async () => {
   emit("hide", wooj.value.id)
+  emit("restore", wooj.value.id)
 
   await woojService.restore(wooj.value.id)
+
+  emit("update", wooj.value.id)
 }
 </script>
 
 <template>
-  <div class="wooj-card">
+  <div class="wooj-card" :class="{ 'wooj-card_liked': wooj.has_like }">
     <div v-if="hasPanel" class="wooj-card__panel">
-      <span v-if="hasLike" class="wooj-card__panel-button icon is-medium" @click="onLike"><i
-          class="fas fa-heart"></i></span>
-      <span v-if="hasEdit" class="wooj-card__panel-button icon is-medium" @click="onEdit"><i
-          class="fas fa-edit"></i></span>
-      <span v-if="hasRemove" class="wooj-card__panel-button icon is-medium" @click="onRemove"><i
-          class="fas fa-trash"></i></span>
-      <span v-if="hasRestore" class="wooj-card__panel-button icon is-medium" @click="onRestore"><i
-          class="fa fa-undo"></i></span>
+      <span
+        v-if="hasLike"
+        :class="{ 'has-text-danger': wooj.has_like }"
+        class="wooj-card__panel-button icon is-medium"
+        @click="onLike">
+        <i class="fas fa-heart"></i>
+      </span>
+      <span
+        v-if="hasEdit"
+        class="wooj-card__panel-button icon is-medium"
+        @click="onEdit">
+        <i class="fas fa-edit"></i></span>
+      <span
+        v-if="hasRemove"
+        class="wooj-card__panel-button icon is-medium"
+        @click="onRemove">
+        <i class="fas fa-trash"></i>
+      </span>
+      <span
+        v-if="hasRestore"
+        class="wooj-card__panel-button icon is-medium"
+        @click="onRestore">
+        <i class="fa fa-undo"></i>
+      </span>
     </div>
 
     <div class="wooj-card__title title is-5 mb-3">{{ wooj.title }}</div>
@@ -78,6 +108,10 @@ const onRestore = async () => {
   box-shadow: rgba(16, 0, 75, 0.05) 0px 5px 10px 0px;
   border-radius: 10px;
   transition: all .3s;
+
+  &_liked {
+    border-color: crimson;
+  }
 
   &__panel {
     position: absolute;

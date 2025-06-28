@@ -55,6 +55,20 @@ export default class WoojService {
   }
 
   /**
+   * Получить любимые вуджи
+   * @returns {Array} список вуджей
+   */
+  async getLiked() {
+    try {
+      const { data } = await this.http.get("woojs/likes")
+
+      return data
+    } catch {
+      throw "Не удалось получить любимые вуджи"
+    }
+  }
+
+  /**
    * Создать вудж
    * @param {Object} data
    * @returns {Object} вудж
@@ -123,6 +137,36 @@ export default class WoojService {
       await this.http.delete("woojs/trash")
     } catch {
       throw "Не удалось очистить корзину"
+    }
+  }
+
+  /**
+   * Поставить лайк
+   * @param {Number} id
+   * @returns {Object} вудж
+   */
+  async setLike(id) {
+    try {
+      const { data } = await this.http.put(`woojs/${id}/set-like`)
+
+      return data
+    } catch {
+      throw "Не удалось поставить лайк вуджу"
+    }
+  }
+
+  /**
+   * Снять лайк
+   * @param {Number} id
+   * @returns {Object} вудж
+   */
+  async unsetLike(id) {
+    try {
+      const { data } = await this.http.put(`woojs/${id}/unset-like`)
+
+      return data
+    } catch {
+      throw "Не удалось снять лайк с вуджа"
     }
   }
 }

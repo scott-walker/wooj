@@ -13,6 +13,7 @@ const props = defineProps({
   hasRemove: { type: Boolean, default: true },
   hasRestore: { type: Boolean, default: false },
 })
+
 const hiddenIdsMap = ref({})
 const title = computed(() => props.title)
 const woojs = computed(() => props.woojs && props.woojs.filter(wooj => !hiddenIdsMap.value[wooj.id]))
@@ -46,8 +47,18 @@ const onHide = woojId => hiddenIdsMap.value[woojId] = true
         <template #item="{ index }">
           <div class="wooj-list__items">
             <div v-for="wooj of slideItems[index]" :key="wooj.id" class="wooj-list__item">
-              <WoojCard :data="wooj" :hasLike="hasLike" :hasEdit="hasEdit" :hasRemove="hasRemove"
-                :hasRestore="hasRestore" @hide="onHide" />
+              <WoojCard
+                :data="wooj"
+                :hasLike="hasLike"
+                :hasEdit="hasEdit"
+                :hasRemove="hasRemove"
+                :hasRestore="hasRestore"
+                @hide="onHide"
+                @setLike="$emit('setLike', $event)"
+                @unsetLike="$emit('unsetLike', $event)"
+                @remove="$emit('remove', $event)"
+                @restore="$emit('restore', $event)"
+                @update="$emit('update', $event)" />
             </div>
           </div>
         </template>
