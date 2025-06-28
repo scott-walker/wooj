@@ -8,6 +8,7 @@ use App\Http\Requests\Wooj\UpdateRequest;
 use App\Http\Requests\Wooj\GetRequest;
 use App\Http\Resources\WoojResource;
 use App\Models\Wooj;
+use App\Models\Like;
 
 /**
  * Контроллер для работы с вуджами
@@ -23,7 +24,21 @@ class WoojController extends Controller
     public function index()
     {
         $woojs = Wooj::byAuthor()
-            // ->with('topics')
+            ->with('ownLike')
+            ->orderByDesc('id')
+            ->paginate(self::ITEMS_PER_PAGE);
+
+        return WoojResource::collection($woojs);
+    }
+
+    /**
+     * Получить список любимых вуджей
+     */
+    public function likes()
+    {
+        $woojs = Wooj::byAuthor()
+            ->liked()
+            ->with('ownLike')
             ->orderByDesc('id')
             ->paginate(self::ITEMS_PER_PAGE);
 
@@ -43,7 +58,6 @@ class WoojController extends Controller
         //     $sql2
         // ];
         $woojs = Wooj::byAuthor()
-            // ->with('topics')
             ->onlyTrashed()
             ->orderByDesc('deleted_at')
             ->paginate(self::ITEMS_PER_PAGE);
@@ -111,5 +125,28 @@ class WoojController extends Controller
         Wooj::byAuthor()->onlyTrashed()->forceDelete();
 
         return response()->json(['message' => 'success']);
+    }
+
+    /**
+     * Поставить лайк вуджу
+     */
+    public function like(GetRequest $request, Wooj $wooj)
+    {
+        Like::create([
+            'wooj_id' => $wooj->id,
+            'user_id' => Auth::user()->id,
+        ]);
+
+        return new WoojResource($wooj);
+    }
+
+    /**
+     * Снять лайк с вуджа
+     */
+    public function dislike(GetRequest $request, Wooj $wooj)
+    {
+        $wooj->ownLike()->delete();
+
+        return new WoojResource($wooj);
     }
 }
