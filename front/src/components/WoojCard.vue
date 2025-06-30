@@ -1,6 +1,5 @@
 <script setup>
-import { useRouter } from "vue-router"
-import { computed, inject } from "vue"
+import { computed } from "vue"
 
 const props = defineProps({
   data: Object,
@@ -9,59 +8,9 @@ const props = defineProps({
   hasRemove: { type: Boolean, default: true },
   hasRestore: { type: Boolean, default: false },
 })
-const emit = defineEmits(["hide", "setLike", "unsetLike", "remove", "restore", "update"])
-
-const router = useRouter()
-const { wooj: woojService } = inject("services")
 
 const wooj = computed(() => props.data)
 const hasPanel = computed(() => props.hasLike || props.hasEdit || props.hasRemove || props.hasRestore)
-
-/**
- * Лайкнуть
- */
-const onLike = async () => {
-  if (wooj.value.has_like) {
-    await woojService.unsetLike(wooj.value.id)
-    emit("unsetLike", wooj.value.id)
-  } else {
-    await woojService.setLike(wooj.value.id)
-    emit("setLike", wooj.value.id)
-  }
-
-  emit("update", wooj.value.id)
-}
-
-/**
- * Редактировать
- */
-const onEdit = () => {
-  router.push({ name: "Wooj", params: { woojId: wooj.value.id } })
-}
-
-/**
- * Удалить
- */
-const onRemove = async () => {
-  emit("hide", wooj.value.id)
-  emit("remove", wooj.value.id)
-
-  await woojService.delete(wooj.value.id)
-
-  emit("update", wooj.value.id)
-}
-
-/**
- * Восстановить
- */
-const onRestore = async () => {
-  emit("hide", wooj.value.id)
-  emit("restore", wooj.value.id)
-
-  await woojService.restore(wooj.value.id)
-
-  emit("update", wooj.value.id)
-}
 </script>
 
 <template>
@@ -71,24 +20,24 @@ const onRestore = async () => {
         v-if="hasLike"
         :class="{ 'has-text-danger': wooj.has_like }"
         class="wooj-card__panel-button icon is-medium"
-        @click="onLike">
+        @click="$emit('like', wooj)">
         <i class="fas fa-heart"></i>
       </span>
       <span
         v-if="hasEdit"
         class="wooj-card__panel-button icon is-medium"
-        @click="onEdit">
+        @click="$emit('edit', wooj)">
         <i class="fas fa-edit"></i></span>
       <span
         v-if="hasRemove"
         class="wooj-card__panel-button icon is-medium"
-        @click="onRemove">
+        @click="$emit('remove', wooj)">
         <i class="fas fa-trash"></i>
       </span>
       <span
         v-if="hasRestore"
         class="wooj-card__panel-button icon is-medium"
-        @click="onRestore">
+        @click="$emit('restore', wooj)">
         <i class="fa fa-undo"></i>
       </span>
     </div>
@@ -103,14 +52,19 @@ const onRestore = async () => {
   flex-grow: 1;
   position: relative;
   padding: 25px 30px;
-  border: 1px solid transparent;
+  border: 2px solid transparent;
   background: #ffffff;
   box-shadow: rgba(16, 0, 75, 0.05) 0px 5px 10px 0px;
   border-radius: 10px;
   transition: all .3s;
 
   &_liked {
-    border-color: crimson;
+    background: #fff1f5;
+    border-color: #ffd8e3;
+    // background-image: url("@assets/heart.png");
+    // background-repeat: no-repeat;
+    // background-size: cover;
+    // background-position: bottom right;
   }
 
   &__panel {

@@ -4,7 +4,7 @@ import LightInput from "@ui/LightInput.vue"
 import Editor from "@ui/Editor/Index.vue"
 
 const props = defineProps(["woojId"])
-const { wooj: woojService } = inject("services")
+const { woojService } = inject("services")
 
 const wooj = ref(null)
 const isSaving = ref(false)

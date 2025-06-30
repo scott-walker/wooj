@@ -1,26 +1,26 @@
 <script setup>
-import { ref, onMounted, inject } from "vue"
+import { onMounted } from "vue"
 import WoojList from "@components/WoojList.vue"
+import useWoojs from "@hooks/woojs"
 
-const { wooj: woojService } = inject("services")
+const { woojs, fetchLiked, unsetLike, hideWooj, onEdit, onRemove } = useWoojs()
 
-const woojs = ref(null)
+const onLike = async ({ id }) => {
+  hideWooj(id)
 
-const fetchWoojs = async () => {
-  woojs.value = await woojService.getLiked()
+  await unsetLike(id)
 }
-
-const onUnetLike = (data) => {
-  console.log("setLike", data)
-
-  fetchWoojs()
-}
-
-onMounted(fetchWoojs)
+onMounted(fetchLiked)
 </script>
 
 <template>
   <div class="view-liked">
-    <WoojList id="liked" title="Любимые" :woojs="woojs" @unsetLike="onUnetLike" />
+    <WoojList
+      id="liked"
+      title="Любимые"
+      :woojs="woojs"
+      @like="onLike"
+      @edit="onEdit"
+      @remove="onRemove" />
   </div>
 </template>

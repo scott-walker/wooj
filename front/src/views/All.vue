@@ -1,22 +1,21 @@
 <script setup>
-import { ref, onMounted, inject } from "vue"
+import { onMounted } from "vue"
 import WoojList from "@components/WoojList.vue"
+import useWoojs from "@hooks/woojs"
 
-const { wooj: woojService } = inject("services")
+const { woojs, fetchAll, onToggleLike, onEdit, onRemove } = useWoojs()
 
-const woojs = ref(null)
-
-const fetchWoojs = async () => {
-  woojs.value = await woojService.getAll()
-}
-
-const onUpdate = () => fetchWoojs()
-
-onMounted(fetchWoojs)
+onMounted(fetchAll)
 </script>
 
 <template>
   <div class="view-all">
-    <WoojList id="all" title="Все вуджи" :woojs="woojs" @update="onUpdate" />
+    <WoojList
+      id="all"
+      title="Все вуджи"
+      :woojs="woojs"
+      @like="onToggleLike"
+      @edit="onEdit"
+      @remove="onRemove" />
   </div>
 </template>

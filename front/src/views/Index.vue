@@ -1,7 +1,7 @@
 <script setup>
 import { ref, inject, onBeforeMount } from "vue"
 
-const { user: userService } = inject("services")
+const { userService } = inject("services")
 
 const version = ref("0.0")
 

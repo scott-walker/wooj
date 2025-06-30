@@ -5,7 +5,7 @@ import { defineStore } from "pinia"
  * Стор вуджей
  */
 export const useWoojStore = defineStore("wooj", () => {
-  const { wooj: woojService, topic: topicService } = inject("services")
+  const { woojService, topicService } = inject("services")
 
   const topics = ref([])
   const woojs = ref([])

@@ -5,8 +5,8 @@ import { defineStore } from "pinia"
  * Стор авторизационных данных
  */
 export const useAuthStore = defineStore("auth", () => {
-  const { storage: storageUtil } = inject("utils")
-  const { user: userService } = inject("services")
+  const { storage } = inject("utils")
+  const { userService } = inject("services")
 
   const token = ref(null)
   const user = ref(null)
@@ -16,8 +16,8 @@ export const useAuthStore = defineStore("auth", () => {
    * Инициализация
    */
   function init() {
-    token.value = storageUtil.get("token", null)
-    user.value = storageUtil.get("user", null)
+    token.value = storage.get("token", null)
+    user.value = storage.get("user", null)
 
     userService.setToken(token.value)
   }
@@ -33,8 +33,8 @@ export const useAuthStore = defineStore("auth", () => {
       token.value = data.token
       user.value = data.user
 
-      storageUtil.set("token", data.token)
-      storageUtil.set("user", data.user)
+      storage.set("token", data.token)
+      storage.set("user", data.user)
     } catch (message) {
       alert(message)
     }
@@ -50,7 +50,7 @@ export const useAuthStore = defineStore("auth", () => {
       token.value = null
       user.value = null
 
-      storageUtil.clear()
+      storage.clear()
     } catch (message) {
       alert(message)
     }

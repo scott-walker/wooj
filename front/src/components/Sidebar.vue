@@ -21,6 +21,9 @@ const store = useWoojStore()
       <li>
         <SidebarLink :route="{ name: 'Published' }" text="Опубликованные" icon="link" />
       </li>
+      <li>
+        <SidebarLink :route="{ name: 'Trash' }" text="Корзина" icon="trash" />
+      </li>
     </ul>
 
     <p class="menu-label">Топики</p>
@@ -39,7 +42,7 @@ const store = useWoojStore()
       <div></div>
     </div>
 
-    <p class="menu-label">Другое</p>
+    <!-- <p class="menu-label">Другое</p>
     <ul class="menu-list">
       <li>
         <SidebarLink :route="{ name: 'Drafts' }" text="Черновики" icon="sticky-note" />
@@ -50,7 +53,7 @@ const store = useWoojStore()
       <li>
         <SidebarLink :route="{ name: 'Trash' }" text="Корзина" icon="trash" />
       </li>
-    </ul>
+    </ul> -->
   </aside>
 </template>
 

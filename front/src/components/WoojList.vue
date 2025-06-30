@@ -1,6 +1,6 @@
 <script setup>
 import _ from "lodash"
-import { ref, computed } from "vue"
+import { computed } from "vue"
 import WoojCard from "@components/WoojCard.vue"
 
 const props = defineProps({
@@ -14,22 +14,21 @@ const props = defineProps({
   hasRestore: { type: Boolean, default: false },
 })
 
-const hiddenIdsMap = ref({})
-const title = computed(() => props.title)
-const woojs = computed(() => props.woojs && props.woojs.filter(wooj => !hiddenIdsMap.value[wooj.id]))
-const woojNums = computed(() => woojs.value ? woojs.value.length : 0)
-const sliderId = computed(() => `wooj-list-${props.id}`)
-const slideItems = computed(() => _.chunk(woojs.value, 3))
-const slideNums = computed(() => slideItems.value.length)
-const isEmpty = computed(() => woojs.value instanceof Array && !woojs.value.length)
+const ITEMS_PER_SLIDE = 3
 
-const onHide = woojId => hiddenIdsMap.value[woojId] = true
+const title = computed(() => props.title)
+const nums = computed(() => props.woojs ? props.woojs.length : 0)
+const isEmpty = computed(() => props.woojs instanceof Array && !props.woojs.length)
+
+const sliderId = computed(() => `wooj-list-${props.id}`)
+const slideItems = computed(() => _.chunk(props.woojs, ITEMS_PER_SLIDE))
+const slideNums = computed(() => slideItems.value.length)
 </script>
 
 <template>
   <div class="wooj-list">
     <div class="wooj-list__header">
-      <h1 class="title mb-0">{{ title }} <span class="tag is-light ml-2">{{ woojNums }}</span></h1>
+      <h1 class="title mb-0">{{ title }} <span class="tag is-light ml-2">{{ nums }}</span></h1>
       <div class="wooj-list__header-panel">
         <slot name="panel" :isEmpty="isEmpty" />
       </div>
@@ -49,16 +48,14 @@ const onHide = woojId => hiddenIdsMap.value[woojId] = true
             <div v-for="wooj of slideItems[index]" :key="wooj.id" class="wooj-list__item">
               <WoojCard
                 :data="wooj"
-                :hasLike="hasLike"
-                :hasEdit="hasEdit"
-                :hasRemove="hasRemove"
-                :hasRestore="hasRestore"
-                @hide="onHide"
-                @setLike="$emit('setLike', $event)"
-                @unsetLike="$emit('unsetLike', $event)"
+                :hasLike="props.hasLike"
+                :hasEdit="props.hasEdit"
+                :hasRemove="props.hasRemove"
+                :hasRestore="props.hasRestore"
+                @like="$emit('like', $event)"
+                @edit="$emit('edit', $event)"
                 @remove="$emit('remove', $event)"
-                @restore="$emit('restore', $event)"
-                @update="$emit('update', $event)" />
+                @restore="$emit('restore', $event)" />
             </div>
           </div>
         </template>

@@ -9,13 +9,13 @@ import TopicService from "./TopicService"
 export default (utils) => {
   utils = utils || {}
 
-  const user = new UserService(utils.httpClient)
-  const wooj = new WoojService(utils.httpClient)
-  const topic = new TopicService(utils.httpClient)
+  const userService = new UserService(utils.httpClient)
+  const woojService = new WoojService(utils.httpClient)
+  const topicService = new TopicService(utils.httpClient)
 
   return {
-    user,
-    wooj,
-    topic,
+    userService,
+    woojService,
+    topicService,
   }
 }
