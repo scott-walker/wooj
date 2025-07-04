@@ -60,7 +60,7 @@ export default class WoojService {
    */
   async getPinned() {
     try {
-      const { data } = await this.http.get("woojs/likes")
+      const { data } = await this.http.get("woojs/pinned")
 
       return data
     } catch {
@@ -147,7 +147,7 @@ export default class WoojService {
    */
   async pin(id) {
     try {
-      const { data } = await this.http.put(`woojs/${id}/set-like`)
+      const { data } = await this.http.put(`woojs/${id}/pin`)
 
       return data
     } catch {
@@ -162,7 +162,7 @@ export default class WoojService {
    */
   async unpin(id) {
     try {
-      const { data } = await this.http.put(`woojs/${id}/unset-like`)
+      const { data } = await this.http.put(`woojs/${id}/unpin`)
 
       return data
     } catch {

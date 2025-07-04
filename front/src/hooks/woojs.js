@@ -17,16 +17,16 @@ export default () => {
     rawWoojs.value = await woojService.getPinned()
   }
 
-  const unpin = async (woojId) => {
-    pinnedIdsMap.value[woojId] = false
-
-    await woojService.unpin(woojId)
-  }
-
   const pin = async (woojId) => {
     pinnedIdsMap.value[woojId] = true
 
     await woojService.pin(woojId)
+  }
+
+  const unpin = async (woojId) => {
+    pinnedIdsMap.value[woojId] = false
+
+    await woojService.unpin(woojId)
   }
 
   const fetchTrash = async () => {
