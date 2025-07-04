@@ -7,26 +7,26 @@ export default () => {
 
   const rawWoojs = ref(null)
   const hiddenIdsMap = ref({})
-  const likedIdsMap = ref({})
+  const pinnedIdsMap = ref({})
 
   const fetchAll = async () => {
     rawWoojs.value = await woojService.getAll()
   }
 
-  const fetchLiked = async () => {
-    rawWoojs.value = await woojService.getLiked()
+  const fetchPinned = async () => {
+    rawWoojs.value = await woojService.getPinned()
   }
 
-  const unsetLike = async (woojId) => {
-    likedIdsMap.value[woojId] = false
+  const unpin = async (woojId) => {
+    pinnedIdsMap.value[woojId] = false
 
-    await woojService.unsetLike(woojId)
+    await woojService.unpin(woojId)
   }
 
-  const setLike = async (woojId) => {
-    likedIdsMap.value[woojId] = true
+  const pin = async (woojId) => {
+    pinnedIdsMap.value[woojId] = true
 
-    await woojService.setLike(woojId)
+    await woojService.pin(woojId)
   }
 
   const fetchTrash = async () => {
@@ -44,11 +44,11 @@ export default () => {
   /**
    * Лайкнуть
    */
-  const onToggleLike = async (wooj) => {
-    if (wooj.has_like) {
-      unsetLike(wooj.id)
+  const onTogglePin = async (wooj) => {
+    if (wooj.is_pinned) {
+      unpin(wooj.id)
     } else {
-      setLike(wooj.id)
+      pin(wooj.id)
     }
   }
 
@@ -83,8 +83,8 @@ export default () => {
     return hiddenIdsMap.value[wooj.id]
   }
 
-  const checkHasLike = (wooj) => {
-    return likedIdsMap.value[wooj.id] !== undefined ? likedIdsMap.value[wooj.id] : wooj.has_like
+  const checkIsPin = (wooj) => {
+    return pinnedIdsMap.value[wooj.id] !== undefined ? pinnedIdsMap.value[wooj.id] : wooj.is_pinned
   }
 
   const woojs = computed(() => {
@@ -95,7 +95,7 @@ export default () => {
     const woojs = []
 
     for (const wooj of rawWoojs.value) {
-      checkIsHidden(wooj) || woojs.push({ ...wooj, has_like: checkHasLike(wooj) })
+      checkIsHidden(wooj) || woojs.push({ ...wooj, is_pinned: checkIsPin(wooj) })
     }
 
     return woojs
@@ -104,13 +104,13 @@ export default () => {
   return {
     woojs,
     fetchAll,
-    fetchLiked,
-    setLike,
-    unsetLike,
+    fetchPinned,
+    pin,
+    unpin,
     fetchTrash,
     clearTrash,
     hideWooj,
-    onToggleLike,
+    onTogglePin,
     onEdit,
     onRemove,
     onRestore,

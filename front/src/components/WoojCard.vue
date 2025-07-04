@@ -3,25 +3,24 @@ import { computed } from "vue"
 
 const props = defineProps({
   data: Object,
-  hasLike: { type: Boolean, default: true },
+  hasPin: { type: Boolean, default: true },
   hasEdit: { type: Boolean, default: true },
   hasRemove: { type: Boolean, default: true },
   hasRestore: { type: Boolean, default: false },
 })
 
 const wooj = computed(() => props.data)
-const hasPanel = computed(() => props.hasLike || props.hasEdit || props.hasRemove || props.hasRestore)
+const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove || props.hasRestore)
 </script>
 
 <template>
-  <div class="wooj-card" :class="{ 'wooj-card_liked': wooj.has_like }">
+  <div class="wooj-card" :class="{ 'wooj-card_pinned': wooj.is_pinned }">
     <div v-if="hasPanel" class="wooj-card__panel">
       <span
-        v-if="hasLike"
-        :class="{ 'has-text-danger': wooj.has_like }"
+        v-if="hasPin"
         class="wooj-card__panel-button icon is-medium"
-        @click="$emit('like', wooj)">
-        <i class="fas fa-heart"></i>
+        @click="$emit('pin', wooj)">
+        <i class="fas" :class="wooj.is_pinned ? 'fa-thumbtack-slash' : 'fa-thumbtack'"></i>
       </span>
       <span
         v-if="hasEdit"
@@ -58,9 +57,9 @@ const hasPanel = computed(() => props.hasLike || props.hasEdit || props.hasRemov
   border-radius: 10px;
   transition: all .3s;
 
-  &_liked {
-    background: #fff1f5;
-    border-color: #ffd8e3;
+  &_pinned {
+    background: #ffe7b9;
+    border-color: #ffd990;
     // background-image: url("@assets/heart.png");
     // background-repeat: no-repeat;
     // background-size: cover;

@@ -8,7 +8,7 @@ const props = defineProps({
   title: String,
   woojs: Array,
   emptyText: { type: String, default: "Тут пусто" },
-  hasLike: { type: Boolean, default: true },
+  hasPin: { type: Boolean, default: true },
   hasEdit: { type: Boolean, default: true },
   hasRemove: { type: Boolean, default: true },
   hasRestore: { type: Boolean, default: false },
@@ -48,11 +48,11 @@ const slideNums = computed(() => slideItems.value.length)
             <div v-for="wooj of slideItems[index]" :key="wooj.id" class="wooj-list__item">
               <WoojCard
                 :data="wooj"
-                :hasLike="props.hasLike"
+                :hasPin="props.hasPin"
                 :hasEdit="props.hasEdit"
                 :hasRemove="props.hasRemove"
                 :hasRestore="props.hasRestore"
-                @like="$emit('like', $event)"
+                @pin="$emit('pin', $event)"
                 @edit="$emit('edit', $event)"
                 @remove="$emit('remove', $event)"
                 @restore="$emit('restore', $event)" />

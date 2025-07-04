@@ -3,23 +3,23 @@ import { onMounted } from "vue"
 import WoojList from "@components/WoojList.vue"
 import useWoojs from "@hooks/woojs"
 
-const { woojs, fetchLiked, unsetLike, hideWooj, onEdit, onRemove } = useWoojs()
+const { woojs, fetchPinned, unpin, hideWooj, onEdit, onRemove } = useWoojs()
 
-const onLike = async ({ id }) => {
+const onPin = async ({ id }) => {
   hideWooj(id)
 
-  await unsetLike(id)
+  await unpin(id)
 }
-onMounted(fetchLiked)
+onMounted(fetchPinned)
 </script>
 
 <template>
-  <div class="view-liked">
+  <div class="view-pinned">
     <WoojList
-      id="liked"
-      title="Любимые"
+      id="pinned"
+      title="Закрепленные"
       :woojs="woojs"
-      @like="onLike"
+      @pin="onPin"
       @edit="onEdit"
       @remove="onRemove" />
   </div>

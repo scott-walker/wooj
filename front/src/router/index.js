@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router"
 import IndexView from "@views/Index.vue"
 import AllView from "@views/All.vue"
-import LikedView from "@views/Liked.vue"
+import PinnedView from "@views/Pinned.vue"
 import DraftsView from "@views/Drafts.vue"
 import TrashView from "@views/Trash.vue"
 import ArchiveView from "@views/Archive.vue"
@@ -25,9 +25,9 @@ const router = createRouter({
       component: AllView,
     },
     {
-      path: "/liked",
-      name: "Liked",
-      component: LikedView,
+      path: "/pinned",
+      name: "Pinned",
+      component: PinnedView,
     },
     {
       path: "/published",

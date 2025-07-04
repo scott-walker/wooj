@@ -23,7 +23,7 @@ onMounted(fetchTrash)
       title="Корзина"
       emptyText="Корзина пуста"
       :woojs="woojs"
-      :hasLike="false"
+      :hasPin="false"
       :hasEdit="false"
       :hasRemove="false"
       :hasRestore="true"

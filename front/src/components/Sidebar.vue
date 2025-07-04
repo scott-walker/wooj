@@ -16,7 +16,7 @@ const store = useWoojStore()
         <SidebarLink :route="{ name: 'Recent' }" text="Недавние" icon="clock" />
       </li> -->
       <li>
-        <SidebarLink :route="{ name: 'Liked' }" text="Любимые" icon="heart" />
+        <SidebarLink :route="{ name: 'Pinned' }" text="Закрепленные" icon="thumbtack" />
       </li>
       <li>
         <SidebarLink :route="{ name: 'Published' }" text="Опубликованные" icon="link" />

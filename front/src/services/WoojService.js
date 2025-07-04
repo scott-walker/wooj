@@ -55,16 +55,16 @@ export default class WoojService {
   }
 
   /**
-   * Получить любимые вуджи
+   * Получить закрепленные вуджи
    * @returns {Array} список вуджей
    */
-  async getLiked() {
+  async getPinned() {
     try {
       const { data } = await this.http.get("woojs/likes")
 
       return data
     } catch {
-      throw "Не удалось получить любимые вуджи"
+      throw "Не удалось получить закрепленные вуджи"
     }
   }
 
@@ -141,32 +141,32 @@ export default class WoojService {
   }
 
   /**
-   * Поставить лайк
+   * Закрепить вудж
    * @param {Number} id
    * @returns {Object} вудж
    */
-  async setLike(id) {
+  async pin(id) {
     try {
       const { data } = await this.http.put(`woojs/${id}/set-like`)
 
       return data
     } catch {
-      throw "Не удалось поставить лайк вуджу"
+      throw "Не удалось закрепить вудж"
     }
   }
 
   /**
-   * Снять лайк
+   * Открепить вудж
    * @param {Number} id
    * @returns {Object} вудж
    */
-  async unsetLike(id) {
+  async unpin(id) {
     try {
       const { data } = await this.http.put(`woojs/${id}/unset-like`)
 
       return data
     } catch {
-      throw "Не удалось снять лайк с вуджа"
+      throw "Не удалось открепить вудж"
     }
   }
 }
