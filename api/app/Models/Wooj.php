@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Awobaz\Compoships\Compoships;
+// use Awobaz\Compoships\Compoships;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +11,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Topic;
-use App\Models\Like;
 
 /**
  * Модель вуджа
@@ -20,11 +18,13 @@ use App\Models\Like;
 class Wooj extends Model
 {
     /** @use HasFactory<\Database\Factories\WoojFactory> */
-    use HasFactory, SoftDeletes, Compoships;
+    // use HasFactory, SoftDeletes, Compoships;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'title',
         'content',
+        'is_pinned',
         'author_id'
     ];
 
@@ -47,15 +47,6 @@ class Wooj extends Model
     }
 
     /**
-     * Лайк владельца
-     * @return HasOne<Wooj, Like>
-     */
-    public function ownLike(): HasOne
-    {
-        return $this->hasOne(Like::class, ['wooj_id', 'user_id'], ['id', 'author_id']);
-    }
-
-    /**
      * Получить по автору
      */
     public function scopeByAuthor()
@@ -64,10 +55,10 @@ class Wooj extends Model
     }
 
     /**
-     * Получить любимые вуджи
+     * Получить закрепленные вуджи
      */
-    public function scopeLiked()
+    public function scopePinned()
     {
-        return $this->has('ownLike');
+        return $this->where('is_pinned', true);
     }
 }
