@@ -25,7 +25,9 @@ const onChange = () => {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
+@use "@styles/colors";
+
 .ui-light-input {
   &__field {
     padding: 10px 20px;
@@ -36,6 +38,7 @@ const onChange = () => {
     border-radius: 10px;
     transition: all .2s;
     width: 100%;
+    color: colors.$basic;
 
     &::placeholder {
       color: #adb5bd;

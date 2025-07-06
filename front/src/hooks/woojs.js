@@ -110,6 +110,7 @@ export default () => {
     fetchTrash,
     clearTrash,
     hideWooj,
+
     onTogglePin,
     onEdit,
     onRemove,

@@ -7,6 +7,9 @@ const props = defineProps({
   options: { type: Object, default: null }
 })
 
+const COLOR_PRIMARY = "#d4ff38"
+const COLOR_BG = "#d5dce5"
+
 const init = () => {
   const options = props.options || {}
   const swiper = document.querySelector(`#${props.id}`)
@@ -30,18 +33,18 @@ const init = () => {
         margin-top: 40px;
       }
       .swiper-pagination-bullet {
-        width: 15px;
-        height: 15px;
+        width: 12px;
+        height: 12px;
         opacity: 1;
-        background: hsla(232, 31%, 85%, 0.7);
-        border: 2px solid transparent;
+        background: ${COLOR_BG};
+        border: 5px solid transparent;
         transition: all .3s;
       }
       .swiper-pagination-bullet:hover {
-        border-color: #2942ff;
+        border-color: ${COLOR_PRIMARY};
       }
       .swiper-pagination-bullet-active {
-        background: #2942ff;
+        background: ${COLOR_PRIMARY};
       }
     `],
     breakpoints: {
@@ -88,6 +91,8 @@ onMounted(init)
 </template>
 
 <style lang="scss">
+@use "@styles/colors";
+
 .ui-swiper {
   &__items {}
 

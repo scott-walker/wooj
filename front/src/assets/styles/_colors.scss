@@ -1,0 +1,18 @@
+@use "sass:color";
+@use "sass:math";
+
+@function toLight($color, $percent) {
+  $lightness: math.div($percent, 1.05);
+  $saturation: 60%; //math.div($percent, 1.5);
+
+  @return color.scale($color, $lightness: $lightness, $saturation: -$saturation);
+}
+
+$primary: #d4ff38;
+$basic: #10223f;
+$absorbing: #ffffff;
+
+$primary-light: color.change($primary, $alpha: 0.5);
+$basic-light: color.change($basic, $alpha: 80%);
+// $grey: hsl(221, 14%, 96%);
+$grey: toLight($basic, 100%);

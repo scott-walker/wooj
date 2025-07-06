@@ -2,11 +2,12 @@ import { createRouter, createWebHistory } from "vue-router"
 import IndexView from "@views/Index.vue"
 import AllView from "@views/All.vue"
 import PinnedView from "@views/Pinned.vue"
-import DraftsView from "@views/Drafts.vue"
+// import DraftsView from "@views/Drafts.vue"
 import TrashView from "@views/Trash.vue"
-import ArchiveView from "@views/Archive.vue"
+// import ArchiveView from "@views/Archive.vue"
 import PublishedView from "@views/Published.vue"
 import TopicView from "@views/Topic.vue"
+import CreateWoojView from "@views/CreateWooj.vue"
 import WoojView from "@views/Wooj.vue"
 // import Auth from "@views/Auth.vue"
 // import Clean from "../layouts/Clean.vue"
@@ -34,16 +35,16 @@ const router = createRouter({
       name: "Published",
       component: PublishedView,
     },
-    {
-      path: "/drafts",
-      name: "Drafts",
-      component: DraftsView,
-    },
-    {
-      path: "/archive",
-      name: "Archive",
-      component: ArchiveView,
-    },
+    // {
+    //   path: "/drafts",
+    //   name: "Drafts",
+    //   component: DraftsView,
+    // },
+    // {
+    //   path: "/archive",
+    //   name: "Archive",
+    //   component: ArchiveView,
+    // },
     {
       path: "/trash",
       name: "Trash",
@@ -54,6 +55,13 @@ const router = createRouter({
       name: "Topic",
       component: TopicView,
       props: true,
+    },
+    {
+      path: "/wooj",
+      name: "CreateWooj",
+      // component: CreateWoojView,
+      component: WoojView,
+      // props: true,
     },
     {
       path: "/wooj/:woojId(\\d+)",

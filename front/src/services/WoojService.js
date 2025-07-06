@@ -74,6 +74,9 @@ export default class WoojService {
    * @returns {Object} вудж
    */
   async create({ title, content }) {
+    title = title || ""
+    content = content || ""
+
     try {
       const { data } = await this.http.post("woojs", { title, content })
 

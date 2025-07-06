@@ -16,6 +16,7 @@
 //   $input-shadow: none
 // );
 
+@use "@styles/colors";
 @import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
 
 html {
@@ -26,6 +27,7 @@ body {
   font-optical-sizing: auto;
   font-weight: 500;
   font-style: normal;
+  color: colors.$basic;
 }
 
 // #app {

@@ -168,7 +168,9 @@ const onRedo = () => {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
+@use "@styles/colors";
+
 .ui-editor-pamel {
   display: flex;
   justify-content: space-between;
@@ -176,10 +178,10 @@ const onRedo = () => {
   flex-wrap: wrap;
   border-radius: 10px;
   overflow: hidden;
-  width: fit-content;
+  width: 100%;
   padding: 10px;
   box-shadow: rgba(16, 0, 75, 0.1) 0px 1px 3px 0px;
-  background: #ffffff;
+  background: colors.$absorbing;
 
   &__delimiter {
     width: 1px;

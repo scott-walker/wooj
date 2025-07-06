@@ -1,7 +1,9 @@
 <script setup>
 import _ from "lodash"
 import { computed } from "vue"
+import Tag from "@ui/Tag.vue"
 import WoojCard from "@components/WoojCard.vue"
+import Empty from "@components/Empty.vue"
 
 const props = defineProps({
   id: String,
@@ -28,20 +30,18 @@ const slideNums = computed(() => slideItems.value.length)
 <template>
   <div class="wooj-list">
     <div class="wooj-list__header">
-      <h1 class="title mb-0">{{ title }} <span class="tag is-light ml-2">{{ nums }}</span></h1>
+      <h1 class="wooj-list__header-title">
+        {{ title }}
+      </h1>
+      <Tag>{{ nums }}</Tag>
       <div class="wooj-list__header-panel">
         <slot name="panel" :isEmpty="isEmpty" />
       </div>
     </div>
 
-    <div v-if="isEmpty" class="wooj-list__empty has-background-white-ter">
-      <div class="has-text-centered">
-        <p class="title has-text-grey-light">{{ props.emptyText }}</p>
-        <p class="subtitle has-text-grey-light">Вуджей же нет</p>
-      </div>
-    </div>
+    <Empty v-if="isEmpty" :title="props.emptyText" />
 
-    <div v-else-if="woojs" class="wooj-list__board has-background-white-ter">
+    <div v-else-if="woojs" class="wooj-list__board">
       <Swiper :id="sliderId" :itemsNum="slideNums">
         <template #item="{ index }">
           <div class="wooj-list__items">
@@ -68,14 +68,20 @@ const slideNums = computed(() => slideItems.value.length)
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .wooj-list {
   &__header {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    gap: 40px;
+    gap: 20px;
     margin-bottom: 20px;
+
+    &-title {
+      display: flex;
+      align-items: center;
+      font-size: 32px;
+    }
   }
 
   &__empty {

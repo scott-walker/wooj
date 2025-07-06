@@ -1,113 +1,123 @@
 <script setup>
-import { computed } from "vue"
 import { RouterView } from "vue-router"
-import { useAuthStore } from "@stores/auth"
+import { useLayoutStore } from "@stores/layout"
+
+import Loader from "@components/Loader.vue"
+import Header from "@components/Header/Header.vue"
 import Sidebar from "@components/Sidebar.vue"
 
-const authStore = useAuthStore()
-const user = computed(() => authStore.user)
+const layoutStore = useLayoutStore()
 </script>
 
 <template>
-  <div class="layout fixed-grid has-6-cols">
-    <div class="grid is-gapless">
-      <!-- Header -->
-      <div class="layout__header layout__header-left cell pl-5">
-        <p class="title">WOOJ</p>
-        <p class="subtitle pl-3 is-6">Просто заметки</p>
-      </div>
-      <div class="layout__header layout__header-center cell is-col-span-4">
-        <div class="block">
-          <button class="button is-link">
-            <span class="icon">
-              <i class="fas fa-plus"></i>
-            </span>
-            <span>Вудж</span>
-          </button>
-        </div>
+  <div class="layout">
+    <div class="layout__header">
+      <Header />
+    </div>
 
-        <div class="block" :style="{ width: '100%' }">
-          <p class="control has-icons-left">
-            <input class="input" type="text" placeholder="Search" />
-            <span class="icon is-left">
-              <i class="fas fa-search" aria-hidden="true"></i>
-            </span>
-          </p>
-        </div>
-      </div>
-      <div class="layout__header layout__header-right cell">
-        <div class="media">
-          <div class="media-left">
-            <figure class="image is-48x48">
-              <img class="is-rounded" src="@assets/avatar.jpeg" alt="Placeholder image" />
-            </figure>
-          </div>
-          <div class="media-content">
-            <p class="title is-4">{{ user.name }}</p>
-            <p class="subtitle is-6">
-              <a @click.prevent="authStore.logout">Выйти</a>
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Body -->
-      <div class="layout__body layout__body-sidebar cell">
+    <!-- Body -->
+    <div class="layout__body">
+      <div class="layout__body-sidebar"
+        :class="{ aired: layoutStore.hasAiredSidebar, hovered: layoutStore.isHoveredSidebar }"
+        @mouseover="layoutStore.onOverSidebar">
+        <div class="layout__body-sidebar-separator"></div>
         <Sidebar />
       </div>
-      <div class="layout__body layout__body-content cell is-col-span-5">
-        <!-- <div class="layout__body layout__body-content cell is-col-span-5 has-background-white-bis"> -->
-        <!-- <nav class="breadcrumb" aria-label="breadcrumbs">
-          <ul>
-            <li><a href="#">Bulma</a></li>
-            <li><a href="#">Documentation</a></li>
-            <li><a href="#">Components</a></li>
-            <li class="is-active"><a href="#" aria-current="page">Breadcrumb</a></li>
-          </ul>
-        </nav> -->
 
+      <div class="layout__body-content"
+        :class="{ aired: layoutStore.hasAiredSidebar }"
+        @mouseover="layoutStore.onLeaveSidebar">
+        <!-- <Loader /> -->
         <RouterView />
       </div>
     </div>
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
+@use "sass:math";
+@use "@styles/colors";
+
 .layout {
+  $header-gap: 10px;
+  $header-height: 40px;
+  $sidebar-width: 200px;
+  $sidebar-active-area-width: math.div($sidebar-width, 2);
+  $content-hor-gap: 40px;
+  $content-ver-gap: math.div($content-hor-gap, 1.5);
+
   &__header {
-    height: 80px;
+    height: $header-height;
     overflow: hidden;
 
     &-left {
-      padding: 20px 20px 0px 20px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: $header-gap;
     }
 
     &-center {
       display: flex;
-      gap: 10px;
-      padding: 20px 0px 0px 0px;
     }
 
     &-right {
-      padding: 20px 20px 0px 20px;
+      padding-right: $header-gap;
     }
   }
 
   &__body {
-    height: calc(100vh - 80px);
+    display: flex;
+    justify-content: flex-end;
+    align-items: stretch;
+    height: calc(100vh - $header-height);
 
     &-sidebar {
-      padding: 20px 20px 0px 20px;
+      position: fixed;
+      left: 0;
+      z-index: 10000;
+      min-width: $sidebar-width;
+      max-width: $sidebar-width;
+      height: 100%;
+      transition: all 0.3s;
+      background: colors.$absorbing;
+
+      &-separator {
+        background-color: colors.$grey;
+        width: 100%;
+        height: 0;
+        transition: height 0.3s;
+      }
+
+      &.aired {
+        margin-left: -$sidebar-active-area-width;
+        // min-width: 0;
+        // max-width: 0;
+        opacity: 0;
+
+        &.hovered {
+          margin-left: 0;
+          opacity: 1;
+        }
+
+        & .layout__body-sidebar-separator {
+          height: 10px;
+        }
+      }
     }
 
     &-content {
-      // padding: 20px 40px 0px 40px;
-      padding: 15px 40px 0px 10px;
-    }
-  }
+      // flex-grow: 1;
+      // width: 100%;
+      width: calc(100% - $sidebar-width);
+      padding: $content-ver-gap $content-hor-gap;
+      background-color: colors.$grey;
+      transition: all 0.3s;
 
-  .cell {
-    // padding: 20px;
+      &.aired {
+        width: 100%;
+      }
+    }
   }
 }
 </style>
