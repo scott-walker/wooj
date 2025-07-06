@@ -12,8 +12,8 @@ class UpdateRequest extends GetRequest
     public function rules(): array
     {
         return [
-            'title' => ['string', 'max:255'],
-            'content' => ['string'],
+            'title' => ['nullable', 'string', 'max:255'],
+            'content' => ['nullable', 'string'],
         ];
     }
 }
