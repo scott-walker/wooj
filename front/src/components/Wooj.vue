@@ -38,7 +38,6 @@ const wooj = computed(() => props.data)
 
 .wooj {
   height: 100%;
-  // height: calc(100% - 40px);
 
   &__board {
     display: flex;
@@ -46,8 +45,6 @@ const wooj = computed(() => props.data)
     align-items: flex-start;
     padding: 40px;
     height: 100%;
-    // border-radius: 20px;
-    // height: calc(100% - 80px);
   }
 
   &__paper {

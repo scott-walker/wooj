@@ -38,7 +38,7 @@ const onCreateWooj = async () => {
       @click="layoutStore.onToggleSidebar" />
 
     <IconLink
-      icon="notes-medical"
+      icon="plus"
       :active="layoutStore.isCreateWoojActive"
       :loading="isWaitingCreateWooj"
       @click="onCreateWooj" />

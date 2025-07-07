@@ -1,6 +1,8 @@
 @use "@styles/colors";
 
 @mixin contentFormat() {
+  font-size: 1.2rem;
+
   /* List styles */
   ul,
   ol {
@@ -21,40 +23,39 @@
   h5,
   h6 {
     line-height: 1.1;
-    margin-top: 2.5rem;
+    margin-top: 10px;
+    margin-bottom: 20px;
     text-wrap: pretty;
+    font-weight: bold;
   }
 
-  h1,
-  h2 {
-    margin-top: 3.5rem;
-    margin-bottom: 1.5rem;
-  }
+  // h1,
+  // h2 {
+  //   // margin-top: 3.5rem;
+  //   // margin-bottom: 1.5rem;
+  // }
 
   h1 {
     font-size: 1.4rem;
   }
-
-  h2 {
-    font-size: 1.2rem;
-  }
-
-  h3 {
-    font-size: 1.1rem;
-  }
-
-  h4,
-  h5,
-  h6 {
-    font-size: 1rem;
-  }
+  // h2 {
+  //   font-size: 1.2rem;
+  // }
+  // h3 {
+  //   font-size: 1.1rem;
+  // }
+  // h4,
+  // h5,
+  // h6 {
+  //   font-size: 1rem;
+  // }
 
   /* Code and preformatted text styles */
   code {
     background-color: colors.$grey;
     border-radius: 0.4rem;
     color: colors.$basic;
-    font-size: 0.85rem;
+    font-size: 1.2rem;
     padding: 0.25em 0.3em;
   }
 
@@ -63,19 +64,21 @@
     border-radius: 0.5rem;
     color: colors.$absorbing;
     font-family: monospace;
+    // font-weight: bold;
     margin: 1.5rem 0;
-    padding: 0.75rem 1rem;
+    padding: 20px 30px;
 
     code {
       background: none;
-      color: inherit;
-      font-size: 0.8rem;
+      color: colors.$primary;
+      font-size: 1.2rem;
       padding: 0;
     }
   }
 
   blockquote {
-    border-left: 3px solid colors.$grey;
+    border-left: 6px solid colors.$grey;
+    font-style: italic;
     margin: 1.5rem 0;
     padding-left: 1rem;
   }

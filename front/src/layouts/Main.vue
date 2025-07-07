@@ -2,7 +2,6 @@
 import { RouterView } from "vue-router"
 import { useLayoutStore } from "@stores/layout"
 
-import Loader from "@components/Loader.vue"
 import Header from "@components/Header/Header.vue"
 import Sidebar from "@components/Sidebar.vue"
 
@@ -27,7 +26,6 @@ const layoutStore = useLayoutStore()
       <div class="layout__body-content"
         :class="{ aired: layoutStore.hasAiredSidebar }"
         @mouseover="layoutStore.onLeaveSidebar">
-        <!-- <Loader /> -->
         <RouterView />
       </div>
     </div>
@@ -91,8 +89,6 @@ const layoutStore = useLayoutStore()
 
       &.aired {
         margin-left: -$sidebar-active-area-width;
-        // min-width: 0;
-        // max-width: 0;
         opacity: 0;
 
         &.hovered {
@@ -107,8 +103,7 @@ const layoutStore = useLayoutStore()
     }
 
     &-content {
-      // flex-grow: 1;
-      // width: 100%;
+      overflow-y: auto;
       width: calc(100% - $sidebar-width);
       padding: $content-ver-gap $content-hor-gap;
       background-color: colors.$grey;

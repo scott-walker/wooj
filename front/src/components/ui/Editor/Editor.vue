@@ -131,34 +131,34 @@ onBeforeUnmount(() => {
     top: 0;
   }
 
-  &__content {}
-}
+  &__content {
 
-/* Basic editor styles */
-.tiptap {
-  padding: 20px;
-  transition: all .2s;
-  font-size: 1.2rem;
-  max-height: calc(100vh - 400px);
-  overflow-y: auto;
+    /* Basic editor styles */
+    .tiptap {
+      padding: 20px;
+      transition: all .2s;
+      // max-height: calc(100vh - 400px);
+      // overflow-y: auto;
 
-  &.ProseMirror-focused {
-    outline: none;
+      &.ProseMirror-focused {
+        outline: none;
+      }
+
+      :first-child {
+        margin-top: 0;
+      }
+
+      p.is-empty:first-child::before {
+        color: #adb5bd;
+        font-style: italic;
+        content: attr(data-placeholder);
+        float: left;
+        height: 0;
+        pointer-events: none;
+      }
+
+      @include wooj.contentFormat();
+    }
   }
-
-  :first-child {
-    margin-top: 0;
-  }
-
-  p.is-empty:first-child::before {
-    color: #adb5bd;
-    font-style: italic;
-    content: attr(data-placeholder);
-    float: left;
-    height: 0;
-    pointer-events: none;
-  }
-
-  @include wooj.contentFormat();
 }
 </style>

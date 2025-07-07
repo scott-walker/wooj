@@ -1,13 +1,15 @@
 <script setup>
 import { computed } from "vue"
 import { useAuthStore } from "@stores/auth"
+import { useLayoutStore } from "@stores/layout"
 
-import IconLink from "@ui/IconLink.vue"
+import Tag from "@ui/Tag.vue"
 import Logo from "@components/Header/Logo.vue"
 import Bars from "@components/Header/Bars.vue"
 import UserPanel from "@components/Header/UserPanel.vue"
 
 const authStore = useAuthStore()
+const layoutStore = useLayoutStore()
 const user = computed(() => authStore.user)
 </script>
 
@@ -19,6 +21,9 @@ const user = computed(() => authStore.user)
     </div>
 
     <div class="header-center">
+      <Tag v-if="layoutStore.statusBar"
+        :icon="layoutStore.statusBar.icon"
+        :text="layoutStore.statusBar.title" />
     </div>
 
     <div class="header-right">

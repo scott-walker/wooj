@@ -12,14 +12,14 @@ const iconClass = computed(() => `fas fa-${props.icon}`)
 
 <template>
   <RouterLink :to="props.route" custom v-slot="{ isActive, href, navigate }">
-    <div class="sidebar-link" :class="isActive ? 'active' : ''" :href="href" @click="navigate">
+    <a class="sidebar-link" :class="isActive ? 'active' : ''" :href="href" @click="navigate">
       <span class="sidebar-link__icon">
         <i :class="iconClass"></i>
       </span>
       <span class="sidebar-link__text">
         {{ props.text }}
       </span>
-    </div>
+    </a>
   </RouterLink>
 </template>
 
@@ -27,6 +27,7 @@ const iconClass = computed(() => `fas fa-${props.icon}`)
 @use "@styles/colors";
 
 .sidebar-link {
+  display: block;
   padding: 6px 10px;
   font-size: 16px;
   line-height: 16px;

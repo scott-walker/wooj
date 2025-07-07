@@ -11,8 +11,9 @@ export const useWoojStore = defineStore("wooj", () => {
   const woojs = ref([])
   const activeTopicId = ref(null)
   const activeWoojId = ref(null)
+  const activeWooj = ref(null)
   const activeTopic = computed(() => topics.value.find(({ id }) => id === activeTopicId.value))
-  const activeWooj = computed(() => woojs.value.find(({ id }) => id === activeWoojId.value))
+  // const activeWooj = computed(() => woojs.value.find(({ id }) => id === activeWoojId.value))
 
   /**
    * Получить список топиков
@@ -56,12 +57,20 @@ export const useWoojStore = defineStore("wooj", () => {
     activeTopicId.value = Number(topicId)
   }
 
+  // /**
+  //  * Активировать вудж
+  //  * @param {Number} woojId
+  //  */
+  // function activateWooj(woojId) {
+  //   activeWoojId.value = Number(woojId)
+  // }
+
   /**
    * Активировать вудж
-   * @param {Number} woojId
+   * @param {Object} wooj
    */
-  function activateWooj(woojId) {
-    activeWoojId.value = Number(woojId)
+  function activateWooj(wooj) {
+    activeWooj.value = wooj
   }
 
   /**
@@ -70,6 +79,13 @@ export const useWoojStore = defineStore("wooj", () => {
   function deactivateTopic() {
     activateTopic(null)
   }
+
+  // /**
+  //  * Деактивировать вудж
+  //  */
+  // function deactivateWooj() {
+  //   activateWooj(null)
+  // }
 
   /**
    * Деактивировать вудж

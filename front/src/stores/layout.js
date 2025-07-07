@@ -11,12 +11,23 @@ export const useLayoutStore = defineStore("layout", () => {
   const isHoveredSidebar = ref(false)
   const isHoveredBars = ref(false)
   const isCreateWoojActive = ref(false)
+  const statusBar = ref(null)
 
   /**
    * Инициализация
    */
   function init() {
     hasAiredSidebar.value = storage.get("hasAiredSidebar", false)
+  }
+
+  const setStatusBar = ({ title, icon }) => {
+    statusBar.value = {
+      title,
+      icon: icon || "",
+    }
+  }
+  const unsetStatusBar = () => {
+    statusBar.value = null
   }
 
   const onOverSidebar = () => (isHoveredSidebar.value = true)
@@ -39,6 +50,11 @@ export const useLayoutStore = defineStore("layout", () => {
     isHoveredSidebar,
     isHoveredBars,
     isCreateWoojActive,
+
+    statusBar,
+    setStatusBar,
+    unsetStatusBar,
+
     onOverSidebar,
     onLeaveSidebar,
     onOverBars,

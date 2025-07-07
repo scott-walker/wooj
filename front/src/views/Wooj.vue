@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted, inject } from "vue"
+import { ref, watch, onMounted, onUnmounted, inject } from "vue"
 import { useLayoutStore } from "@stores/layout"
 import Wooj from "@components/Wooj.vue"
 import Empty from "@components/Empty.vue"
@@ -33,17 +33,28 @@ const onSave = async () => {
 
 const init = async () => {
   isLoaded.value = false
+  isNotFound.value = false
+  layoutStore.setStatusBar({
+    title: "Редактирование",
+    icon: "file-pen"
+  })
 
   try {
     wooj.value = await woojService.get(props.woojId)
   } catch {
     isNotFound.value = true
+    layoutStore.setStatusBar({
+      title: "Нет вуджа",
+      icon: "magnifying-glass"
+    })
   }
 
   isLoaded.value = true
 }
 
 onMounted(init)
+onUnmounted(() => layoutStore.unsetStatusBar())
+
 watch(() => props.woojId, init)
 </script>
 
@@ -57,8 +68,8 @@ watch(() => props.woojId, init)
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .view-wooj {
-  height: calc(100% - 40px);
+  // height: calc(100% - 40px);
 }
 </style>

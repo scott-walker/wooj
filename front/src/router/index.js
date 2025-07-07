@@ -3,14 +3,11 @@ import IndexView from "@views/Index.vue"
 import AllView from "@views/All.vue"
 import PinnedView from "@views/Pinned.vue"
 // import DraftsView from "@views/Drafts.vue"
-import TrashView from "@views/Trash.vue"
 // import ArchiveView from "@views/Archive.vue"
+import TrashView from "@views/Trash.vue"
 import PublishedView from "@views/Published.vue"
 import TopicView from "@views/Topic.vue"
-import CreateWoojView from "@views/CreateWooj.vue"
 import WoojView from "@views/Wooj.vue"
-// import Auth from "@views/Auth.vue"
-// import Clean from "../layouts/Clean.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -57,23 +54,11 @@ const router = createRouter({
       props: true,
     },
     {
-      path: "/wooj",
-      name: "CreateWooj",
-      // component: CreateWoojView,
-      component: WoojView,
-      // props: true,
-    },
-    {
       path: "/wooj/:woojId(\\d+)",
       name: "Wooj",
       component: WoojView,
       props: true,
     },
-    // {
-    //   path: "/auth",
-    //   name: "Auth",
-    //   component: Auth,
-    // },
     // {
     //   path: '/about',
     //   name: 'about',

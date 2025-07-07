@@ -1,9 +1,13 @@
 <script setup>
+import { useRouter } from "vue-router"
 import Link from "@ui/Link.vue"
+
+const router = useRouter()
+const onHome = () => router.push({ name: 'Index' })
 </script>
 
 <template>
-  <Link :scalable="false"><span class="logo">WOOJ</span></Link>
+  <Link :scalable="false" @click="onHome"><span class="logo">WOOJ</span></Link>
 </template>
 
 <style lang="scss">
