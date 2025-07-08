@@ -23,7 +23,8 @@ class WoojController extends Controller
     public function index()
     {
         $woojs = Wooj::byAuthor()
-            ->orderByDesc('is_pinned')
+            ->with('woojTopics')
+            ->topicAll()
             ->paginate(self::ITEMS_PER_PAGE);
 
         return WoojResource::collection($woojs);
@@ -35,7 +36,8 @@ class WoojController extends Controller
     public function pinned()
     {
         $woojs = Wooj::byAuthor()
-            ->pinned()
+            ->with('woojTopics')
+            ->topicPinned()
             ->paginate(self::ITEMS_PER_PAGE);
 
         return WoojResource::collection($woojs);
@@ -121,8 +123,7 @@ class WoojController extends Controller
      */
     public function pin(GetRequest $request, Wooj $wooj)
     {
-        $wooj->is_pinned = true;
-        $wooj->save();
+        $wooj->pin();
 
         return new WoojResource($wooj);
     }
@@ -132,8 +133,7 @@ class WoojController extends Controller
      */
     public function unpin(GetRequest $request, Wooj $wooj)
     {
-        $wooj->is_pinned = false;
-        $wooj->save();
+        $wooj->unpin();
 
         return new WoojResource($wooj);
     }

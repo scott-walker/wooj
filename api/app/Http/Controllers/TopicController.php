@@ -17,10 +17,10 @@ class TopicController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-        $topics = Topic::with('woojs')
-            ->where('author_id', $user->id)
-            ->orderByDesc('id')
+        $topics = Topic::byAuthor()
+            ->with('woojs')
+            ->customTopics()
+            ->orderBy('id')
             ->paginate(self::ITEMS_PER_PAGE);
 
         return TopicResource::collection($topics);
@@ -31,10 +31,9 @@ class TopicController extends Controller
      */
     public function store(StoreTopicRequest $request)
     {
-        $user = Auth::user();
-        $topic = Topic::create(attributes: [
+        $topic = Topic::create([
             'name' => $request->name,
-            'author_id' => $user->id,
+            'author_id' => Auth::user()->id,
         ]);
 
         return new TopicResource($topic);
