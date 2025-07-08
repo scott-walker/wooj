@@ -21,7 +21,7 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
       <span
         v-if="hasPin"
         class="wooj-card__panel-button icon is-medium"
-        @click="$emit('pin', wooj)">
+        @click.stop="$emit('pin', wooj)">
         <i class="fas" :class="wooj.is_pinned ? 'fa-thumbtack-slash' : 'fa-thumbtack'"></i>
       </span>
       <span

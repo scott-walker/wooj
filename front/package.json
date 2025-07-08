@@ -10,6 +10,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@shopify/draggable": "^1.1.4",
     "@tiptap/extension-color": "^2.22.3",
     "@tiptap/extension-list-item": "^2.22.3",
     "@tiptap/extension-placeholder": "^2.22.3",

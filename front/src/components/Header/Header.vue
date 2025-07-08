@@ -1,6 +1,4 @@
 <script setup>
-import { computed } from "vue"
-import { useAuthStore } from "@stores/auth"
 import { useLayoutStore } from "@stores/layout"
 
 import Tag from "@ui/Tag.vue"
@@ -8,9 +6,7 @@ import Logo from "@components/Header/Logo.vue"
 import Bars from "@components/Header/Bars.vue"
 import UserPanel from "@components/Header/UserPanel.vue"
 
-const authStore = useAuthStore()
 const layoutStore = useLayoutStore()
-const user = computed(() => authStore.user)
 </script>
 
 <template>
@@ -27,7 +23,7 @@ const user = computed(() => authStore.user)
     </div>
 
     <div class="header-right">
-      <UserPanel :user="user" @logout="authStore.logout" />
+      <UserPanel />
     </div>
   </header>
 </template>
@@ -44,6 +40,10 @@ const user = computed(() => authStore.user)
     justify-content: flex-start;
     align-items: center;
     gap: 10px;
+  }
+
+  &-right {
+    padding-right: 20px;
   }
 }
 </style>

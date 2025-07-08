@@ -6,45 +6,64 @@ export default () => {
   const { woojService } = inject("services")
 
   const rawWoojs = ref(null)
+  const inProcessing = ref(false)
   const hiddenIdsMap = ref({})
   const pinnedIdsMap = ref({})
 
+  const inProcess = async (cb) => {
+    inProcessing.value = true
+    await cb()
+    inProcessing.value = false
+  }
+
   const fetchAll = async () => {
-    rawWoojs.value = await woojService.getAll()
+    await inProcess(async () => {
+      rawWoojs.value = await woojService.getAll()
+    })
   }
 
   const fetchPinned = async () => {
-    rawWoojs.value = await woojService.getPinned()
+    await inProcess(async () => {
+      rawWoojs.value = await woojService.getPinned()
+    })
   }
 
   const pin = async (woojId) => {
     pinnedIdsMap.value[woojId] = true
 
-    await woojService.pin(woojId)
+    await inProcess(async () => {
+      await woojService.pin(woojId)
+    })
   }
 
   const unpin = async (woojId) => {
     pinnedIdsMap.value[woojId] = false
 
-    await woojService.unpin(woojId)
+    await inProcess(async () => {
+      await woojService.unpin(woojId)
+    })
   }
 
   const fetchTrash = async () => {
-    rawWoojs.value = await woojService.getTrash()
+    await inProcess(async () => {
+      rawWoojs.value = await woojService.getTrash()
+    })
   }
 
   const clearTrash = async () => {
     rawWoojs.value = []
 
-    await woojService.clearTrash()
+    await inProcess(async () => {
+      await woojService.clearTrash()
+    })
   }
 
   const hideWooj = (woojId) => (hiddenIdsMap.value[woojId] = true)
 
   /**
-   * Лайкнуть
+   * Закрепить / открепить
    */
-  const onTogglePin = async (wooj) => {
+  const onTogglePin = (wooj) => {
     if (wooj.is_pinned) {
       unpin(wooj.id)
     } else {
@@ -65,7 +84,9 @@ export default () => {
   const onRemove = async (wooj) => {
     hideWooj(wooj.id)
 
-    await woojService.delete(wooj.id)
+    await inProcess(async () => {
+      await woojService.delete(wooj.id)
+    })
   }
 
   /**
@@ -74,7 +95,9 @@ export default () => {
   const onRestore = async (wooj) => {
     hideWooj(wooj.id)
 
-    await woojService.restore(wooj.id)
+    await inProcess(async () => {
+      await woojService.restore(wooj.id)
+    })
   }
 
   const onClearTrash = () => clearTrash()
@@ -102,6 +125,7 @@ export default () => {
   })
 
   return {
+    inProcessing,
     woojs,
     fetchAll,
     fetchPinned,

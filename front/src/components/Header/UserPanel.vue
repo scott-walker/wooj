@@ -1,12 +1,10 @@
 <script setup>
 import { computed } from "vue"
+import { useAuthStore } from "@stores/auth"
 import IconLink from "@ui/IconLink.vue"
 
-const props = defineProps({
-  user: Object
-})
-
-const user = computed(() => props.user)
+const authStore = useAuthStore()
+const user = computed(() => authStore.user)
 </script>
 
 <template>
@@ -16,7 +14,7 @@ const user = computed(() => props.user)
     </figure>
     <div class="user-panel__name">{{ user.name }}</div>
     <div class="user-panel__logout">
-      <IconLink icon="right-from-bracket" @click="$emit('logout')" />
+      <IconLink icon="right-from-bracket" @click="authStore.logout" />
     </div>
   </div>
 </template>
