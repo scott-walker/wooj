@@ -71,11 +71,35 @@ class Wooj extends Model
     }
 
     /**
+     * Сортировать по позициям в топике
+     */
+    public function scopeOrderByTopicPositions($query, string $direction = 'asc')
+    {
+        $subQuery = WoojTopic::select('position')
+            ->whereColumn('wooj_id', 'woojs.id')
+            ->where('topic_id', 1)
+            ->take(1);
+
+        return $query->orderBy($subQuery, $direction);
+    }
+
+    /**
+     * Получить вуджи по топику 
+     */
+    public function scopeTopic(int $topicId)
+    {
+        return $this->whereHas('woojTopics', function ($q) use ($topicId) {
+            $q->where('topic_id', $topicId);
+            // $q->orderBy('position');
+        });
+    }
+
+    /**
      * Получить вуджи по топику "все"
      */
     public function scopeTopicAll()
     {
-        return $this->whereHas('woojTopics', fn($q) => $q->where('topic_id', Topic::ID_TOPIC_ALL));
+        return $this->scopeTopic(Topic::ID_TOPIC_ALL);
     }
 
     /**
@@ -83,7 +107,7 @@ class Wooj extends Model
      */
     public function scopeTopicPinned()
     {
-        return $this->whereHas('woojTopics', fn($q) => $q->where('topic_id', Topic::ID_TOPIC_PINNED));
+        return $this->scopeTopic(Topic::ID_TOPIC_PINNED);
     }
 
     /**
@@ -91,7 +115,7 @@ class Wooj extends Model
      */
     public function scopeTopicPublic()
     {
-        return $this->whereHas('woojTopics', fn($q) => $q->where('topic_id', Topic::ID_TOPIC_PUBLIC));
+        return $this->scopeTopic(Topic::ID_TOPIC_PUBLIC);
     }
 
     /**
@@ -129,6 +153,15 @@ class Wooj extends Model
     {
         return $this->woojTopics->pluck("topic_id")->toArray();
     }
+
+    /**
+     * Позиции в топиках
+     * @return array
+     */
+    // public function getPositionsAttribute()
+    // {
+    //     return $this->woojTopics->mapWithKeys(fn(WoojTopic $item) => [$item->topic_id => $item->position])->all();
+    // }
 
     /**
      * Закрепленный / открепленный

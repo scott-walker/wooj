@@ -12,7 +12,7 @@ class WoojTopic extends Model
 {
     public $timestamps = false;
     protected $table = 'woojs_topics';
-    protected $fillable = ['wooj_id', 'topic_id'];
+    protected $fillable = ['wooj_id', 'topic_id', 'position'];
 
     use HasFactory;
 

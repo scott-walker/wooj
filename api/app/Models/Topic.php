@@ -8,8 +8,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Wooj;
+use App\Models\WoojTopic;
 use App\Models\User;
 
+/**
+ * Модель топика
+ * @property int $id
+ * @property string $name
+ * @property int $author_id
+ */
 class Topic extends Model
 {
     public const int ID_TOPIC_ALL = 1;
@@ -56,5 +63,38 @@ class Topic extends Model
             self::ID_TOPIC_PINNED,
             self::ID_TOPIC_PUBLIC,
         ]);
+    }
+
+    /**
+     * Получить позиции вуджей в топике
+     */
+    public function getWoojPositionsAttribute()
+    {
+        return WoojTopic::where('topic_id', $this->id)
+            ->orderBy('position')
+            ->pluck('wooj_id')
+            ->toArray();
+    }
+
+    /**
+     * Сортировать вуджи в топике
+     * @param array $positions
+     * @return Topic
+     */
+    public function sortWoojs(array $positions): Topic
+    {
+        /**
+         * @var WoojTopic[]
+         */
+        $woojTopics = WoojTopic::where('topic_id', $this->id)
+            ->get()
+            ->keyBy('wooj_id');
+
+        foreach ($positions as $position => $woojId) {
+            $woojTopic = $woojTopics[$woojId];
+            $woojTopic->update(['position' => $position]);
+        }
+
+        return $this;
     }
 }

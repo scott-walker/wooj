@@ -3,17 +3,25 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\StoreTopicRequest;
-use App\Http\Requests\UpdateTopicRequest;
+use App\Http\Requests\Topic\StoreRequest;
+use App\Http\Requests\Topic\UpdateRequest;
+use App\Http\Requests\Topic\GetRequest;
 use App\Http\Resources\TopicResource;
 use App\Models\Topic;
 
+/**
+ * Контроллер для работы с топиками
+ */
 class TopicController extends Controller
 {
+    /**
+     * Количество записей на странице
+     * @var int
+     */
     protected const int ITEMS_PER_PAGE = 100;
 
     /**
-     * Display a listing of the resource.
+     * Получить список всех кастомных топиков
      */
     public function index()
     {
@@ -27,9 +35,9 @@ class TopicController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Сохранить топик
      */
-    public function store(StoreTopicRequest $request)
+    public function store(StoreRequest $request)
     {
         $topic = Topic::create([
             'name' => $request->name,
@@ -40,17 +48,17 @@ class TopicController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Показать топик
      */
-    public function show(Topic $topic)
+    public function show(GetRequest $request, Topic $topic)
     {
         return new TopicResource($topic);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновить топик
      */
-    public function update(UpdateTopicRequest $request, Topic $topic)
+    public function update(UpdateRequest $request, Topic $topic)
     {
         $topic->update($request->all());
 
@@ -58,11 +66,21 @@ class TopicController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удалить топик
      */
-    public function destroy(Topic $topic)
+    public function destroy(GetRequest $request, Topic $topic)
     {
         $topic->delete();
+
+        return new TopicResource($topic);
+    }
+
+    /**
+     * Сортировка вуджей
+     */
+    public function sort(GetRequest $request, Topic $topic)
+    {
+        $topic->sortWoojs($request->positions);
 
         return new TopicResource($topic);
     }

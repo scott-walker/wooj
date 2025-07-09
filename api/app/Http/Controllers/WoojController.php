@@ -14,7 +14,10 @@ use App\Models\Wooj;
  */
 class WoojController extends Controller
 {
-    // Количество записей на странице
+    /**
+     * Количество записей на странице
+     * @var int
+     */
     protected const int ITEMS_PER_PAGE = 100;
 
     /**
@@ -25,6 +28,7 @@ class WoojController extends Controller
         $woojs = Wooj::byAuthor()
             ->with('woojTopics')
             ->topicAll()
+            ->orderByTopicPositions()
             ->paginate(self::ITEMS_PER_PAGE);
 
         return WoojResource::collection($woojs);
@@ -38,6 +42,7 @@ class WoojController extends Controller
         $woojs = Wooj::byAuthor()
             ->with('woojTopics')
             ->topicPinned()
+            ->orderByTopicPositions()
             ->paginate(self::ITEMS_PER_PAGE);
 
         return WoojResource::collection($woojs);

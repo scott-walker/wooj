@@ -12,6 +12,7 @@ Route::middleware(['throttle:api'])->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
 
     Route::middleware(['auth:sanctum'])->group(function () {
+        // Woojs
         Route::get('/woojs/trash', [WoojController::class, 'trash']);
         Route::delete('/woojs/trash', [WoojController::class, 'destroyTrashed']);
         Route::put('/woojs/{wooj}/restore', [WoojController::class, 'restore'])->withTrashed();
@@ -19,7 +20,12 @@ Route::middleware(['throttle:api'])->group(function () {
         Route::put('/woojs/{wooj}/pin', [WoojController::class, 'pin']);
         Route::put('/woojs/{wooj}/unpin', [WoojController::class, 'unpin']);
         Route::apiResource('/woojs', WoojController::class);
+
+        // Topics
+        Route::put('/topics/{topic}/sort', [TopicController::class, 'sort']);
         Route::apiResource('/topics', TopicController::class);
+
+        // Auth
         Route::post('/logout', [AuthController::class, 'logout']);
     });
 });

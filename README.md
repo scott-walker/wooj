@@ -23,6 +23,8 @@ _Swiper_
 https://swiperjs.com/element#usage
 _Editor_
 https://tiptap.dev/docs/editor/getting-started/overview
+_Sortable_
+https://shopify.github.io/draggable/examples/multiple-containers.html
 
 _Lodash_
 https://lodash.com/
