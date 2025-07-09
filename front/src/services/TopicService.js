@@ -70,4 +70,20 @@ export default class TopicService {
       throw "Не удалось обновить топик"
     }
   }
+
+  /**
+   * Обновить позиции вуджей в топике
+   * @param {Number} id
+   * @param {Array} positions
+   * @returns {Object} топик
+   */
+  async sort(id, positions) {
+    try {
+      const { data } = await this.http.put(`topics/${id}/sort`, { positions })
+
+      return data
+    } catch {
+      throw "Не удалось обновить позиции вуджей в топике"
+    }
+  }
 }

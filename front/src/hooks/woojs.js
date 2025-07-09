@@ -3,7 +3,7 @@ import { ref, computed, inject } from "vue"
 
 export default () => {
   const router = useRouter()
-  const { woojService } = inject("services")
+  const { woojService, topicService } = inject("services")
 
   const rawWoojs = ref(null)
   const inProcessing = ref(false)
@@ -55,6 +55,12 @@ export default () => {
 
     await inProcess(async () => {
       await woojService.clearTrash()
+    })
+  }
+
+  const sort = async (topicId, positions) => {
+    await inProcess(async () => {
+      await topicService.sort(topicId, positions)
     })
   }
 
@@ -133,6 +139,7 @@ export default () => {
     unpin,
     fetchTrash,
     clearTrash,
+    sort,
     hideWooj,
 
     onTogglePin,

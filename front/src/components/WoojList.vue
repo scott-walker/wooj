@@ -1,10 +1,12 @@
 <script setup>
 import _ from "lodash"
 import { Sortable, Plugins } from "@shopify/draggable"
-import { computed, onMounted, onUnmounted } from "vue"
+import { useTemplateRef, computed, onMounted, onUnmounted, nextTick } from "vue"
 import Tag from "@ui/Tag.vue"
 import WoojCard from "@components/WoojCard.vue"
 import Empty from "@components/Empty.vue"
+
+let sortableDriver = null
 
 const props = defineProps({
   id: String,
@@ -18,7 +20,8 @@ const props = defineProps({
   hasRestore: { type: Boolean, default: false },
 })
 
-let sortable = null
+const items = useTemplateRef("items")
+const emit = defineEmits(["sort", "pin", "edit", "remove", "restore"])
 
 const getRandMargin = (i) => {
   return {}
@@ -47,7 +50,7 @@ const woojPositions = computed(() => woojs.value.reduce((map, wooj) => {
 const initSortable = () => {
   console.log("initSortable")
 
-  sortable = new Sortable(document.querySelectorAll('.wooj-list__items'), {
+  sortableDriver = new Sortable(document.querySelectorAll('.wooj-list__items'), {
     draggable: '.wooj-list__item',
     handle: '.wooj-card__wrapper',
     sortAnimation: {
@@ -60,10 +63,22 @@ const initSortable = () => {
     },
     plugins: [Plugins.SortAnimation]
   });
+
+  // sortableDriver.on('sortable:start', (evn) => console.log('sortable:start', evn))
+  // sortableDriver.on('sortable:sort', (evn) => console.log('sortable:sort', evn))
+  // sortableDriver.on('sortable:sorted', (evn) => console.log('sortable:sorted', evn))
+  sortableDriver.on('sortable:stop', () => {
+    nextTick(() => {
+      const elements = Array.from(items.value.querySelectorAll('.wooj-list__item'))
+      const positions = elements.map(item => parseInt(item.dataset.id))
+
+      emit("sort", positions)
+    })
+  })
 }
 
 onMounted(() => props.hasSort && initSortable())
-onUnmounted(() => sortable && sortable.destroy())
+onUnmounted(() => sortableDriver && sortableDriver.destroy())
 </script>
 
 <template>
@@ -81,18 +96,19 @@ onUnmounted(() => sortable && sortable.destroy())
     <Empty v-if="isEmpty" :title="props.emptyText" />
 
     <div v-else-if="woojs" class="wooj-list__board">
-      <div class="wooj-list__items" :class="{ sortable: props.hasSort }">
-        <div v-for="wooj, i of props.woojs" :key="wooj.id" class="wooj-list__item" :style="woojPositions[wooj.id]">
+      <div class="wooj-list__items" :class="{ sortable: props.hasSort }" ref="items">
+        <div v-for="wooj, i of props.woojs" :key="wooj.id" :data-id="wooj.id" class="wooj-list__item"
+          :style="woojPositions[wooj.id]">
           <WoojCard
             :data="wooj"
             :hasPin="props.hasPin"
             :hasEdit="props.hasEdit"
             :hasRemove="props.hasRemove"
             :hasRestore="props.hasRestore"
-            @pin="$emit('pin', $event)"
-            @edit="$emit('edit', $event)"
-            @remove="$emit('remove', $event)"
-            @restore="$emit('restore', $event)" />
+            @pin="emit('pin', $event)"
+            @edit="emit('edit', $event)"
+            @remove="emit('remove', $event)"
+            @restore="emit('restore', $event)" />
         </div>
       </div>
     </div>

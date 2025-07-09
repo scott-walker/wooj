@@ -3,8 +3,12 @@ import { ref, onMounted } from "vue"
 import WoojList from "@components/WoojList.vue"
 import useWoojs from "@hooks/woojs"
 
-const { woojs, fetchAll, onTogglePin, onEdit, onRemove } = useWoojs()
+const { woojs, fetchAll, sort, onTogglePin, onEdit, onRemove } = useWoojs()
 const isLoaded = ref(false)
+
+const onSort = (positions) => {
+  sort(1, positions)
+}
 
 onMounted(async () => {
   await fetchAll()
@@ -20,6 +24,7 @@ onMounted(async () => {
       id="all"
       title="Все вуджи"
       :woojs="woojs"
+      @sort="onSort"
       @pin="onTogglePin"
       @edit="onEdit"
       @remove="onRemove" />
