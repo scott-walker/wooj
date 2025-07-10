@@ -22,6 +22,7 @@ use App\Models\WoojTopic;
  * @property int $author_id
  * @property bool $isPinned
  * @property array $topicIds
+ * @property User $author
  */
 class Wooj extends Model
 {
@@ -31,7 +32,6 @@ class Wooj extends Model
     protected $fillable = [
         'title',
         'content',
-        'is_pinned',
         'author_id'
     ];
 
@@ -73,11 +73,11 @@ class Wooj extends Model
     /**
      * Сортировать по позициям в топике
      */
-    public function scopeOrderByTopicPositions($query, string $direction = 'asc')
+    public function scopeOrderByTopicPositions($query, $topicId, string $direction = 'asc')
     {
         $subQuery = WoojTopic::select('position')
             ->whereColumn('wooj_id', 'woojs.id')
-            ->where('topic_id', 1)
+            ->where('topic_id', $topicId)
             ->take(1);
 
         return $query->orderBy($subQuery, $direction);
@@ -90,7 +90,6 @@ class Wooj extends Model
     {
         return $this->whereHas('woojTopics', function ($q) use ($topicId) {
             $q->where('topic_id', $topicId);
-            // $q->orderBy('position');
         });
     }
 
@@ -99,7 +98,7 @@ class Wooj extends Model
      */
     public function scopeTopicAll()
     {
-        return $this->scopeTopic(Topic::ID_TOPIC_ALL);
+        return $this->scopeTopic(Auth::user()->topicAllId);
     }
 
     /**
@@ -107,7 +106,7 @@ class Wooj extends Model
      */
     public function scopeTopicPinned()
     {
-        return $this->scopeTopic(Topic::ID_TOPIC_PINNED);
+        return $this->scopeTopic(Auth::user()->topicPinnedId);
     }
 
     /**
@@ -115,34 +114,7 @@ class Wooj extends Model
      */
     public function scopeTopicPublic()
     {
-        return $this->scopeTopic(Topic::ID_TOPIC_PUBLIC);
-    }
-
-    /**
-     * Закрепить вудж
-     */
-    public function pin()
-    {
-        WoojTopic::create([
-            'wooj_id' => $this->id,
-            'topic_id' => Topic::ID_TOPIC_PINNED,
-        ]);
-
-        return $this;
-    }
-
-    /**
-     * Открепить вудж
-     */
-    public function unpin()
-    {
-        $woojTopic = WoojTopic::where([
-            'wooj_id' => $this->id,
-            'topic_id' => Topic::ID_TOPIC_PINNED,
-        ]);
-        $woojTopic->delete();
-
-        return $this;
+        return $this->scopeTopic(Auth::user()->topicPublicId);
     }
 
     /**
@@ -169,6 +141,6 @@ class Wooj extends Model
      */
     public function getIsPinnedAttribute(): bool
     {
-        return in_array(Topic::ID_TOPIC_PINNED, $this->topicIds);
+        return in_array(Auth::user()->topicPinnedId, $this->topicIds);
     }
 }

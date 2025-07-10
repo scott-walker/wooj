@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Topic;
 
-class SortRequest extends GetRequest
+use Illuminate\Foundation\Http\FormRequest;
+
+class SortRequest extends FormRequest //extends GetRequest
 {
     /**
      * Get the validation rules that apply to the request.

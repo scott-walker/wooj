@@ -3,18 +3,26 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
-use Laravel\Sanctum\PersonalAccessToken;
+use Illuminate\Auth\AuthenticationException;
 use App\Http\Requests\RegisterUserRequest;
 use App\Http\Requests\LoginUserRequest;
 use App\Models\User;
-use App\Helpers\User as UserHelper;
+use App\Services\UserService;
 
 /**
  * Контроллер авторизации
+ * @property UserService $userSerivce
  */
 class AuthController extends Controller
 {
+    /**
+     * Инициализировать контроллер
+     * @param UserService $userSerivce
+     */
+    public function __construct(
+        private UserService $userSerivce,
+    ) {}
+
     /**
      * Регистрация пользователя
      * @param \App\Http\Requests\RegisterUserRequest $request
@@ -22,11 +30,7 @@ class AuthController extends Controller
      */
     public function register(RegisterUserRequest $request): JsonResponse
     {
-        $user = User::create([
-            'name' => UserHelper::emailToName($request->email),
-            'email' => $request->email,
-            'password' => $request->password,
-        ]);
+        $user = $this->userSerivce->register($request->email, $request->password);
 
         return response()->json([
             'user' => $user,
@@ -40,23 +44,17 @@ class AuthController extends Controller
      */
     public function login(LoginUserRequest $request): JsonResponse
     {
-        $credentials = $request->only(['email', 'password']);
+        try {
+            $user = $this->userSerivce->login($request->email, $request->password);
+            $token = $this->userSerivce->createToken();
 
-        if (!Auth::attempt($credentials)) {
+            return response()->json([
+                'user' => $user,
+                'token' => $token
+            ]);
+        } catch (AuthenticationException) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
-
-        /**
-         * @var User
-         */
-        $user = Auth::user();
-        $user->tokens()->delete();
-        $token = $user->createToken('')->plainTextToken;
-
-        return response()->json([
-            'user' => $user,
-            'token' => $token,
-        ]);
     }
 
     /**
@@ -65,15 +63,7 @@ class AuthController extends Controller
      */
     public function logout(): JsonResponse
     {
-        /**
-         * @var User
-         */
-        $user = Auth::user();
-        /**
-         * @var PersonalAccessToken
-         */
-        $token = $user->currentAccessToken();
-        $token->delete();
+        $user = $this->userSerivce->logout();
 
         return response()->json([
             'user' => $user

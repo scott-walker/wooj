@@ -2,86 +2,142 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Topic\StoreRequest;
 use App\Http\Requests\Topic\UpdateRequest;
+use App\Http\Requests\Topic\SortRequest;
 use App\Http\Requests\Topic\GetRequest;
 use App\Http\Resources\TopicResource;
 use App\Models\Topic;
+use App\Services\TopicService;
 
 /**
  * Контроллер для работы с топиками
+ * @property TopicService $topicService
  */
 class TopicController extends Controller
 {
     /**
-     * Количество записей на странице
-     * @var int
+     * Инициализировать контроллер
+     * @param TopicService $topicService
      */
-    protected const int ITEMS_PER_PAGE = 100;
+    public function __construct(
+        private TopicService $topicService,
+    ) {}
 
     /**
      * Получить список всех кастомных топиков
+     * @return ResourceCollection
      */
-    public function index()
+    public function index(): ResourceCollection
     {
-        $topics = Topic::byAuthor()
-            ->with('woojs')
-            ->customTopics()
-            ->orderBy('id')
-            ->paginate(self::ITEMS_PER_PAGE);
+        $topics = $this->topicService->getCustomTopics();
 
-        return TopicResource::collection($topics);
+        return $this->topicService->wrapCollection($topics);
     }
 
     /**
      * Сохранить топик
+     * @param StoreRequest $request
+     * @return TopicResource
      */
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request): TopicResource
     {
-        $topic = Topic::create([
+        $topic = $this->topicService->create([
             'name' => $request->name,
             'author_id' => Auth::user()->id,
         ]);
 
-        return new TopicResource($topic);
+        return $this->topicService->wrap($topic);
     }
 
     /**
      * Показать топик
+     * @param GetRequest $request
+     * @param Topic $topic
+     * @return TopicResource
      */
-    public function show(GetRequest $request, Topic $topic)
+    public function show(GetRequest $request, Topic $topic): TopicResource
     {
-        return new TopicResource($topic);
+        return $this->topicService->wrap($topic);
     }
 
     /**
      * Обновить топик
+     * @param UpdateRequest $request
+     * @param Topic $topic
+     * @return TopicResource
      */
-    public function update(UpdateRequest $request, Topic $topic)
+    public function update(UpdateRequest $request, Topic $topic): TopicResource
     {
-        $topic->update($request->all());
+        $topic = $this->topicService->update($topic, $request->all());
 
-        return new TopicResource($topic);
+        return $this->topicService->wrap($topic);
     }
 
     /**
      * Удалить топик
+     * @param GetRequest $request
+     * @param Topic $topic
+     * @return TopicResource
      */
-    public function destroy(GetRequest $request, Topic $topic)
+    public function destroy(GetRequest $request, Topic $topic): TopicResource
     {
-        $topic->delete();
+        $topic = $this->topicService->delete($topic);
 
-        return new TopicResource($topic);
+        return $this->topicService->wrap($topic);
+    }
+
+    /**
+     * Сортировка вуджей в топике "все"
+     * @param SortRequest $request
+     * @return TopicResource
+     */
+    public function sortAll(SortRequest $request): TopicResource
+    {
+        $topic = $this->topicService->getTopic(Auth::user()->topicAllId);
+        $topic = $this->topicService->sortWoojs($topic, $request->positions);
+
+        return $this->topicService->wrap($topic);
+    }
+
+    /**
+     * Сортировка вуджей в топике "закрепленные"
+     * @param SortRequest $request
+     * @return TopicResource
+     */
+    public function sortPinned(SortRequest $request): TopicResource
+    {
+        $topic = $this->topicService->getTopic(Auth::user()->topicPinnedId);
+        $topic = $this->topicService->sortWoojs($topic, $request->positions);
+
+        return $this->topicService->wrap($topic);
+    }
+
+    /**
+     * Сортировка вуджей в топике "опубликованные"
+     * @param SortRequest $request
+     * @return TopicResource
+     */
+    public function sortPublic(SortRequest $request): TopicResource
+    {
+        $topic = $this->topicService->getTopic(Auth::user()->topicPublicId);
+        $topic = $this->topicService->sortWoojs($topic, $request->positions);
+
+        return $this->topicService->wrap($topic);
     }
 
     /**
      * Сортировка вуджей
+     * @param SortRequest $request
+     * @param Topic $topic
+     * @return TopicResource
      */
-    public function sort(GetRequest $request, Topic $topic)
+    public function sort(SortRequest $request, Topic $topic): TopicResource
     {
-        $topic->sortWoojs($request->positions);
+        $topic = $this->topicService->sortWoojs($topic, $request->positions);
 
-        return new TopicResource($topic);
+        return $this->topicService->wrap($topic);
     }
 }

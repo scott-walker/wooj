@@ -75,26 +75,4 @@ class Topic extends Model
             ->pluck('wooj_id')
             ->toArray();
     }
-
-    /**
-     * Сортировать вуджи в топике
-     * @param array $positions
-     * @return Topic
-     */
-    public function sortWoojs(array $positions): Topic
-    {
-        /**
-         * @var WoojTopic[]
-         */
-        $woojTopics = WoojTopic::where('topic_id', $this->id)
-            ->get()
-            ->keyBy('wooj_id');
-
-        foreach ($positions as $position => $woojId) {
-            $woojTopic = $woojTopics[$woojId];
-            $woojTopic->update(['position' => $position]);
-        }
-
-        return $this;
-    }
 }
