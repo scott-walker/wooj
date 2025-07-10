@@ -3,13 +3,16 @@ import { ref, onMounted } from "vue"
 import WoojList from "@components/WoojList.vue"
 import useWoojs from "@hooks/woojs"
 
-const { woojs, fetchPinned, unpin, hideWooj, onEdit, onRemove } = useWoojs()
+const { woojs, fetchPinned, sort, unpin, hideWooj, onEdit, onRemove } = useWoojs()
 const isLoaded = ref(false)
 
-const onPin = async ({ id }) => {
+const onUnpin = async ({ id }) => {
   hideWooj(id)
 
   await unpin(id)
+}
+const onSort = (positions) => {
+  sort("pinned", positions)
 }
 
 onMounted(async () => {
@@ -26,7 +29,8 @@ onMounted(async () => {
       id="pinned"
       title="Закрепленные"
       :woojs="woojs"
-      @pin="onPin"
+      @sort="onSort"
+      @pin="onUnpin"
       @edit="onEdit"
       @remove="onRemove" />
   </div>

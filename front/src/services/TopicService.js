@@ -73,17 +73,35 @@ export default class TopicService {
 
   /**
    * Обновить позиции вуджей в топике
-   * @param {Number} id
+   * @param {Number|String} topic
    * @param {Array} positions
    * @returns {Object} топик
    */
-  async sort(id, positions) {
+  async sort(topic, positions) {
     try {
-      const { data } = await this.http.put(`topics/${id}/sort`, { positions })
+      const { data } = await this.http.put(`topics/${topic}/sort`, { positions })
 
       return data
     } catch {
       throw "Не удалось обновить позиции вуджей в топике"
     }
+  }
+
+  /**
+   * Обновить позиции вуджей в топике "все"
+   * @param {Array} positions
+   * @returns {Object} топик
+   */
+  async sortAll(positions) {
+    return this.sort("all", positions)
+  }
+
+  /**
+   * Обновить позиции вуджей в топике "все"
+   * @param {Array} positions
+   * @returns {Object} топик
+   */
+  async sortPinned(positions) {
+    return this.sort("pinned", positions)
   }
 }

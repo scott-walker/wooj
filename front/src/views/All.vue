@@ -7,7 +7,7 @@ const { woojs, fetchAll, sort, onTogglePin, onEdit, onRemove } = useWoojs()
 const isLoaded = ref(false)
 
 const onSort = (positions) => {
-  sort(1, positions)
+  sort("all", positions)
 }
 
 onMounted(async () => {

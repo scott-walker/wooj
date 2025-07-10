@@ -58,9 +58,9 @@ export default () => {
     })
   }
 
-  const sort = async (topicId, positions) => {
+  const sort = async (topic, positions) => {
     await inProcess(async () => {
-      await topicService.sort(topicId, positions)
+      await topicService.sort(topic, positions)
     })
   }
 
