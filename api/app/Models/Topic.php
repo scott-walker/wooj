@@ -14,18 +14,35 @@ use App\Models\User;
 /**
  * Модель топика
  * @property int $id
+ * @property string $type
  * @property string $name
  * @property int $author_id
  */
 class Topic extends Model
 {
-    public const int ID_TOPIC_ALL = 1;
-    public const int ID_TOPIC_PINNED = 2;
-    public const int ID_TOPIC_PUBLIC = 3;
+    public const string TYPE_ALL = 'all';
+    public const string TYPE_PINNED = 'pinned';
+    public const string TYPE_PUBLIC = 'public';
+    public const string TYPE_CUSTOM = 'custom';
 
-    protected $fillable = ['id', 'name', 'author_id'];
+    protected $fillable = ['id', 'type', 'name', 'author_id'];
 
     use HasFactory;
+
+    /**
+     * Проверить тип топика на существующий
+     * @param mixed $type
+     * @return bool
+     */
+    public static function isTypeExists($type): bool
+    {
+        return in_array($type, [
+            self::TYPE_ALL,
+            self::TYPE_PINNED,
+            self::TYPE_PUBLIC,
+            self::TYPE_CUSTOM,
+        ]);
+    }
 
     /**
      * Автор
@@ -51,18 +68,6 @@ class Topic extends Model
     public function scopeByAuthor()
     {
         return $this->where('author_id', Auth::user()->id);
-    }
-
-    /**
-     * Получить только пользовательские топики
-     */
-    public function scopeCustomTopics()
-    {
-        return $this->whereNotIn('id', [
-            self::ID_TOPIC_ALL,
-            self::ID_TOPIC_PINNED,
-            self::ID_TOPIC_PUBLIC,
-        ]);
     }
 
     /**

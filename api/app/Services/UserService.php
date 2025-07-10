@@ -8,49 +8,58 @@ use Illuminate\Auth\AuthenticationException;
 use Laravel\Sanctum\PersonalAccessToken;
 use App\Helpers\User as UserHelper;
 use App\Models\User;
-use App\Models\Settings;
 use App\Models\Topic;
 
+/**
+ * Сервис для работы с пользователем
+ */
 class UserService
 {
-    public function __construct() {}
-
+    /**
+     * Зарегистрировать пользователя
+     * @param string $email
+     * @param string $password
+     * @return User|null
+     */
     public function register(string $email, string $password): User|null
     {
         $user = null;
 
         DB::transaction(function () use (&$user, $email, $password) {
+            // Создать пользователя
             $user = User::create([
                 'name' => UserHelper::emailToName($email),
                 'email' => $email,
                 'password' => $password,
             ]);
 
-            $settings = [
-                'user_id' => $user->id,
-            ];
+            // Создать базовые топики пользователя
             $baseTopics = [
-                ['name' => 'Все', 'param' => 'topic_all_id'],
-                ['name' => 'Закрепленные', 'param' => 'topic_pinned_id'],
-                ['name' => 'Опубликованные', 'param' => 'topic_public_id'],
+                ['name' => 'Все', 'type' => Topic::TYPE_ALL],
+                ['name' => 'Закрепленные', 'type' => Topic::TYPE_PINNED],
+                ['name' => 'Опубликованные', 'type' => Topic::TYPE_PUBLIC],
             ];
 
             foreach ($baseTopics as $item) {
                 $topic = new Topic();
+                $topic->type = $item['type'];
                 $topic->name = $item['name'];
                 $topic->author_id = $user->id;
                 $topic->save();
-
-                $settings[$item['param']] = $topic->id;
             }
-
-            Settings::create($settings);
         });
 
         return $user;
     }
 
-    public function login(string $email, string $password)
+
+    /**
+     * Залогинить пользователя
+     * @param string $email
+     * @param string $password
+     * @return User
+     */
+    public function login(string $email, string $password): User
     {
         $credentials = [
             'email' => $email,
@@ -64,6 +73,10 @@ class UserService
         return Auth::user();
     }
 
+    /**
+     * Разлогинить пользователя
+     * @return User
+     */
     public function logout(): User
     {
         /**
@@ -79,7 +92,11 @@ class UserService
         return $user;
     }
 
-    public function createToken()
+    /**
+     * Создать токен
+     * @return string
+     */
+    public function createToken(): string
     {
         /**
          * @var User

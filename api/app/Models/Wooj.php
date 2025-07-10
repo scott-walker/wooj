@@ -41,7 +41,7 @@ class Wooj extends Model
      */
     public function author(): BelongsTo
     {
-        return $this->belongsTo(related: User::class);
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -63,61 +63,6 @@ class Wooj extends Model
     }
 
     /**
-     * Получить по автору
-     */
-    public function scopeByAuthor()
-    {
-        return $this->where('author_id', Auth::user()->id);
-    }
-
-    /**
-     * Сортировать по позициям в топике
-     */
-    public function scopeOrderByTopicPositions($query, $topicId, string $direction = 'asc')
-    {
-        $subQuery = WoojTopic::select('position')
-            ->whereColumn('wooj_id', 'woojs.id')
-            ->where('topic_id', $topicId)
-            ->take(1);
-
-        return $query->orderBy($subQuery, $direction);
-    }
-
-    /**
-     * Получить вуджи по топику 
-     */
-    public function scopeTopic(int $topicId)
-    {
-        return $this->whereHas('woojTopics', function ($q) use ($topicId) {
-            $q->where('topic_id', $topicId);
-        });
-    }
-
-    /**
-     * Получить вуджи по топику "все"
-     */
-    public function scopeTopicAll()
-    {
-        return $this->scopeTopic(Auth::user()->topicAllId);
-    }
-
-    /**
-     * Получить вуджи по топику "закрепленные"
-     */
-    public function scopeTopicPinned()
-    {
-        return $this->scopeTopic(Auth::user()->topicPinnedId);
-    }
-
-    /**
-     * Получить вуджи по топику "публичные"
-     */
-    public function scopeTopicPublic()
-    {
-        return $this->scopeTopic(Auth::user()->topicPublicId);
-    }
-
-    /**
      * ID топиков
      * @return array
      */
@@ -127,20 +72,11 @@ class Wooj extends Model
     }
 
     /**
-     * Позиции в топиках
-     * @return array
-     */
-    // public function getPositionsAttribute()
-    // {
-    //     return $this->woojTopics->mapWithKeys(fn(WoojTopic $item) => [$item->topic_id => $item->position])->all();
-    // }
-
-    /**
      * Закрепленный / открепленный
      * @return bool
      */
     public function getIsPinnedAttribute(): bool
     {
-        return in_array(Auth::user()->topicPinnedId, $this->topicIds);
+        return (bool) $this->topics->where('type', Topic::TYPE_PINNED)->count();
     }
 }

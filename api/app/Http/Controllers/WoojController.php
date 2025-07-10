@@ -9,6 +9,7 @@ use App\Http\Requests\Wooj\StoreRequest;
 use App\Http\Requests\Wooj\UpdateRequest;
 use App\Http\Requests\Wooj\GetRequest;
 use App\Http\Resources\WoojResource;
+use App\Models\Topic;
 use App\Models\Wooj;
 use App\Services\WoojService;
 
@@ -32,7 +33,12 @@ class WoojController extends Controller
      */
     public function index(): ResourceCollection
     {
-        return $this->woojSerivce->getAll();
+        $woojs = $this->woojSerivce->getWoojs([
+            'type' => Topic::TYPE_ALL,
+            'author_id' => Auth::user()->id,
+        ]);
+
+        return $this->woojSerivce->wrapCollection($woojs);
     }
 
     /**
@@ -41,7 +47,12 @@ class WoojController extends Controller
      */
     public function pinned(): ResourceCollection
     {
-        return $this->woojSerivce->getPinned();
+        $woojs = $this->woojSerivce->getWoojs([
+            'type' => Topic::TYPE_PINNED,
+            'author_id' => Auth::user()->id,
+        ]);
+
+        return $this->woojSerivce->wrapCollection($woojs);
     }
 
     /**
@@ -50,7 +61,11 @@ class WoojController extends Controller
      */
     public function trash(): ResourceCollection
     {
-        return $this->woojSerivce->getTrashed();
+        $woojs = $this->woojSerivce->getTrashed([
+            'author_id' => Auth::user()->id,
+        ]);
+
+        return $this->woojSerivce->wrapCollection($woojs);
     }
 
     /**
@@ -60,11 +75,13 @@ class WoojController extends Controller
      */
     public function store(StoreRequest $request): WoojResource
     {
-        return $this->woojSerivce->create([
+        $wooj = $this->woojSerivce->create([
             'title' => $request->title,
             'content' => $request->content,
             'author_id' => Auth::user()->id,
         ]);
+
+        return $this->woojSerivce->wrap($wooj);
     }
 
     /**
@@ -75,7 +92,7 @@ class WoojController extends Controller
      */
     public function show(GetRequest $request, Wooj $wooj): WoojResource
     {
-        return new WoojResource($wooj);
+        return $this->woojSerivce->wrap($wooj);
     }
 
     /**
@@ -86,7 +103,9 @@ class WoojController extends Controller
      */
     public function update(UpdateRequest $request, Wooj $wooj): WoojResource
     {
-        return $this->woojSerivce->update($wooj, $request->all());
+        $wooj = $this->woojSerivce->update($wooj, $request->all());
+
+        return $this->woojSerivce->wrap($wooj);
     }
 
     /**
@@ -97,7 +116,9 @@ class WoojController extends Controller
      */
     public function destroy(GetRequest $request, Wooj $wooj): WoojResource
     {
-        return $this->woojSerivce->remove($wooj);
+        $wooj = $this->woojSerivce->remove($wooj);
+
+        return $this->woojSerivce->wrap($wooj);
     }
 
     /**
@@ -108,7 +129,9 @@ class WoojController extends Controller
      */
     public function restore(GetRequest $request, Wooj $wooj): WoojResource
     {
-        return $this->woojSerivce->restore($wooj);
+        $wooj = $this->woojSerivce->restore($wooj);
+
+        return $this->woojSerivce->wrap($wooj);
     }
 
     /**
@@ -117,7 +140,7 @@ class WoojController extends Controller
      */
     public function destroyTrashed(): JsonResponse
     {
-        $this->woojSerivce->destroyTrashed();
+        $this->woojSerivce->destroyTrashed(Auth::user()->id);
 
         return response()->json(['message' => 'success']);
     }
@@ -130,7 +153,9 @@ class WoojController extends Controller
      */
     public function pin(GetRequest $request, Wooj $wooj): WoojResource
     {
-        return $this->woojSerivce->pin($wooj);
+        $wooj = $this->woojSerivce->pin($wooj);
+
+        return $this->woojSerivce->wrap($wooj);
     }
 
     /**
@@ -141,6 +166,8 @@ class WoojController extends Controller
      */
     public function unpin(GetRequest $request, Wooj $wooj): WoojResource
     {
-        return $this->woojSerivce->unpin($wooj);
+        $wooj = $this->woojSerivce->unpin($wooj);
+
+        return $this->woojSerivce->wrap($wooj);
     }
 }

@@ -32,7 +32,9 @@ class TopicController extends Controller
      */
     public function index(): ResourceCollection
     {
-        $topics = $this->topicService->getCustomTopics();
+        $topics = $this->topicService->getCustomTopics([
+            'author_id' => Auth::user()->id,
+        ]);
 
         return $this->topicService->wrapCollection($topics);
     }
@@ -85,45 +87,6 @@ class TopicController extends Controller
     public function destroy(GetRequest $request, Topic $topic): TopicResource
     {
         $topic = $this->topicService->delete($topic);
-
-        return $this->topicService->wrap($topic);
-    }
-
-    /**
-     * Сортировка вуджей в топике "все"
-     * @param SortRequest $request
-     * @return TopicResource
-     */
-    public function sortAll(SortRequest $request): TopicResource
-    {
-        $topic = $this->topicService->getTopic(Auth::user()->topicAllId);
-        $topic = $this->topicService->sortWoojs($topic, $request->positions);
-
-        return $this->topicService->wrap($topic);
-    }
-
-    /**
-     * Сортировка вуджей в топике "закрепленные"
-     * @param SortRequest $request
-     * @return TopicResource
-     */
-    public function sortPinned(SortRequest $request): TopicResource
-    {
-        $topic = $this->topicService->getTopic(Auth::user()->topicPinnedId);
-        $topic = $this->topicService->sortWoojs($topic, $request->positions);
-
-        return $this->topicService->wrap($topic);
-    }
-
-    /**
-     * Сортировка вуджей в топике "опубликованные"
-     * @param SortRequest $request
-     * @return TopicResource
-     */
-    public function sortPublic(SortRequest $request): TopicResource
-    {
-        $topic = $this->topicService->getTopic(Auth::user()->topicPublicId);
-        $topic = $this->topicService->sortWoojs($topic, $request->positions);
 
         return $this->topicService->wrap($topic);
     }

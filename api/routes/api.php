@@ -22,9 +22,6 @@ Route::middleware(['throttle:api'])->group(function () {
         Route::apiResource('/woojs', WoojController::class);
 
         // Topics
-        Route::put('/topics/all/sort', [TopicController::class, 'sortAll']);
-        Route::put('/topics/pinned/sort', [TopicController::class, 'sortPinned']);
-        Route::put('/topics/public/sort', [TopicController::class, 'sortPublic']);
         Route::put('/topics/{topic}/sort', [TopicController::class, 'sort']);
         Route::apiResource('/topics', TopicController::class);
 

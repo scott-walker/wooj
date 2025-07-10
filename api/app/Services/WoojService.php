@@ -3,10 +3,12 @@
 namespace App\Services;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 use App\Http\Resources\WoojResource;
 use App\Models\Wooj;
 use App\Models\WoojTopic;
+use App\Models\Topic;
 
 /**
  * Сервис для работы с вуджами
@@ -20,137 +22,165 @@ class WoojService
     protected const int ITEMS_PER_PAGE = 100;
 
     /**
-     * Получить все вуджи
+     * Обернуть топик
+     * @param Wooj $wooj
+     * @return WoojResource
+     */
+    public function wrap(Wooj $wooj): WoojResource
+    {
+        return new WoojResource($wooj);
+    }
+
+    /**
+     * Обернуть коллекцию топиков
+     * @param mixed $woojs
      * @return ResourceCollection
      */
-    public function getAll(): ResourceCollection
+    public function wrapCollection(mixed $woojs): ResourceCollection
     {
-        $woojs = Wooj::byAuthor()
-            ->with('woojTopics')
-            ->topicAll()
-            ->orderByTopicPositions(Auth::user()->topicAllId)
-            ->paginate(self::ITEMS_PER_PAGE);
-
         return WoojResource::collection($woojs);
     }
 
     /**
-     * Получить закрепленные вуджи
-     * @return ResourceCollection
+     * Получить все вуджи
+     * @param array $params
+     * @param callable|null $params
+     * @return LengthAwarePaginator
      */
-    public function getPinned(): ResourceCollection
+    public function getWoojs(array $params = [], ?callable $cb = null): LengthAwarePaginator
     {
-        $woojs = Wooj::byAuthor()
-            ->with('woojTopics')
-            ->topicPinned()
-            ->orderByTopicPositions(Auth::user()->topicPinnedId)
-            ->paginate(self::ITEMS_PER_PAGE);
+        $type = $params['type'] ?? null;
+        $authorId = $params['author_id'] ?? null;
 
-        return WoojResource::collection($woojs);
+        $query = Wooj::select('woojs.*')
+            ->join('woojs_topics', 'woojs_topics.wooj_id', '=', 'woojs.id')
+            ->join('topics', 'topics.id', '=', 'woojs_topics.topic_id');
+
+        if ($type !== null) {
+            $query->where('topics.type', $type);
+        }
+        if ($authorId !== null) {
+            $query
+                ->where('woojs.author_id', $authorId)
+                ->where('topics.author_id', $authorId);
+        }
+        if (is_callable($cb)) {
+            $cb($query);
+        }
+
+        return $query
+            ->orderBy('woojs_topics.position')
+            ->paginate(self::ITEMS_PER_PAGE);
     }
 
     /**
      * Получить вуджи в корзине
-     * @return ResourceCollection
+     * @param array $params
+     * @return LengthAwarePaginator
      */
-    public function getTrashed(): ResourceCollection
+    public function getTrashed(array $params = []): LengthAwarePaginator
     {
-        $woojs = Wooj::byAuthor()
-            ->onlyTrashed()
-            ->orderByDesc('deleted_at')
-            ->paginate(self::ITEMS_PER_PAGE);
-
-        return WoojResource::collection($woojs);
+        return $this->getWoojs($params, fn($q) => $q->onlyTrashed());
     }
 
     /**
      * Создать вудж
      * @param array $fields
-     * @return WoojResource
+     * @return Wooj|null
      */
-    public function create(array $fields): WoojResource
+    public function create(array $fields): Wooj|null
     {
-        $wooj = Wooj::create([
-            'title' => $fields['title'] ?? '',
-            'content' => $fields['content'] ?? '',
-            'author_id' => $fields['author_id'],
-        ]);
+        $wooj = null;
 
-        // Установить топик "все" для вуджа
-        $this->setTopic($wooj, $wooj->author->topicAllId);
+        DB::transaction(function () use (&$wooj, $fields) {
+            $wooj = Wooj::create([
+                'title' => $fields['title'] ?? '',
+                'content' => $fields['content'] ?? '',
+                'author_id' => $fields['author_id'],
+            ]);
 
-        return new WoojResource($wooj);
+            $topic = Topic::where([
+                'type' => Topic::TYPE_ALL,
+                'author_id' => $wooj->author->id
+            ])->firstOrFail();
+
+            // Установить топик "все" для вуджа
+            $this->setTopic($wooj, $topic->id);
+        });
+
+        return $wooj;
     }
 
     /**
      * Обновить вудж
      * @param Wooj $wooj
      * @param array $fields
-     * @return WoojResource
+     * @return Wooj
      */
-    public function update(Wooj $wooj, array $fields): WoojResource
+    public function update(Wooj $wooj, array $fields): Wooj
     {
         $wooj->update($fields);
 
-        return new WoojResource($wooj);
+        return $wooj;
     }
 
     /**
      * Отправить вудж в корзину
      * @param Wooj $wooj
-     * @return WoojResource
+     * @return Wooj
      */
-    public function remove(Wooj $wooj): WoojResource
+    public function remove(Wooj $wooj): Wooj
     {
         $wooj->delete();
 
-        return new WoojResource($wooj);
+        return $wooj;
     }
 
     /**
      * Восстановить вудж из корзины
      * @param Wooj $wooj
-     * @return WoojResource
+     * @return Wooj
      */
-    public function restore(Wooj $wooj): WoojResource
+    public function restore(Wooj $wooj): Wooj
     {
         $wooj->restore();
 
-        return new WoojResource($wooj);
+        return $wooj;
     }
 
     /**
      * Очистить корзину
+     * @param int $authorId
      * @return void
      */
-    public function destroyTrashed(): void
+    public function destroyTrashed(int $authorId): void
     {
-        Wooj::byAuthor()->onlyTrashed()->forceDelete();
+        Wooj::onlyTrashed()->where('author_id', $authorId)->forceDelete();
     }
 
     /**
      * Установить топик для вуджа
      * @param Wooj $wooj
      * @param int $topicId
-     * @return WoojResource
+     * @return Wooj
      */
-    public function setTopic(Wooj $wooj, int $topicId): WoojResource
+    public function setTopic(Wooj $wooj, int $topicId): Wooj
     {
         WoojTopic::create([
             'wooj_id' => $wooj->id,
             'topic_id' => $topicId,
         ]);
 
-        return new WoojResource($wooj);
+        return $wooj;
     }
 
     /**
      * Снять топик с вуджа
      * @param Wooj $wooj
      * @param int $topicId
-     * @return WoojResource
+     * @return Wooj
      */
-    public function unsetTopic(Wooj $wooj, int $topicId): WoojResource
+    public function unsetTopic(Wooj $wooj, int $topicId): Wooj
     {
         $woojTopic = WoojTopic::where([
             'wooj_id' => $wooj->id,
@@ -158,26 +188,36 @@ class WoojService
         ]);
         $woojTopic->delete();
 
-        return new WoojResource($wooj);
+        return $wooj;
     }
 
     /**
      * Закрепить вудж
      * @param Wooj $wooj
-     * @return WoojResource
+     * @return Wooj
      */
-    public function pin(Wooj $wooj): WoojResource
+    public function pin(Wooj $wooj): Wooj
     {
-        return $this->setTopic($wooj, $wooj->author->topicPinnedId);
+        $topic = Topic::where([
+            'type' => Topic::TYPE_PINNED,
+            'author_id' => $wooj->author->id
+        ])->firstOrFail();
+
+        return $this->setTopic($wooj, $topic->id);
     }
 
     /**
      * Открепить вудж
      * @param Wooj $wooj
-     * @return WoojResource
+     * @return Wooj
      */
-    public function unpin(Wooj $wooj): WoojResource
+    public function unpin(Wooj $wooj): Wooj
     {
-        return $this->unsetTopic($wooj, $wooj->author->topicPinnedId);
+        $topic = Topic::where([
+            'type' => Topic::TYPE_PINNED,
+            'author_id' => $wooj->author->id
+        ])->firstOrFail();
+
+        return $this->unsetTopic($wooj, $topic->id);
     }
 }

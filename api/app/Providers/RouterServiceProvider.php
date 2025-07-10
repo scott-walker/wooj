@@ -4,7 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use App\Models\Wooj;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Topic;
 
 class RouterServiceProvider extends ServiceProvider
 {
@@ -21,9 +22,13 @@ class RouterServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Route::middleware()
-        // Route::bind('trashed_wooj', function ($id) {
-        //     return Wooj::onlyTrashed()->findOrFail($id);
-        // });
+        // Получить топик пользователя по типу или по ID
+        Route::bind('topic', function (string|int $key) {
+            $column = Topic::isTypeExists($key) ? 'type' : 'id';
+
+            return Topic::where('author_id', Auth::user()->id)
+                ->where($column, $key)
+                ->firstOrFail();
+        });
     }
 }
