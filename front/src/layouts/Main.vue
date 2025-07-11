@@ -38,7 +38,7 @@ const layoutStore = useLayoutStore()
 
 .layout {
   $header-gap: 10px;
-  $header-height: 40px;
+  $header-height: 50px;
   $sidebar-width: 200px;
   $sidebar-active-area-width: math.div($sidebar-width, 2);
   $content-hor-gap: 40px;
@@ -47,6 +47,7 @@ const layoutStore = useLayoutStore()
   &__header {
     height: $header-height;
     overflow: hidden;
+    // box-shadow: rgba(16, 0, 75, 1) 0px 12px 13px 5px;
 
     &-left {
       display: flex;

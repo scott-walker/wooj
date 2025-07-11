@@ -1,7 +1,7 @@
 <script setup>
 import _ from "lodash"
 import { Sortable, Plugins } from "@shopify/draggable"
-import { useTemplateRef, computed, onMounted, onUnmounted, nextTick } from "vue"
+import { useTemplateRef, computed, onMounted, onUnmounted, watch, nextTick } from "vue"
 import Tag from "@ui/Tag.vue"
 import Skeleton from "@ui/Skeleton.vue"
 import WoojCard from "@components/WoojCard.vue"
@@ -50,6 +50,8 @@ const woojPositions = computed(() => woojs.value.reduce((map, wooj) => {
 }, {}))
 
 const initSortable = () => {
+  console.log("initSortable")
+
   sortableDriver = new Sortable(document.querySelectorAll('.wooj-list__items'), {
     draggable: '.wooj-list__item',
     handle: '.wooj-card__wrapper',
@@ -74,7 +76,10 @@ const initSortable = () => {
   })
 }
 
-onMounted(() => props.hasSort && initSortable())
+watch(() => props.loaded, (value) => nextTick(() => {
+  value && props.hasSort && initSortable()
+}))
+// onMounted(() => props.hasSort && initSortable())
 onUnmounted(() => sortableDriver && sortableDriver.destroy())
 </script>
 

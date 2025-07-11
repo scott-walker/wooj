@@ -44,7 +44,7 @@ const onCreate = async () => {
 .create-topic {
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-end;
   gap: 20px;
 
   &__field {

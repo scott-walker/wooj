@@ -142,8 +142,8 @@ const onRedo = () => {
     <div class="ui-editor-pamel__delimiter"></div>
 
     <section class="ui-editor-pamel__group">
-      <Button @click="onCode" icon="code" :disabled="isCodeDisabled" :active="isCodeActive" />
-      <Button @click="onBlockquote" icon="quote-right" :disabled="isBlockquoteDisabled" :active="isBlockquoteActive" />
+      <!-- <Button @click="onCode" icon="code" :disabled="isCodeDisabled" :active="isCodeActive" /> -->
+      <!-- <Button @click="onBlockquote" icon="quote-right" :disabled="isBlockquoteDisabled" :active="isBlockquoteActive" /> -->
       <Button @click="onHorizontalRule" icon="window-minimize" />
     </section>
 
@@ -173,10 +173,12 @@ const onRedo = () => {
 
 .ui-editor-pamel {
   display: flex;
-  justify-content: space-between;
+  // justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: stretch;
   flex-wrap: wrap;
-  border-radius: 10px;
+  gap: 20px;
+  border-radius: 5px;
   overflow: hidden;
   width: 100%;
   padding: 10px;

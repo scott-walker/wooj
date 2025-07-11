@@ -7,11 +7,11 @@ import SidebarLink from "@components/SidebarLink.vue"
 import CreateTopic from "@components/CreateTopic.vue"
 import { useWoojStore } from "@stores/wooj"
 
-const show = ref(false)
+const isShowedCreateTopic = ref(false)
 const woojStore = useWoojStore()
 
-const onShowCreateTopic = () => show.value = true
-const onHideCreateTopic = () => show.value = false
+const onShowCreateTopic = () => isShowedCreateTopic.value = true
+const onHideCreateTopic = () => isShowedCreateTopic.value = false
 </script>
 
 <template>
@@ -43,7 +43,7 @@ const onHideCreateTopic = () => show.value = false
     <div class="sidebar__item plus-topic-item">
       <Button text="Топик" icon="plus" @click="onShowCreateTopic" />
     </div>
-    <Modal v-model="show" title="Новый топик">
+    <Modal v-model="isShowedCreateTopic" title="Новый топик">
       <CreateTopic @created="onHideCreateTopic" />
     </Modal>
   </aside>

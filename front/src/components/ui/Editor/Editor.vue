@@ -93,11 +93,14 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="ui-editor" :class="{ focused: isFocused }" v-if="editor" @mouseover="onMouseOver"
+  <div
+    v-if="editor"
+    class="ui-editor"
+    :class="{ focused: isFocused }"
+    @mouseover="onMouseOver"
     @mouseleave="onMouseLeave">
-    <Transition>
-      <EditorPanel class="ui-editor__panel" v-show="isFocused" :editor="editor" />
-    </Transition>
+
+    <EditorPanel class="ui-editor__panel" :class="{ 'hidden': !isFocused }" :editor="editor" />
     <EditorContent class="ui-editor__content" :editor="editor" />
   </div>
 </template>
@@ -109,26 +112,42 @@ onBeforeUnmount(() => {
 .ui-editor {
   position: relative;
   border: 2px solid transparent;
-  border-radius: 10px;
+  border-top: none;
+  border-radius: 5px;
   transition: all .2s;
 
   &:hover {
-    border-color: rgba(16, 0, 75, 0.05);
+    // border-color: colors.$grey;
   }
 
   &.focused {
-    border-color: rgba(16, 0, 75, 0.05);
+    border-color: colors.$grey;
 
     .tiptap {
-      padding-top: 76px;
+      // padding-top: 76px;
     }
   }
 
   &__panel {
-    position: absolute;
-    z-index: 100;
+    position: sticky;
+    top: 48px;
+    left: 0;
+    background: white;
+    z-index: 10;
     width: 100%;
-    top: 0;
+    height: 60px;
+    margin-top: -2px;
+    overflow: hidden;
+    transform: translateY(0px);
+    opacity: 1;
+    transition: all .3s;
+    // border-top: 2px solid colors.$grey;
+
+    &.hidden {
+      height: 10px;
+      opacity: 0;
+      transform: translateY(-50px);
+    }
   }
 
   &__content {
@@ -137,8 +156,6 @@ onBeforeUnmount(() => {
     .tiptap {
       padding: 20px;
       transition: all .2s;
-      // max-height: calc(100vh - 400px);
-      // overflow-y: auto;
 
       &.ProseMirror-focused {
         outline: none;

@@ -96,11 +96,10 @@ const onClose = () => show.value = false
       justify-content: space-between;
       align-items: center;
       gap: 20px;
-      padding: 15px;
+      padding: 10px;
 
       &-title {
-        padding-left: 5px;
-        padding-right: 70px;
+        padding-left: 10px;
         font-size: 22px;
         font-weight: bold;
       }
@@ -110,8 +109,7 @@ const onClose = () => show.value = false
       display: flex;
       justify-content: flex-start;
       align-items: stretch;
-      padding: 20px;
-      padding-top: 0;
+      padding: 10px 20px;
     }
   }
 }
