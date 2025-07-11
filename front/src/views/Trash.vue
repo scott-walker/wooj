@@ -24,10 +24,10 @@ onMounted(async () => {
 <template>
   <div class="view-trash">
     <WoojList
-      v-if="isLoaded"
       id="trash"
       title="Корзина"
       emptyText="Корзина пуста"
+      :loaded="isLoaded"
       :woojs="woojs"
       :hasSort="false"
       :hasPin="false"

@@ -15,12 +15,17 @@ export const useWoojStore = defineStore("wooj", () => {
   const activeTopic = computed(() => topics.value.find(({ id }) => id === activeTopicId.value))
   // const activeWooj = computed(() => woojs.value.find(({ id }) => id === activeWoojId.value))
 
+  const isLoadedTopics = ref(false)
+  const isLoadedWoojs = ref(false)
+
   /**
    * Получить список топиков
    */
   async function getTopics() {
     try {
+      isLoadedTopics.value = false
       topics.value = await topicService.getAll()
+      isLoadedTopics.value = true
     } catch (message) {
       alert(message)
     }
@@ -31,7 +36,9 @@ export const useWoojStore = defineStore("wooj", () => {
    */
   async function getWoojs() {
     try {
+      isLoadedWoojs.value = false
       woojs.value = await woojService.getAll()
+      isLoadedWoojs.value = true
     } catch (message) {
       alert(message)
     }
@@ -44,6 +51,19 @@ export const useWoojStore = defineStore("wooj", () => {
   async function get(id) {
     try {
       return await woojService.get(id)
+    } catch (message) {
+      alert(message)
+    }
+  }
+
+  /**
+   * Создать топик
+   */
+  async function createTopic({ name }) {
+    try {
+      topics.value = await topicService.create({ name })
+
+      await getTopics()
     } catch (message) {
       alert(message)
     }
@@ -108,12 +128,18 @@ export const useWoojStore = defineStore("wooj", () => {
   return {
     topics,
     woojs,
+    isLoadedTopics,
+    isLoadedWoojs,
+
     activeTopicId,
     activeWoojId,
     activeTopic,
     activeWooj,
     activateTopic,
     activateWooj,
+
+    createTopic,
+
     deactivateTopic,
     deactivateWooj,
     get,

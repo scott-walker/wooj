@@ -3,6 +3,7 @@ import _ from "lodash"
 import { Sortable, Plugins } from "@shopify/draggable"
 import { useTemplateRef, computed, onMounted, onUnmounted, nextTick } from "vue"
 import Tag from "@ui/Tag.vue"
+import Skeleton from "@ui/Skeleton.vue"
 import WoojCard from "@components/WoojCard.vue"
 import Empty from "@components/Empty.vue"
 
@@ -13,6 +14,7 @@ const props = defineProps({
   title: String,
   woojs: Array,
   emptyText: { type: String, default: "Тут пусто" },
+  loaded: { type: Boolean, default: true },
   hasSort: { type: Boolean, default: true },
   hasPin: { type: Boolean, default: true },
   hasEdit: { type: Boolean, default: true },
@@ -38,9 +40,9 @@ const getRandMargin = (i) => {
 }
 
 const title = computed(() => props.title)
-const woojs = computed(() => props.woojs || [])
+const woojs = computed(() => props.woojs)
 const nums = computed(() => woojs.value.length)
-const isEmpty = computed(() => !nums.value)
+const isEmpty = computed(() => props.loaded && !nums.value)
 const woojPositions = computed(() => woojs.value.reduce((map, wooj) => {
   map[wooj.id] = getRandMargin(wooj.id)
 
@@ -48,8 +50,6 @@ const woojPositions = computed(() => woojs.value.reduce((map, wooj) => {
 }, {}))
 
 const initSortable = () => {
-  console.log("initSortable")
-
   sortableDriver = new Sortable(document.querySelectorAll('.wooj-list__items'), {
     draggable: '.wooj-list__item',
     handle: '.wooj-card__wrapper',
@@ -64,9 +64,6 @@ const initSortable = () => {
     plugins: [Plugins.SortAnimation]
   });
 
-  // sortableDriver.on('sortable:start', (evn) => console.log('sortable:start', evn))
-  // sortableDriver.on('sortable:sort', (evn) => console.log('sortable:sort', evn))
-  // sortableDriver.on('sortable:sorted', (evn) => console.log('sortable:sorted', evn))
   sortableDriver.on('sortable:stop', () => {
     nextTick(() => {
       const elements = Array.from(items.value.querySelectorAll('.wooj-list__item'))
@@ -87,7 +84,7 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
       <h1 class="wooj-list__header-title">
         {{ title }}
       </h1>
-      <Tag>{{ nums }}</Tag>
+      <Tag v-if="nums">{{ nums }}</Tag>
       <div class="wooj-list__header-panel">
         <slot name="panel" :isEmpty="isEmpty" />
       </div>
@@ -95,27 +92,31 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
 
     <Empty v-if="isEmpty" :title="props.emptyText" />
 
-    <div v-else-if="woojs" class="wooj-list__board">
-      <div class="wooj-list__items" :class="{ sortable: props.hasSort }" ref="items">
-        <div v-for="wooj, i of props.woojs" :key="wooj.id" :data-id="wooj.id" class="wooj-list__item"
-          :style="woojPositions[wooj.id]">
-          <WoojCard
-            :data="wooj"
-            :hasPin="props.hasPin"
-            :hasEdit="props.hasEdit"
-            :hasRemove="props.hasRemove"
-            :hasRestore="props.hasRestore"
-            @pin="emit('pin', $event)"
-            @edit="emit('edit', $event)"
-            @remove="emit('remove', $event)"
-            @restore="emit('restore', $event)" />
+    <template v-else-if="loaded">
+      <div class="wooj-list__board">
+        <div class="wooj-list__items" :class="{ sortable: props.hasSort }" ref="items">
+          <div
+            class="wooj-list__item"
+            v-for="wooj of woojs"
+            :key="wooj.id"
+            :data-id="wooj.id"
+            :style="woojPositions[wooj.id]">
+            <WoojCard
+              :data="wooj"
+              :hasPin="props.hasPin"
+              :hasEdit="props.hasEdit"
+              :hasRemove="props.hasRemove"
+              :hasRestore="props.hasRestore"
+              @pin="emit('pin', $event)"
+              @edit="emit('edit', $event)"
+              @remove="emit('remove', $event)"
+              @restore="emit('restore', $event)" />
+          </div>
         </div>
       </div>
-    </div>
+    </template>
 
-    <div v-else class="skeleton grid is-col-min-10 is-gap-2">
-      <div v-for="i of 8" :key="i" class="cell skeleton-block m-0"></div>
-    </div>
+    <Skeleton v-else type="blocks" :itemsNum="8" />
   </div>
 </template>
 

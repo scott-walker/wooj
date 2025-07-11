@@ -5,7 +5,7 @@ export default () => {
   const router = useRouter()
   const { woojService, topicService } = inject("services")
 
-  const rawWoojs = ref(null)
+  const rawWoojs = ref([])
   const inProcessing = ref(false)
   const hiddenIdsMap = ref({})
   const pinnedIdsMap = ref({})
@@ -117,10 +117,6 @@ export default () => {
   }
 
   const woojs = computed(() => {
-    if (!rawWoojs.value) {
-      return null
-    }
-
     const woojs = []
 
     for (const wooj of rawWoojs.value) {

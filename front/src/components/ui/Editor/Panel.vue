@@ -69,7 +69,7 @@ const onHeading = level => {
 const colorsMap = ref({
   purple: "#5f00d7",
   pink: "#d1007c",
-  green: "#008b6c",
+  green: "#d4ff38",
 })
 const isColorPurpleDisabled = computed(() => !props.editor.can().chain().focus().setColor(colorsMap.value.purple).run())
 const isColorPurpleActive = computed(() => props.editor.isActive("textStyle", { color: colorsMap.value.purple }))
@@ -155,8 +155,8 @@ const onRedo = () => {
         :disabled="isColorPurpleDisabled" :active="isColorPurpleActive" />
       <Button @click="onColor(colorsMap.pink, isColorPinkActive)" icon="circle" :color="colorsMap.pink"
         :disabled="isColorPinkDisabled" :active="isColorPinkActive" />
-      <Button @click="onColor(colorsMap.green, isColorGreenActive)" icon="circle" :color="colorsMap.green"
-        :disabled="isColorGreenDisabled" :active="isColorGreenActive" />
+      <!-- <Button @click="onColor(colorsMap.green, isColorGreenActive)" icon="circle" :color="colorsMap.green"
+        :disabled="isColorGreenDisabled" :active="isColorGreenActive" /> -->
     </section>
 
     <div class="ui-editor-pamel__delimiter"></div>

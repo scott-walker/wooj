@@ -6,17 +6,20 @@ const props = defineProps({
   text: { type: String },
   icon: { type: String, default: null },
   loading: { type: Boolean, default: false },
+  disabled: { type: Boolean, default: false },
 })
 const emit = defineEmits(["click"])
 const cssClass = computed(() => {
   const classes = []
 
   props.loading && classes.push("loading")
+  props.disabled && classes.push("disabled")
 
   return classes
 })
+const isLocked = computed(() => props.disabled || props.loading)
 
-const onClick = () => !props.loading && emit('click')
+const onClick = () => !isLocked.value && emit('click')
 </script>
 
 <template>
@@ -34,8 +37,11 @@ const onClick = () => !props.loading && emit('click')
 @use "@styles/colors";
 
 .ui-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
-  display: inline-block;
+  width: fit-content;
   padding: 3px 15px;
   border-radius: 20px;
   transition: all 0.3s;
@@ -57,6 +63,16 @@ const onClick = () => !props.loading && emit('click')
     position: relative;
     top: 1px;
     margin-right: 5px;
+  }
+
+  &.disabled {
+    cursor: default;
+
+    &:hover {
+      box-shadow: none;
+    }
+
+    opacity: .6;
   }
 
   &.loading {

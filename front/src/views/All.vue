@@ -20,10 +20,10 @@ onMounted(async () => {
 <template>
   <div class="view-all">
     <WoojList
-      v-if="isLoaded"
       id="all"
       title="Все вуджи"
       :woojs="woojs"
+      :loaded="isLoaded"
       @sort="onSort"
       @pin="onTogglePin"
       @edit="onEdit"

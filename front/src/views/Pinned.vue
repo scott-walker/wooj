@@ -25,9 +25,9 @@ onMounted(async () => {
 <template>
   <div class="view-pinned">
     <WoojList
-      v-if="isLoaded"
       id="pinned"
       title="Закрепленные"
+      :loaded="isLoaded"
       :woojs="woojs"
       @sort="onSort"
       @pin="onUnpin"

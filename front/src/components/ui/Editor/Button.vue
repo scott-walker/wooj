@@ -20,18 +20,20 @@ const colorStyle = computed(() => ({
   </button>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
+@use "@styles/colors";
+
 .ui-editor-button {
   border: 2px solid transparent;
   border-radius: 10px;
   transition: all .1s;
 
   &.active {
-    background: rgba(255, 166, 0, 0.276);
+    background: colors.$primary;
   }
 
   &:hover {
-    background: rgba(255, 166, 0, 0.276);
+    background: colors.$primary;
   }
 
   &__icon {}

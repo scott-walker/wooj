@@ -2,9 +2,11 @@
 import { computed } from "vue"
 import LightInput from "@ui/LightInput.vue"
 import Editor from "@ui/Editor/Editor.vue"
+import Skeleton from "@ui/Skeleton.vue"
 
 const props = defineProps({
   data: Object,
+  loaded: { type: Boolean, default: true },
   isSaving: { type: Boolean, default: false },
 })
 
@@ -14,14 +16,14 @@ const wooj = computed(() => props.data)
 <template>
   <div class="wooj">
     <div class="wooj__board">
-      <div v-if="wooj" class="wooj__paper">
-        <span v-show="isSaving" class="wooj__save-status tag is-medium">Сохранено</span>
+      <div v-if="props.loaded" class="wooj__paper">
+        <span v-show="props.isSaving" class="wooj__save-status tag is-medium">Сохранено</span>
 
         <div class="wooj__title">
           <LightInput
             v-model="wooj.title"
             :max="60"
-            cssClass="title is-4"
+            fieldClass="title is-4"
             placeholder="Кликни сюда и напиши заголовок"
             @save="$emit('save', wooj)" />
         </div>
@@ -29,6 +31,8 @@ const wooj = computed(() => props.data)
           <Editor v-model="wooj.content" @save="$emit('save', wooj)" />
         </div>
       </div>
+
+      <Skeleton v-else type="block-list" :itemsNum="1" class="wooj__skeleton" />
     </div>
   </div>
 </template>
@@ -69,6 +73,10 @@ const wooj = computed(() => props.data)
 
   &__content {
     margin-top: 5px;
+  }
+
+  &__skeleton {
+    max-width: 900px;
   }
 }
 </style>

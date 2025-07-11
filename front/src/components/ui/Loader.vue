@@ -20,6 +20,8 @@
 @use "@styles/colors";
 
 .ui-loader {
+  height: 100%;
+
   &__figure {
     fill: colors.$basic;
     height: 100%;

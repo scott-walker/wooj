@@ -43,7 +43,6 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
       </span>
     </div>
 
-
     <div class="wooj-card__wrapper" :class="{ 'pinned': wooj.is_pinned }">
       <div class="wooj-card__title">{{ title }}</div>
       <div class="wooj-card__content" v-html="content" />
@@ -53,6 +52,7 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
 
 <style lang="scss" scoped>
 @use "@styles/colors";
+@use "@styles/common";
 
 .wooj-card {
   flex-grow: 1;
@@ -60,10 +60,9 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
   justify-content: center;
   align-items: stretch;
   position: relative;
-  background: colors.$absorbing;
-  box-shadow: rgba(16, 0, 75, 0.05) 0px 5px 10px 0px;
   border-radius: 100px;
   transition: all .3s;
+  @include common.card();
 
   &__panel {
     position: absolute;
@@ -86,8 +85,6 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
   }
 
   &:hover {
-    box-shadow: rgba(16, 0, 75, 0.15) 0px 10px 30px 0px;
-
     .wooj-card__panel {
       opacity: 1;
     }

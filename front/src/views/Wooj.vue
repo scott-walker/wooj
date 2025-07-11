@@ -61,10 +61,7 @@ watch(() => props.woojId, init)
 <template>
   <div class="view-wooj">
     <Empty v-if="isNotFound" title="Вудж не найден" text="Используй поиск" />
-    <Wooj v-else-if="isLoaded" :data="wooj" :isSaving="isSaving" @save="onSave" />
-    <div v-else class="skeleton grid is-col-min-1 is-gap-2">
-      <div class="cell skeleton-block"></div>
-    </div>
+    <Wooj v-else :loaded="isLoaded" :data="wooj" :isSaving="isSaving" @save="onSave" />
   </div>
 </template>
 
