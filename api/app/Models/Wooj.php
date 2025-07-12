@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-// use Awobaz\Compoships\Compoships;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;

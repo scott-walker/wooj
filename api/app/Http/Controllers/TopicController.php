@@ -32,9 +32,7 @@ class TopicController extends Controller
      */
     public function index(): ResourceCollection
     {
-        $topics = $this->topicService->getCustomTopics([
-            'author_id' => Auth::user()->id,
-        ]);
+        $topics = $this->topicService->getTopicsByAuthor(Auth::user()->id);
 
         return $this->topicService->wrapCollection($topics);
     }

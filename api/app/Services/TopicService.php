@@ -66,7 +66,20 @@ class TopicService
     }
 
     /**
+     * Получить топики по автору
+     * @param int $authorId
+     * @return LengthAwarePaginator
+     */
+    public function getTopicsByAuthor(int $authorId): LengthAwarePaginator
+    {
+        return Topic::where('author_id', $authorId)
+            ->with("woojTopics")
+            ->paginate(self::ITEMS_PER_PAGE);
+    }
+
+    /**
      * Получить пользовательские топики
+     * @param array $params
      * @return LengthAwarePaginator
      */
     public function getCustomTopics(array $params): LengthAwarePaginator

@@ -50,6 +50,7 @@ class WoojService
     public function getWoojs(array $params = [], ?callable $cb = null): LengthAwarePaginator
     {
         $type = $params['type'] ?? null;
+        $topicId = $params['topic_id'] ?? null;
         $authorId = $params['author_id'] ?? null;
 
         $query = Wooj::select('woojs.*')
@@ -58,6 +59,9 @@ class WoojService
 
         if ($type !== null) {
             $query->where('topics.type', $type);
+        }
+        if ($topicId !== null) {
+            $query->where('topics.id', $topicId);
         }
         if ($authorId !== null) {
             $query
@@ -69,7 +73,21 @@ class WoojService
         }
 
         return $query
+            ->orderBy('woojs_topics.topic_id')
             ->orderBy('woojs_topics.position')
+            ->paginate(self::ITEMS_PER_PAGE);
+    }
+
+    /**
+     * Получить вуджи по автору
+     * @param int $authorId
+     * @return LengthAwarePaginator
+     */
+    public function getWoojsByAuthor(int $authorId): LengthAwarePaginator
+    {
+        return Wooj::where('author_id', $authorId)
+            ->with('topics')
+            ->withTrashed()
             ->paginate(self::ITEMS_PER_PAGE);
     }
 

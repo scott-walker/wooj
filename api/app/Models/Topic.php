@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Wooj;
 use App\Models\WoojTopic;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Модель топика
@@ -54,12 +55,22 @@ class Topic extends Model
     }
 
     /**
-     * Вуджы
+     * Связь с вуджами
      * @return BelongsToMany
      */
     public function woojs(): BelongsToMany
     {
         return $this->belongsToMany(Wooj::class, 'woojs_topics');
+    }
+
+    /**
+     * Связь с вуджами
+     * @return HasMany
+     */
+    public function woojTopics(): HasMany
+    {
+        return $this->hasMany(WoojTopic::class, 'topic_id')
+            ->orderBy('position', 'asc');
     }
 
     /**
@@ -75,9 +86,6 @@ class Topic extends Model
      */
     public function getWoojPositionsAttribute()
     {
-        return WoojTopic::where('topic_id', $this->id)
-            ->orderBy('position')
-            ->pluck('wooj_id')
-            ->toArray();
+        return $this->woojTopics->pluck('wooj_id')->toArray();
     }
 }

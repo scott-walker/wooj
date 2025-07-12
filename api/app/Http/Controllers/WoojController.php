@@ -33,16 +33,13 @@ class WoojController extends Controller
      */
     public function index(): ResourceCollection
     {
-        $woojs = $this->woojSerivce->getWoojs([
-            'type' => Topic::TYPE_ALL,
-            'author_id' => Auth::user()->id,
-        ]);
+        $woojs = $this->woojSerivce->getWoojsByAuthor(Auth::user()->id);
 
         return $this->woojSerivce->wrapCollection($woojs);
     }
 
     /**
-     * Получить список любимых вуджей
+     * Получить список закрепленных вуджей
      * @return ResourceCollection
      */
     public function pinned(): ResourceCollection
@@ -62,6 +59,22 @@ class WoojController extends Controller
     public function trash(): ResourceCollection
     {
         $woojs = $this->woojSerivce->getTrashed([
+            'author_id' => Auth::user()->id,
+        ]);
+
+        return $this->woojSerivce->wrapCollection($woojs);
+    }
+
+    /**
+     * Получить список вуджей в топике
+     * @param GetRequest $request
+     * @param Topic $topic
+     * @return ResourceCollection
+     */
+    public function topic(Topic $topic): ResourceCollection
+    {
+        $woojs = $this->woojSerivce->getWoojs([
+            'topic_id' => $topic->id,
             'author_id' => Auth::user()->id,
         ]);
 
