@@ -23,11 +23,11 @@ const layoutStore = useLayoutStore()
         <Sidebar />
       </div>
 
-      <div class="layout__body-content"
+      <Scrollbar class="layout__body-content"
         :class="{ aired: layoutStore.hasAiredSidebar }"
         @mouseover="layoutStore.onLeaveSidebar">
         <RouterView />
-      </div>
+      </Scrollbar>
     </div>
   </div>
 </template>
@@ -70,6 +70,8 @@ const layoutStore = useLayoutStore()
     justify-content: flex-end;
     align-items: stretch;
     height: calc(100vh - $header-height);
+    overflow-y: hidden;
+    background-color: colors.$grey;
 
     &-sidebar {
       position: fixed;
@@ -104,10 +106,8 @@ const layoutStore = useLayoutStore()
     }
 
     &-content {
-      overflow-y: auto;
       width: calc(100% - $sidebar-width);
       padding: $content-ver-gap $content-hor-gap;
-      background-color: colors.$grey;
       transition: all 0.3s;
 
       &.aired {

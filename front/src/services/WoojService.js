@@ -172,4 +172,19 @@ export default class WoojService {
       throw "Не удалось открепить вудж"
     }
   }
+
+  /**
+   * Установить топики для вуджа
+   * @param {Number} id
+   * @returns {Object} вудж
+   */
+  async setTopics(id, map) {
+    try {
+      const { data } = await this.http.put(`woojs/${id}/set-topics`, { map })
+
+      return data
+    } catch {
+      throw "Не удалось установить топики для вуджа"
+    }
+  }
 }

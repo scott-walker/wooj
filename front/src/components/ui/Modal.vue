@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch } from "vue"
+import { ref, computed, watch, useTemplateRef, nextTick } from "vue"
 import IconLink from "@ui/IconLink.vue"
 
 const show = defineModel()
@@ -7,6 +7,7 @@ const props = defineProps({
   title: { type: String, default: "" },
   center: { type: Boolean, default: false },
 })
+const modal = useTemplateRef("modal")
 const mousePosition = ref(null)
 const contentPosition = computed(() => {
   const { x, y } = mousePosition.value || {}
@@ -23,7 +24,9 @@ const contentPosition = computed(() => {
 })
 
 watch(show, (value) => {
-  if (!value) {
+  if (value) {
+    nextTick(() => document.body.append(modal.value))
+  } else {
     mousePosition.value = null
   }
 })
@@ -38,8 +41,8 @@ const onClose = () => show.value = false
 </script>
 
 <template>
-  <div class="ui-modal" v-if="show" @mouseover="onCheckPosition">
-    <div class="ui-modal__background" @click="onClose"></div>
+  <div class="ui-modal" v-if="show" @mouseover="onCheckPosition" ref="modal">
+    <div class=" ui-modal__background" @click="onClose"></div>
     <div class="ui-modal__content" :style="contentPosition">
       <div class="ui-modal__content-header">
         <div v-if="props.title" class="ui-modal__content-header-title">

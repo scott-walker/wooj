@@ -1,24 +1,9 @@
-// Set your brand colors
-// $purple: #8a4d76;
-// $pink: #fa7c91;
-// $brown: #757763;
-// $beige-light: #d0d1cd;
-// $beige-lighter: #eff0eb;
-
-// Path to Bulma's sass folder
-// @use "bulma/sass" with (
-//   $family-primary: '"Nunito", sans-serif',
-//   $grey-dark: $brown,
-//   $grey-light: $beige-light,
-//   $primary: $purple,
-//   $link: $pink,
-//   $control-border-width: 2px,
-//   $input-shadow: none
-// );
-
+@use "sass:color";
 @use "@styles/colors";
 @import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
+@import "vue3-perfect-scrollbar/style.css";
 
+// Base
 html {
   overflow-y: auto;
 }
@@ -30,7 +15,14 @@ body {
   color: colors.$basic;
 }
 
-// #app {
-//   width: 100vw;
-//   height: 100vh;
-// }
+// Scrollbar
+.ps {
+  &__rail-y,
+  &__rail-y:hover {
+    background: transparent !important;
+  }
+  &__thumb-y {
+    background-color: color.change(colors.$basic, $alpha: 70%) !important;
+    width: 10px !important;
+  }
+}

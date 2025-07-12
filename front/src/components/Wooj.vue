@@ -1,15 +1,16 @@
 <script setup>
-import { ref, computed } from "vue"
+import { ref } from "vue"
 import Modal from "@ui/Modal.vue"
 import IconLink from "@ui/IconLink.vue"
 import LightInput from "@ui/LightInput.vue"
 import Editor from "@ui/Editor/Editor.vue"
 import Skeleton from "@ui/Skeleton.vue"
-import Topics from "@components/Topics.vue"
+import TopicTags from "@components/TopicTags.vue"
 import { useWoojStore } from "@stores/wooj"
 
+const wooj = defineModel()
+const emit = defineEmits(["save", "change-topics"])
 const props = defineProps({
-  data: Object,
   loaded: { type: Boolean, default: true },
   isSaving: { type: Boolean, default: false },
 })
@@ -18,11 +19,7 @@ const woojStore = useWoojStore()
 const isShowedTopics = ref(false)
 const isShowedShare = ref(false)
 
-const wooj = computed(() => props.data)
-
-const onSaveTopics = (map) => {
-  console.log(map)
-}
+const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
 </script>
 
 <template>
@@ -30,9 +27,9 @@ const onSaveTopics = (map) => {
     <div v-if="props.loaded" class="wooj__board">
       <div class="wooj__actions">
         <IconLink icon="tags" @click="isShowedTopics = !isShowedTopics" />
-        <!-- <IconLink icon="share-from-square" /> -->
         <IconLink icon="link" @click="isShowedShare = !isShowedShare" />
       </div>
+
       <div class="wooj__paper">
         <span v-show="props.isSaving" class="wooj__save-status tag is-medium">Сохранено</span>
 
@@ -42,10 +39,10 @@ const onSaveTopics = (map) => {
             :max="60"
             fieldClass="wooj__title-field"
             placeholder="Кликни сюда и напиши заголовок"
-            @save="$emit('save', wooj)" />
+            @save="emit('save', wooj)" />
         </div>
         <div class="wooj__content">
-          <Editor v-model="wooj.content" @save="$emit('save', wooj)" />
+          <Editor v-model="wooj.content" @save="emit('save', wooj)" />
         </div>
       </div>
     </div>
@@ -53,7 +50,7 @@ const onSaveTopics = (map) => {
     <Skeleton v-else type="block-list" :itemsNum="1" class="wooj__skeleton" />
 
     <Modal v-model="isShowedTopics" title="Топики">
-      <Topics :items="woojStore.topics" @save="onSaveTopics" />
+      <TopicTags :items="woojStore.topics" v-model="wooj.topicIds" @save="onSaveTopics" />
     </Modal>
     <Modal v-model="isShowedShare" title="Публиковать вуддж">
       Публиковать!!!
@@ -116,8 +113,6 @@ const onSaveTopics = (map) => {
     z-index: 11;
     background: colors.$absorbing;
     border-bottom: 2px solid colors.$grey;
-
-    // box-shadow: rgba(16, 0, 75, 0.1) 0px 5px 10px 0px;
 
     &-field {
       padding: 20px !important;
