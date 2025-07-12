@@ -69,6 +69,21 @@ export default class WoojService {
   }
 
   /**
+   * Получить вуджи по топику
+   * @param {Number} id
+   * @returns {Array} список вуджей
+   */
+  async getByTopic(id) {
+    try {
+      const { data } = await this.http.get(`woojs/topic/${id}`)
+
+      return data
+    } catch {
+      throw "Не удалось получить вуджи по топику"
+    }
+  }
+
+  /**
    * Создать вудж
    * @param {Object} data
    * @returns {Object} вудж

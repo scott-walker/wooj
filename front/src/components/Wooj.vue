@@ -107,16 +107,14 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
   }
 
   &__title {
-    position: sticky;
-    top: -30px;
-    left: 0;
+    position: relative;
     z-index: 11;
     background: colors.$absorbing;
     border-bottom: 2px solid colors.$grey;
 
     &-field {
       padding: 20px !important;
-      font-size: 32px;
+      font-size: 28px;
       font-weight: bold;
       border: none !important;
 

@@ -1,24 +1,15 @@
 <script setup>
-import { ref, computed, onMounted } from "vue"
+import { computed, onBeforeMount, watch } from "vue"
 import WoojList from "@components/WoojList.vue"
-import useWoojs from "@hooks/woojs"
+import useDataStore from "@stores/data"
 
-const { woojs, fetchTrash, onRestore, onClearTrash } = useWoojs()
-const isLoaded = ref(false)
+const store = useDataStore()
+const isShowedButton = computed(() => store.removedWoojs.length)
 
-const isShowedButton = computed(() => {
-  if (woojs.value instanceof Array) {
-    return woojs.value.length
-  }
+// const load = () => store.isLoadedTopics && store.activateTopic(store.topicAll.id)
 
-  return woojs.value
-})
-
-onMounted(async () => {
-  await fetchTrash()
-
-  isLoaded.value = true
-})
+// onBeforeMount(load)
+// watch(() => store.isLoadedTopics, load)
 </script>
 
 <template>
@@ -27,14 +18,14 @@ onMounted(async () => {
       id="trash"
       title="Корзина"
       emptyText="Корзина пуста"
-      :loaded="isLoaded"
-      :woojs="woojs"
       :hasSort="false"
       :hasPin="false"
       :hasEdit="false"
       :hasRemove="false"
       :hasRestore="true"
-      @restore="onRestore">
+      :woojs="store.removedWoojs"
+      :loaded="store.isLoaded"
+      @restore="store.restore">
       <template #panel>
         <button v-if="isShowedButton" class="button is-danger" @click="onClearTrash">
           <span class="icon">

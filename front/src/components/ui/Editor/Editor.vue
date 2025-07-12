@@ -130,7 +130,7 @@ onBeforeUnmount(() => {
 
   &__panel {
     position: sticky;
-    top: 48px;
+    top: -27px;
     left: 0;
     background: white;
     z-index: 10;

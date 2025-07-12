@@ -1,20 +1,18 @@
 <script setup>
-import { ref, onMounted } from "vue"
+import { onBeforeMount, watch } from "vue"
 import WoojList from "@components/WoojList.vue"
-import useWoojs from "@hooks/woojs"
+// import useWoojs from "@hooks/woojs"
+import useDataStore from "@stores/data"
 
-const { woojs, fetchAll, sort, onTogglePin, onEdit, onRemove } = useWoojs()
-const isLoaded = ref(false)
+const dataStore = useDataStore()
 
-const onSort = (positions) => {
-  sort("all", positions)
-}
+// const { woojs, fetchAll, sort, onTogglePin, onEdit, onRemove } = useWoojs()
+// const isLoaded = ref(false)
 
-onMounted(async () => {
-  await fetchAll()
+// const load = () => dataStore.isLoadedTopics && dataStore.activateTopic(dataStore.topicAll.id)
 
-  isLoaded.value = true
-})
+// onBeforeMount(load)
+// watch(() => dataStore.isLoadedTopics, load)
 </script>
 
 <template>
@@ -22,11 +20,11 @@ onMounted(async () => {
     <WoojList
       id="all"
       title="Все вуджи"
-      :woojs="woojs"
-      :loaded="isLoaded"
-      @sort="onSort"
-      @pin="onTogglePin"
-      @edit="onEdit"
-      @remove="onRemove" />
+      :woojs="dataStore.allWoojs"
+      :loaded="dataStore.isLoaded"
+      @sort="dataStore.sort('all', $event)"
+      @pin="dataStore.togglePin"
+      @edit="dataStore.edit"
+      @remove="dataStore.remove" />
   </div>
 </template>

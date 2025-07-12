@@ -18,6 +18,14 @@ export const useWoojStore = defineStore("wooj", () => {
   const isLoadedTopics = ref(false)
   const isLoadedWoojs = ref(false)
 
+  // const TOPIC_TYPE_ALL = "all"
+  // const TOPIC_TYPE_PINNED = "pinned"
+  // const TOPIC_TYPE_PUBLIC = "public"
+  // const TOPIC_TYPE_CUSTOM = "custom"
+
+  // const allWoojs = computed(() => woojs.value)
+  // const pinnedWoojs = computed(() => woojs.value.filter(wooj => wooj.isPinned))
+
   /**
    * Получить список топиков
    */

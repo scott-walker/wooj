@@ -5,10 +5,10 @@ import Modal from "@ui/Modal.vue"
 import Skeleton from "@ui/Skeleton.vue"
 import SidebarLink from "@components/SidebarLink.vue"
 import CreateTopic from "@components/CreateTopic.vue"
-import { useWoojStore } from "@stores/wooj"
+import useDataStore from "@stores/data"
 
 const isShowedCreateTopic = ref(false)
-const woojStore = useWoojStore()
+const store = useDataStore()
 
 const onShowCreateTopic = () => isShowedCreateTopic.value = true
 const onHideCreateTopic = () => isShowedCreateTopic.value = false
@@ -33,8 +33,8 @@ const onHideCreateTopic = () => isShowedCreateTopic.value = false
     </ul>
 
     <p class="sidebar__label">Топики</p>
-    <ul v-if="woojStore.isLoadedTopics" class="sidebar__menu">
-      <li v-for="topic of woojStore.topics" class="sidebar__menu-item">
+    <ul v-if="store.isLoadedTopics" class="sidebar__menu">
+      <li v-for="topic of store.customTopics" class="sidebar__menu-item">
         <SidebarLink :route="{ name: 'Topic', params: { topicId: topic.id } }" :text="topic.name" icon="tag" />
       </li>
     </ul>

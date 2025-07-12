@@ -1,10 +1,14 @@
 <script setup>
-import { reactive } from "vue";
+import { reactive } from "vue"
+import { useAuthStore } from "@stores/auth"
 
+const authStore = useAuthStore()
 const form = reactive({
   email: "",
   password: "",
 })
+
+const onSubmit = (form) => authStore.login(form)
 </script>
 
 <template>
@@ -46,7 +50,7 @@ const form = reactive({
           </div>
           <div class="field">
             <p class="control is-flex is-justify-content-center">
-              <button class="button is-link is-rounded" @click="$emit('submit', form)">
+              <button class="button is-link is-rounded" @click="onSubmit">
                 Погнали
               </button>
             </p>

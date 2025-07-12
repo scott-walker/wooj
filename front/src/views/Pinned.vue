@@ -1,25 +1,13 @@
 <script setup>
-import { ref, onMounted } from "vue"
+import { onBeforeMount, watch } from "vue"
 import WoojList from "@components/WoojList.vue"
-import useWoojs from "@hooks/woojs"
+import useDataStore from "@stores/data"
 
-const { woojs, fetchPinned, sort, unpin, hideWooj, onEdit, onRemove } = useWoojs()
-const isLoaded = ref(false)
+const store = useDataStore()
+// const load = () => store.isLoadedTopics && store.activateTopic(store.topicAll.id)
 
-const onUnpin = async ({ id }) => {
-  hideWooj(id)
-
-  await unpin(id)
-}
-const onSort = (positions) => {
-  sort("pinned", positions)
-}
-
-onMounted(async () => {
-  await fetchPinned()
-
-  isLoaded.value = true
-})
+// onBeforeMount(load)
+// watch(() => store.isLoadedTopics, load)
 </script>
 
 <template>
@@ -27,11 +15,11 @@ onMounted(async () => {
     <WoojList
       id="pinned"
       title="Закрепленные"
-      :loaded="isLoaded"
-      :woojs="woojs"
-      @sort="onSort"
-      @pin="onUnpin"
-      @edit="onEdit"
-      @remove="onRemove" />
+      :woojs="store.pinnedWoojs"
+      :loaded="store.isLoaded"
+      @sort="store.sort('pinned', $event)"
+      @pin="store.togglePin"
+      @edit="store.edit"
+      @remove="store.remove" />
   </div>
 </template>

@@ -50,8 +50,6 @@ const woojPositions = computed(() => woojs.value.reduce((map, wooj) => {
 }, {}))
 
 const initSortable = () => {
-  console.log("initSortable")
-
   sortableDriver = new Sortable(document.querySelectorAll('.wooj-list__items'), {
     draggable: '.wooj-list__item',
     handle: '.wooj-card__wrapper',
@@ -79,7 +77,8 @@ const initSortable = () => {
 watch(() => props.loaded, (value) => nextTick(() => {
   value && props.hasSort && initSortable()
 }))
-// onMounted(() => props.hasSort && initSortable())
+
+onMounted(() => props.hasSort && props.loaded && initSortable())
 onUnmounted(() => sortableDriver && sortableDriver.destroy())
 </script>
 
