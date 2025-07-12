@@ -220,4 +220,25 @@ class WoojService
 
         return $this->unsetTopic($wooj, $topic->id);
     }
+
+    /**
+     * Установить топики по карте topicId => set/unset
+     * @param Wooj $wooj
+     * @param array $topicsMap
+     * @return Wooj
+     */
+    public function setTopicsByMap(Wooj $wooj, array $topicsMap): Wooj
+    {
+        WoojTopic::where('wooj_id', $wooj->id)
+            ->whereIn('topic_id', array_keys($topicsMap))
+            ->delete();
+
+        foreach ($topicsMap as $topicId => $value) {
+            if ($value) {
+                $this->setTopic($wooj, $topicId);
+            }
+        }
+
+        return $wooj;
+    }
 }

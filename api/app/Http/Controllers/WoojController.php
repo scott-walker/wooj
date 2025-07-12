@@ -170,4 +170,17 @@ class WoojController extends Controller
 
         return $this->woojSerivce->wrap($wooj);
     }
+
+    /**
+     * Установить топики для вуджа
+     * @param GetRequest $request
+     * @param Wooj $wooj
+     * @return WoojResource
+     */
+    public function setTopics(GetRequest $request, Wooj $wooj): WoojResource
+    {
+        $wooj = $this->woojSerivce->setTopicsByMap($wooj, $request->map);
+
+        return $this->woojSerivce->wrap($wooj);
+    }
 }

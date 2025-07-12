@@ -15,10 +15,11 @@ Route::middleware(['throttle:api'])->group(function () {
         // Woojs
         Route::get('/woojs/trash', [WoojController::class, 'trash']);
         Route::delete('/woojs/trash', [WoojController::class, 'destroyTrashed']);
-        Route::put('/woojs/{wooj}/restore', [WoojController::class, 'restore'])->withTrashed();
         Route::get('/woojs/pinned', [WoojController::class, 'pinned']);
+        Route::put('/woojs/{wooj}/restore', [WoojController::class, 'restore'])->withTrashed();
         Route::put('/woojs/{wooj}/pin', [WoojController::class, 'pin']);
         Route::put('/woojs/{wooj}/unpin', [WoojController::class, 'unpin']);
+        Route::put('/woojs/{wooj}/set-topics', [WoojController::class, 'setTopics']);
         Route::apiResource('/woojs', WoojController::class);
 
         // Topics
