@@ -48,7 +48,7 @@ const onClose = () => show.value = false
         <div v-if="props.title" class="ui-modal__content-header-title">
           {{ props.title }}
         </div>
-        <IconLink icon="xmark" @click="onClose" />
+        <IconLink icon="xmark" type="default" @click="onClose" />
       </div>
       <div class="ui-modal__content-body">
         <slot />
@@ -99,10 +99,10 @@ const onClose = () => show.value = false
       justify-content: space-between;
       align-items: center;
       gap: 20px;
-      padding: 15px;
+      padding: 20px 25px 20px 15px;
 
       &-title {
-        padding-left: 5px;
+        padding-left: 15px;
         padding-right: 70px;
         font-size: 22px;
         font-weight: bold;
@@ -113,7 +113,7 @@ const onClose = () => show.value = false
       display: flex;
       justify-content: flex-start;
       align-items: stretch;
-      padding: 20px;
+      padding: 20px 30px;
       padding-top: 0;
     }
   }

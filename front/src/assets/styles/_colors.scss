@@ -9,6 +9,7 @@
 }
 
 $primary: #d4ff38;
+$danger: color.change(crimson, $lightness: 60%);
 $basic: #10223f;
 $absorbing: #ffffff;
 
@@ -16,3 +17,4 @@ $primary-light: color.change($primary, $alpha: 0.5);
 $basic-light: color.change($basic, $alpha: 80%);
 // $grey: hsl(221, 14%, 96%);
 $grey: toLight($basic, 100%);
+$grey-strong: toLight($basic, 92%);

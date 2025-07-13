@@ -3,7 +3,10 @@ import _ from "lodash"
 import { Sortable, Plugins } from "@shopify/draggable"
 import { ref, useTemplateRef, computed, onMounted, onUnmounted, watch, nextTick } from "vue"
 import Tag from "@ui/Tag.vue"
+import IconLink from "@ui/IconLink.vue"
 import Skeleton from "@ui/Skeleton.vue"
+import EditableBlock from "@ui/EditableBlock.vue"
+import Dialog from "@ui/Dialog.vue"
 import WoojCard from "@components/WoojCard.vue"
 import Empty from "@components/Empty.vue"
 
@@ -15,7 +18,7 @@ const props = defineProps({
   woojs: Array,
   emptyText: { type: String, default: "Тут пусто" },
   loaded: { type: Boolean, default: true },
-  hasEditableTitle: { type: Boolean, default: false },
+  hasEditableTopic: { type: Boolean, default: false },
   hasSort: { type: Boolean, default: true },
   hasPin: { type: Boolean, default: true },
   hasEdit: { type: Boolean, default: true },
@@ -24,7 +27,15 @@ const props = defineProps({
 })
 
 const items = useTemplateRef("items")
-const emit = defineEmits(["sort", "pin", "edit", "remove", "restore", "update-title"])
+const emit = defineEmits([
+  "sort",
+  "pin",
+  "edit",
+  "remove",
+  "restore",
+  "update-topic",
+  "delete-topic"
+])
 
 const getRandMargin = (i) => {
   const FACTOR = 7;
@@ -39,9 +50,12 @@ const getRandMargin = (i) => {
   }
 }
 
-const title = computed(() => props.title)
 const changedTitle = ref(props.title)
+const isTitleFocused = ref(false)
+const isShowedDeleteDialog = ref(false)
 const positions = ref([])
+
+const title = computed(() => props.title)
 const woojs = computed(() => props.woojs)
 const nums = computed(() => woojs.value.length)
 const isEmpty = computed(() => props.loaded && !nums.value)
@@ -51,10 +65,17 @@ const woojPositions = computed(() => woojs.value.reduce((map, wooj) => {
   return map
 }, {}))
 
-const onInputTitle = ({ target }) => changedTitle.value = target.innerText
 const onUpdateTitle = () => {
-  changedTitle.value !== title.value && emit("update-title", changedTitle.value)
+  if (_.isEqual(changedTitle.value, title.value)) {
+    return
+  }
+
+  emit("update-topic", { name: changedTitle.value })
 }
+const onDeleteTopic = () => emit("delete-topic")
+const onEdit = () => (isTitleFocused.value = true)
+const onDelete = () => (isShowedDeleteDialog.value = true)
+
 
 const initSortable = () => {
   const getPositions = () => {
@@ -87,6 +108,7 @@ const initSortable = () => {
 watch(() => props.loaded, (value) => nextTick(() => {
   value && props.hasSort && initSortable()
 }))
+watch(() => props.title, (title) => (changedTitle.value = title))
 watch(() => positions.value, (currentPositions, prevPositions) => {
   if (!props.hasSort || !prevPositions.length || _.isEqual(currentPositions, prevPositions)) {
     return
@@ -102,18 +124,24 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
 <template>
   <div class="wooj-list">
     <div class="wooj-list__header">
-      <h1
+      <EditableBlock
+        ref="topicTitle"
         class="wooj-list__header-title"
-        :class="{ editable: hasEditableTitle }"
-        :contenteditable="hasEditableTitle"
-        @input="onInputTitle"
-        @blur="onUpdateTitle">
-        {{ title }}
-      </h1>
+        :key="changedTitle"
+        v-model="changedTitle"
+        v-model:focused="isTitleFocused"
+        :locked="!hasEditableTopic"
+        :max="20"
+        @blur="onUpdateTitle" />
 
       <Tag v-if="nums">{{ nums }}</Tag>
 
       <div class="wooj-list__header-panel">
+        <div v-if="hasEditableTopic" class="wooj-list__header-panel-edit">
+          <IconLink icon="pencil" @click="onEdit" />
+          <IconLink icon="xmark" type="danger" @click="onDelete" />
+        </div>
+
         <slot name="panel" :isEmpty="isEmpty" />
       </div>
     </div>
@@ -145,11 +173,16 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
     </template>
 
     <Skeleton v-else type="blocks" :itemsNum="8" />
+
+    <Dialog v-model="isShowedDeleteDialog" title="Удалить топик" type="danger" @approve="onDeleteTopic">
+      Ты действительно хочешь сделать это?
+    </Dialog>
   </div>
 </template>
 
 <style lang="scss" scoped>
 @use "sass:color";
+@use "@styles/common";
 @use "@styles/colors";
 
 .wooj-list {
@@ -182,6 +215,24 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
           border-left: none;
           border-color: color.change(colors.$grey, $lightness: 80%);
         }
+      }
+    }
+
+    &-panel {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 10px;
+
+      &-edit {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 10px;
+        @include common.card();
+        padding: 7px;
+        border-radius: 7px;
+        background-color: colors.$absorbing;
       }
     }
   }

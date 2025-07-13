@@ -72,6 +72,21 @@ export default class TopicService {
   }
 
   /**
+   * Удалить топик
+   * @param {Number} id
+   * @returns {Object} топик
+   */
+  async delete(id) {
+    try {
+      const { data } = await this.http.delete(`topics/${id}`)
+
+      return data
+    } catch {
+      throw "Не удалось удалить топик"
+    }
+  }
+
+  /**
    * Обновить позиции вуджей в топике
    * @param {Number|String} topic
    * @param {Array} positions

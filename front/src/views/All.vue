@@ -13,6 +13,7 @@ onBeforeMount(() => setRouteListeners())
   <div class="view-all">
     <WoojList
       :id="topic.id"
+      :key="topic.id"
       :title="topic.title"
       :woojs="topic.woojs"
       :loaded="topic.isLoaded"

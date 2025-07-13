@@ -14,6 +14,7 @@ onBeforeMount(() => setRouteListeners())
   <div class="view-trash">
     <WoojList
       :id="topic.id"
+      :key="topic.id"
       :title="topic.title"
       :woojs="topic.woojs"
       :loaded="topic.isLoaded"

@@ -192,6 +192,24 @@ export default defineStore("woojs", () => {
   }
 
   /**
+   * Удалить топик
+   * @param {Number} topicId
+   * @returns {Promise}
+   */
+  const deleteTopic = async (topicId) => {
+    isUpdatingTopic.value = true
+
+    try {
+      await topicService.delete(topicId)
+      await fetchAll()
+    } catch (message) {
+      alert(message)
+    }
+
+    isUpdatingTopic.value = false
+  }
+
+  /**
    * Создать вудж
    * @param {Object} fields
    * @returns {Promise}
@@ -421,6 +439,7 @@ export default defineStore("woojs", () => {
 
     createTopic,
     updateTopic,
+    deleteTopic,
     createWooj,
     updateWooj,
     setWoojTopics,

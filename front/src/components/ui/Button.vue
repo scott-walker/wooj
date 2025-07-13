@@ -4,13 +4,14 @@ import Loader from "@ui/Loader.vue"
 
 const props = defineProps({
   text: { type: String },
+  type: { type: String, default: "primary" },
   icon: { type: String, default: null },
   loading: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },
 })
 const emit = defineEmits(["click"])
 const cssClass = computed(() => {
-  const classes = []
+  const classes = [props.type]
 
   props.loading && classes.push("loading")
   props.disabled && classes.push("disabled")
@@ -42,19 +43,50 @@ const onClick = () => !isLocked.value && emit('click')
   align-items: center;
   position: relative;
   width: fit-content;
-  padding: 3px 15px;
+  padding: 7px 15px;
   border-radius: 20px;
   transition: all 0.3s;
   border: 4px solid colors.$absorbing;
-  background-color: colors.$primary;
+  background-color: colors.$grey-strong;
   color: colors.$basic;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   text-align: center;
+  text-transform: uppercase;
   cursor: pointer;
 
   &:hover {
-    box-shadow: 0px 0px 1px 3px colors.$primary;
+    box-shadow: 0px 0px 1px 3px colors.$grey-strong;
+  }
+
+  &:active {
+    box-shadow: 0px 0px 1px 5px colors.$grey-strong;
+  }
+
+  &.primary {
+    background-color: colors.$primary;
+    color: colors.$basic;
+
+    &:hover {
+      box-shadow: 0px 0px 1px 3px colors.$primary;
+    }
+
+    &:active {
+      box-shadow: 0px 0px 1px 5px colors.$primary;
+    }
+  }
+
+  &.danger {
+    background-color: colors.$danger;
+    color: colors.$absorbing;
+
+    &:hover {
+      box-shadow: 0px 0px 1px 3px colors.$danger;
+    }
+
+    &:active {
+      box-shadow: 0px 0px 1px 5px colors.$danger;
+    }
   }
 
   &__wrapper {}
@@ -92,7 +124,6 @@ const onClick = () => !isLocked.value && emit('click')
     left: calc(50% - 11px);
     width: 22px;
     height: 22px;
-    // animation: rotating 1.5s linear infinite;
   }
 }
 </style>

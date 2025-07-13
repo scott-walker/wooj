@@ -24,14 +24,16 @@ onBeforeMount(() => {
   <div class="view-topic">
     <WoojList
       :id="topic.id"
+      :key="topic.id"
       :title="topic.title"
       :woojs="topic.woojs"
       :loaded="topic.isLoaded"
-      :hasEditableTitle="true"
+      :hasEditableTopic="true"
       @sort="topic.sort"
       @pin="topic.togglePin"
       @edit="topic.edit"
       @remove="topic.remove"
-      @update-title="topic.updateTitle" />
+      @update-topic="topic.update"
+      @delete-topic="topic.delete" />
   </div>
 </template>

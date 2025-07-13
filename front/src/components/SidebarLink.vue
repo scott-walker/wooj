@@ -27,7 +27,9 @@ const iconClass = computed(() => `fas fa-${props.icon}`)
 @use "@styles/colors";
 
 .sidebar-link {
-  display: block;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
   padding: 6px 10px;
   font-size: 16px;
   line-height: 16px;
@@ -48,11 +50,14 @@ const iconClass = computed(() => `fas fa-${props.icon}`)
   &__icon {
     display: inline-block;
     text-align: center;
-    width: 20px;
+    min-width: 20px;
+    max-width: 20px;
   }
 
   &__text {
     margin-left: 10px;
+    overflow: hidden;
+    text-wrap: nowrap;
   }
 }
 </style>

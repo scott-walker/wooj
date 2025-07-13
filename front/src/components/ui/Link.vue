@@ -2,6 +2,7 @@
 import { computed } from "vue"
 
 const props = defineProps({
+  type: { type: String, default: "primary" },
   active: { type: Boolean, default: false },
   scalable: { type: Boolean, default: true },
   loading: { type: Boolean, default: false },
@@ -9,7 +10,7 @@ const props = defineProps({
 const emit = defineEmits(["click"])
 
 const cssClass = computed(() => {
-  const classes = []
+  const classes = [props.type]
 
   props.loading && classes.push("loading")
   props.active && classes.push("active")
@@ -41,8 +42,18 @@ const onClick = () => !props.loading && emit('click')
   &:hover,
   &.active,
   &.loading {
-    background-color: colors.$primary;
+    background-color: colors.$grey-strong;
     color: colors.$basic;
+
+    &.primary {
+      background-color: colors.$primary;
+      color: colors.$basic;
+    }
+
+    &.danger {
+      background-color: colors.$danger;
+      color: colors.$absorbing
+    }
 
     &.scalable {
       transform: scale(1.2);

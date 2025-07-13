@@ -43,6 +43,7 @@ const layoutStore = useLayoutStore()
   }
 
   &-right {
+    height: 100%;
     padding-right: 20px;
   }
 }

@@ -26,6 +26,16 @@ export default () => {
   }
 
   /**
+   * Удалить топик
+   * @returns {Promise}
+   */
+  const deleteTopic = async (topicId) => {
+    await woojStore.deleteTopic(topicId)
+
+    router.push({ name: "All" })
+  }
+
+  /**
    * Событие "все ресурсы загружены"
    * @param {Function} cb
    * @returns {void}
@@ -100,7 +110,8 @@ export default () => {
         togglePin: woojStore.togglePin,
         remove: woojStore.remove,
         edit,
-        updateTitle: (name) => woojStore.updateTopic(woojStore.activeTopic?.id, { name }),
+        update: (fields) => woojStore.updateTopic(woojStore.activeTopic?.id, fields),
+        delete: () => deleteTopic(woojStore.activeTopic?.id),
       },
     }
   })

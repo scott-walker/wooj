@@ -4,6 +4,7 @@ import Link from "@ui/Link.vue"
 
 const props = defineProps({
   icon: String,
+  type: { type: String, default: "primary" },
   active: { type: Boolean, default: false },
   scalable: { type: Boolean, default: true },
   mirror: { type: Boolean, default: false },
@@ -21,7 +22,7 @@ const iconClass = computed(() => {
 </script>
 
 <template>
-  <Link class="ui-icon-link" :active="props.active" :scalable="props.scalable">
+  <Link class="ui-icon-link" :type="props.type" :active="props.active" :scalable="props.scalable">
   <i class="ui-icon-link__icon" :class="iconClass"></i>
   </Link>
 </template>
