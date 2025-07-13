@@ -1,13 +1,11 @@
 import { ref, computed, inject } from "vue"
 import { defineStore } from "pinia"
-import { useRouter } from "vue-router"
 
 /**
  * Стор вуджей
  */
 export default defineStore("data", () => {
   const { woojService, topicService } = inject("services")
-  const router = useRouter()
 
   const TOPIC_TYPE_ALL = "all"
   const TOPIC_TYPE_PINNED = "pinned"
@@ -22,7 +20,7 @@ export default defineStore("data", () => {
 
   const topicAll = computed(() => topics.value.find((topic) => topic.type === TOPIC_TYPE_ALL))
   const topicPinned = computed(() => topics.value.find((topic) => topic.type === TOPIC_TYPE_PINNED))
-  const topicPublic = computed(() => topics.value.find((topic) => topic.type === TOPIC_TYPE_PUBLIC))
+  const topicPublished = computed(() => topics.value.find((topic) => topic.type === TOPIC_TYPE_PUBLIC))
   const customTopics = computed(() => topics.value.filter((topic) => topic.type === TOPIC_TYPE_CUSTOM))
 
   // Нормализованные вуджи
@@ -81,8 +79,11 @@ export default defineStore("data", () => {
 
     return woojs.filter((wooj) => wooj.is_pinned)
   })
-  // const pinnedWoojs = computed(() => visibleWoojs.value.filter((wooj) => wooj.is_pinned))
+  const publishedWoojs = computed(() => topicWoojsMap.value[topicPublished.value?.id] || [])
   const removedWoojs = computed(() => normalizedWoojs.value.filter((wooj) => wooj.is_deleted))
+
+  // Требуется ли обновление списка вуджей и топиков
+  const isNeedUpdate = ref(false)
 
   const isLoadedTopics = ref(false)
   const isLoadedWoojs = ref(false)
@@ -134,8 +135,11 @@ export default defineStore("data", () => {
   async function fetchAll(options) {
     options = options || {}
 
+    console.log("fetchAll")
     await fetchTopics(options)
     await fetchWoojs(options)
+
+    isNeedUpdate.value = false
   }
 
   /**
@@ -194,7 +198,8 @@ export default defineStore("data", () => {
     pinnedWoojsMap.value[wooj.id] = true
 
     await woojService.pin(wooj.id)
-    await fetchAll({ quiet: true })
+
+    isNeedUpdate.value = true
   }
 
   /**
@@ -206,7 +211,8 @@ export default defineStore("data", () => {
     pinnedWoojsMap.value[wooj.id] = false
 
     await woojService.unpin(wooj.id)
-    await fetchAll({ quiet: true })
+
+    isNeedUpdate.value = true
   }
 
   /**
@@ -225,7 +231,6 @@ export default defineStore("data", () => {
     removedWoojsMap.value[wooj.id] = true
 
     await woojService.delete(wooj.id)
-    // await fetchWoojs({ quiet: true })
   }
 
   /**
@@ -237,7 +242,6 @@ export default defineStore("data", () => {
     removedWoojsMap.value[wooj.id] = false
 
     await woojService.restore(wooj.id)
-    // await fetchWoojs({ quiet: true })
   }
 
   /**
@@ -246,7 +250,8 @@ export default defineStore("data", () => {
    */
   const clearTrash = async () => {
     await woojService.clearTrash()
-    await fetchAll({ quiet: true })
+
+    isNeedUpdate.value = true
   }
 
   /**
@@ -257,20 +262,9 @@ export default defineStore("data", () => {
    */
   const sort = async (topic, positions) => {
     await topicService.sort(topic, positions)
-    await fetchAll({ quiet: true })
-  }
 
-  /**
-   * Редактировать вудж
-   * @param {Object} wooj
-   * @returns {void}
-   */
-  const edit = (wooj) => {
-    router.push({ name: "Wooj", params: { woojId: wooj.id } })
+    isNeedUpdate.value = true
   }
-
-  // Собрать все
-  // fetchAll()
 
   return {
     topics,
@@ -278,7 +272,7 @@ export default defineStore("data", () => {
 
     topicAll,
     topicPinned,
-    topicPublic,
+    topicPublished,
     customTopics,
 
     activeTopicId,
@@ -288,7 +282,10 @@ export default defineStore("data", () => {
     activeWoojs,
     allWoojs,
     pinnedWoojs,
+    publishedWoojs,
     removedWoojs,
+
+    isNeedUpdate,
 
     isLoadedTopics,
     isLoadedWoojs,
@@ -312,6 +309,5 @@ export default defineStore("data", () => {
     restore,
     clearTrash,
     sort,
-    edit,
   }
 })

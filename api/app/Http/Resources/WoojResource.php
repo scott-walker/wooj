@@ -21,6 +21,7 @@ class WoojResource extends JsonResource
             'content' => $this->content,
             'author_id' => $this->author_id,
             'is_pinned' => $this->isPinned,
+            'is_published' => false,
             'is_deleted' => (bool) $this->deleted_at,
             // 'deleted_at' => $this->deleted_at ? Carbon::parse($this->deleted_at)->format('Y-m-d H:i:s') : null,
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),

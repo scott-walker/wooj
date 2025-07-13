@@ -1,25 +1,24 @@
 <script setup>
-import { onBeforeMount, watch } from "vue"
+import { computed, onBeforeMount } from "vue"
 import WoojList from "@components/WoojList.vue"
-import useDataStore from "@stores/data"
+import useWoojs from "@hooks/woojs"
 
-const store = useDataStore()
-// const load = () => store.isLoadedTopics && store.activateTopic(store.topicAll.id)
+const { topicParamsMap, setRouteListeners } = useWoojs()
+const topic = computed(() => topicParamsMap.value.pinned)
 
-// onBeforeMount(load)
-// watch(() => store.isLoadedTopics, load)
+onBeforeMount(() => setRouteListeners())
 </script>
 
 <template>
   <div class="view-pinned">
     <WoojList
-      id="pinned"
-      title="Закрепленные"
-      :woojs="store.pinnedWoojs"
-      :loaded="store.isLoaded"
-      @sort="store.sort('pinned', $event)"
-      @pin="store.togglePin"
-      @edit="store.edit"
-      @remove="store.remove" />
+      :id="topic.id"
+      :title="topic.title"
+      :woojs="topic.woojs"
+      :loaded="topic.isLoaded"
+      @sort="topic.sort"
+      @pin="topic.togglePin"
+      @edit="topic.edit"
+      @remove="topic.remove" />
   </div>
 </template>

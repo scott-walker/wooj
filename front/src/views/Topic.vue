@@ -1,30 +1,42 @@
 <script setup>
-import { computed, onBeforeMount, watch } from "vue"
+import { computed, watch, onBeforeMount } from "vue"
 import WoojList from "@components/WoojList.vue"
-import useDataStore from "@stores/data"
+import useWoojsStore from "@stores/data"
+import useWoojs from "@hooks/woojs"
 
 const props = defineProps(["topicId"])
-const store = useDataStore()
-const title = computed(() => store.activeTopic?.name || "")
-const listId = computed(() => `topic-${props.topicId}`)
+const { topicParamsMap, setRouteListeners } = useWoojs()
+const woojStore = useWoojsStore()
+const topic = computed(() => topicParamsMap.value.custom)
 
-const load = () => store.isLoadedTopics && store.activateTopic(props.topicId)
+const activateTopic = () => woojStore.isLoadedTopics && woojStore.activateTopic(props.topicId)
 
-onBeforeMount(load)
-watch(() => store.isLoadedTopics, load)
-watch(() => props.topicId, load)
+onBeforeMount(() => {
+  // console.log("onBeforeMount", props.topicId)
+  activateTopic()
+})
+watch(() => woojStore.isLoadedTopics, () => {
+  // console.log("watch:isLoadedTopics", props.topicId)
+  activateTopic()
+})
+watch(() => props.topicId, () => {
+  // console.log("watch:topicId", props.topicId)
+  activateTopic()
+})
+
+onBeforeMount(() => setRouteListeners())
 </script>
 
 <template>
   <div class="view-topic">
     <WoojList
-      :id="listId"
-      :title="title"
-      :woojs="store.activeWoojs"
-      :loaded="store.isLoaded"
-      @sort="store.sort(props.topicId, $event)"
-      @pin="store.togglePin"
-      @edit="store.edit"
-      @remove="store.remove" />
+      :id="topic.id"
+      :title="topic.title"
+      :woojs="topic.woojs"
+      :loaded="topic.isLoaded"
+      @sort="topic.sort"
+      @pin="topic.togglePin"
+      @edit="topic.edit"
+      @remove="topic.remove" />
   </div>
 </template>
