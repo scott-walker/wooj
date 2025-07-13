@@ -100,8 +100,8 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
     overflow: hidden;
 
     &.pinned {
-      // background: colors.$primary;
-      background: linear-gradient(352deg, colors.$primary 18%, rgba(255, 255, 255, 1) 18%);
+      background: linear-gradient(349deg, rgba(212, 255, 56, 1) 12%, rgba(255, 255, 255, 1) 12%);
+      // background: linear-gradient(352deg, colors.$primary 18%, rgba(255, 255, 255, 1) 18%);
     }
   }
 

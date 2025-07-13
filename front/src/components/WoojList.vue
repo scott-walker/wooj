@@ -1,7 +1,7 @@
 <script setup>
 import _ from "lodash"
 import { Sortable, Plugins } from "@shopify/draggable"
-import { useTemplateRef, computed, onMounted, onUnmounted, watch, nextTick } from "vue"
+import { ref, useTemplateRef, computed, onMounted, onUnmounted, watch, nextTick } from "vue"
 import Tag from "@ui/Tag.vue"
 import Skeleton from "@ui/Skeleton.vue"
 import WoojCard from "@components/WoojCard.vue"
@@ -15,6 +15,7 @@ const props = defineProps({
   woojs: Array,
   emptyText: { type: String, default: "Тут пусто" },
   loaded: { type: Boolean, default: true },
+  hasEditableTitle: { type: Boolean, default: false },
   hasSort: { type: Boolean, default: true },
   hasPin: { type: Boolean, default: true },
   hasEdit: { type: Boolean, default: true },
@@ -23,23 +24,24 @@ const props = defineProps({
 })
 
 const items = useTemplateRef("items")
-const emit = defineEmits(["sort", "pin", "edit", "remove", "restore"])
+const emit = defineEmits(["sort", "pin", "edit", "remove", "restore", "update-title"])
 
 const getRandMargin = (i) => {
-  return {}
-  // const FACTOR = 5;
+  const FACTOR = 7;
 
-  // const vector = i % 2 === 0 ? -1 : 1;
-  // const top = _.random(0, FACTOR) * vector
-  // const left = _.random(0, FACTOR) * vector
+  const vector = i % 2 === 0 ? -1 : 1;
+  const top = _.random(0, FACTOR) * vector
+  const left = _.random(0, FACTOR) * vector
 
-  // return {
-  //   top: `${top}px`,
-  //   left: `${left}px`,
-  // }
+  return {
+    top: `${top}px`,
+    left: `${left}px`,
+  }
 }
 
 const title = computed(() => props.title)
+const changedTitle = ref(props.title)
+const positions = ref([])
 const woojs = computed(() => props.woojs)
 const nums = computed(() => woojs.value.length)
 const isEmpty = computed(() => props.loaded && !nums.value)
@@ -49,7 +51,18 @@ const woojPositions = computed(() => woojs.value.reduce((map, wooj) => {
   return map
 }, {}))
 
+const onInputTitle = ({ target }) => changedTitle.value = target.innerText
+const onUpdateTitle = () => {
+  changedTitle.value !== title.value && emit("update-title", changedTitle.value)
+}
+
 const initSortable = () => {
+  const getPositions = () => {
+    const elements = items.value ? Array.from(items.value.querySelectorAll('.wooj-list__item')) : []
+
+    return elements.map(item => parseInt(item.dataset.id))
+  }
+
   sortableDriver = new Sortable(document.querySelectorAll('.wooj-list__items'), {
     draggable: '.wooj-list__item',
     handle: '.wooj-card__wrapper',
@@ -66,17 +79,28 @@ const initSortable = () => {
 
   sortableDriver.on('sortable:stop', () => {
     nextTick(() => {
-      const elements = Array.from(items.value.querySelectorAll('.wooj-list__item'))
-      const positions = elements.map(item => parseInt(item.dataset.id))
+      positions.value = getPositions()
 
-      emit("sort", positions)
+      // const elements = Array.from(items.value.querySelectorAll('.wooj-list__item'))
+      // const positions = elements.map(item => parseInt(item.dataset.id))
+
+      // emit("sort", positions)
     })
   })
+
+  positions.value = getPositions()
 }
 
 watch(() => props.loaded, (value) => nextTick(() => {
   value && props.hasSort && initSortable()
 }))
+watch(() => positions.value, (currentPositions, prevPositions) => {
+  if (!prevPositions.length || _.isEqual(currentPositions, prevPositions)) {
+    return
+  }
+
+  emit("sort", currentPositions)
+})
 
 onMounted(() => props.hasSort && props.loaded && initSortable())
 onUnmounted(() => sortableDriver && sortableDriver.destroy())
@@ -85,10 +109,17 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
 <template>
   <div class="wooj-list">
     <div class="wooj-list__header">
-      <h1 class="wooj-list__header-title">
+      <h1
+        class="wooj-list__header-title"
+        :class="{ editable: hasEditableTitle }"
+        :contenteditable="hasEditableTitle"
+        @input="onInputTitle"
+        @blur="onUpdateTitle">
         {{ title }}
       </h1>
+
       <Tag v-if="nums">{{ nums }}</Tag>
+
       <div class="wooj-list__header-panel">
         <slot name="panel" :isEmpty="isEmpty" />
       </div>
@@ -125,6 +156,9 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
 </template>
 
 <style lang="scss" scoped>
+@use "sass:color";
+@use "@styles/colors";
+
 .wooj-list {
   &__header {
     display: flex;
@@ -136,7 +170,26 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
     &-title {
       display: flex;
       align-items: center;
+      padding: 5px 0;
+      min-width: 100px;
+      border: none;
+      border-bottom: 3px solid transparent;
       font-size: 32px;
+      transition: all .3s;
+      background: none;
+      color: colors.$basic;
+
+      &.editable {
+
+        &:focus,
+        &:hover {
+          outline: none;
+          border-top: none;
+          border-right: none;
+          border-left: none;
+          border-color: color.change(colors.$grey, $lightness: 80%);
+        }
+      }
     }
   }
 

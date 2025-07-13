@@ -1,30 +1,23 @@
 <script setup>
 import { computed, watch, onBeforeMount } from "vue"
 import WoojList from "@components/WoojList.vue"
-import useWoojsStore from "@stores/data"
+import useWoojsStore from "@stores/woojs"
 import useWoojs from "@hooks/woojs"
 
 const props = defineProps(["topicId"])
-const { topicParamsMap, setRouteListeners } = useWoojs()
+const { topicParamsMap, onLoaded, setRouteListeners } = useWoojs()
 const woojStore = useWoojsStore()
 const topic = computed(() => topicParamsMap.value.custom)
 
 const activateTopic = () => woojStore.isLoadedTopics && woojStore.activateTopic(props.topicId)
 
-onBeforeMount(() => {
-  // console.log("onBeforeMount", props.topicId)
-  activateTopic()
-})
-watch(() => woojStore.isLoadedTopics, () => {
-  // console.log("watch:isLoadedTopics", props.topicId)
-  activateTopic()
-})
-watch(() => props.topicId, () => {
-  // console.log("watch:topicId", props.topicId)
-  activateTopic()
-})
+watch(() => props.topicId, () => activateTopic())
 
-onBeforeMount(() => setRouteListeners())
+onLoaded(() => activateTopic())
+onBeforeMount(() => {
+  activateTopic()
+  setRouteListeners()
+})
 </script>
 
 <template>
@@ -34,9 +27,11 @@ onBeforeMount(() => setRouteListeners())
       :title="topic.title"
       :woojs="topic.woojs"
       :loaded="topic.isLoaded"
+      :hasEditableTitle="true"
       @sort="topic.sort"
       @pin="topic.togglePin"
       @edit="topic.edit"
-      @remove="topic.remove" />
+      @remove="topic.remove"
+      @update-title="topic.updateTitle" />
   </div>
 </template>

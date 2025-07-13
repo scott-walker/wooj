@@ -1,14 +1,10 @@
 <script setup>
-import { ref, inject } from "vue"
-import { useRouter } from "vue-router"
 import { useLayoutStore } from "@stores/layout"
+import useWoojs from "@hooks/woojs"
 import IconLink from "@ui/IconLink.vue"
 
 const layoutStore = useLayoutStore()
-const { woojService } = inject("services")
-const router = useRouter()
-
-const isWaitingCreateWooj = ref(false)
+const { woojStore, createWooj } = useWoojs()
 
 const onOverBars = () => {
   layoutStore.onOverBars()
@@ -16,16 +12,10 @@ const onOverBars = () => {
 }
 
 const onCreateWooj = async () => {
-  isWaitingCreateWooj.value = true
-
-  const wooj = await woojService.create({})
+  await createWooj()
 
   layoutStore.onActivateCreateWooj()
-  isWaitingCreateWooj.value = false
-
-  router.push({ name: 'Wooj', params: { woojId: wooj.id }, replace: true })
 }
-
 </script>
 
 <template>
@@ -40,7 +30,7 @@ const onCreateWooj = async () => {
     <IconLink
       icon="plus"
       :active="layoutStore.isCreateWoojActive"
-      :loading="isWaitingCreateWooj"
+      :loading="woojStore.isCreatingWooj"
       @click="onCreateWooj" />
   </div>
 </template>

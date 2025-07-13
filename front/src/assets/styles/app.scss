@@ -20,6 +20,7 @@ body {
   &__rail-y,
   &__rail-y:hover {
     background: transparent !important;
+    z-index: 10;
   }
   &__thumb-y {
     background-color: color.change(colors.$basic, $alpha: 70%) !important;

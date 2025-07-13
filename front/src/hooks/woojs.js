@@ -1,10 +1,10 @@
-import { computed } from "vue"
+import { computed, watch } from "vue"
 import { useRouter, onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router"
-import useDataStore from "@stores/data"
+import useWoojsStore from "@stores/woojs"
 
 export default () => {
   const router = useRouter()
-  const woojStore = useDataStore()
+  const woojStore = useWoojsStore()
 
   /**
    * Редактировать вудж
@@ -16,16 +16,37 @@ export default () => {
   }
 
   /**
+   * Создать вудж
+   * @returns {Promise}
+   */
+  const createWooj = async () => {
+    const wooj = await woojStore.createWooj()
+
+    edit(wooj)
+  }
+
+  /**
+   * Событие "все ресурсы загружены"
+   * @param {Function} cb
+   * @returns {void}
+   */
+  const onLoaded = (cb) => {
+    watch(
+      () => woojStore.isLoaded,
+      () => woojStore.isLoaded && cb(),
+    )
+  }
+
+  /**
    * Установить слушателей за событиями роутера
    * @returns {void}
    */
   const setRouteListeners = () => {
     onBeforeRouteUpdate(() => {
-      console.log("onBeforeRouteUpdate")
       woojStore.isNeedUpdate && woojStore.fetchAll()
     })
+
     onBeforeRouteLeave(() => {
-      console.log("onBeforeRouteLeave")
       woojStore.isNeedUpdate && woojStore.fetchAll()
     })
   }
@@ -41,7 +62,6 @@ export default () => {
         togglePin: woojStore.togglePin,
         remove: woojStore.remove,
         edit,
-        // setListeners: () => setRouteListeners(),
       },
       pinned: {
         id: "pinned",
@@ -52,7 +72,6 @@ export default () => {
         togglePin: woojStore.togglePin,
         remove: woojStore.remove,
         edit,
-        // setListeners: () => setRouteListeners(),
       },
       published: {
         id: "published",
@@ -63,7 +82,6 @@ export default () => {
         togglePin: woojStore.togglePin,
         remove: woojStore.remove,
         edit,
-        // setListeners: () => setRouteListeners(),
       },
       trash: {
         id: "trash",
@@ -71,11 +89,6 @@ export default () => {
         woojs: woojStore.removedWoojs,
         isLoaded: woojStore.isLoaded,
         restore: woojStore.restore,
-        // sort: (positions) => woojStore.sort("published", positions),
-        // togglePin: woojStore.togglePin,
-        // remove: woojStore.remove,
-        // edit,
-        // setListeners: () => setRouteListeners(),
       },
       custom: {
         id: `woojs-${woojStore.activeTopic?.id || "custom"}`,
@@ -86,13 +99,18 @@ export default () => {
         togglePin: woojStore.togglePin,
         remove: woojStore.remove,
         edit,
-        // setListeners: () => setRouteListeners(),
+        updateTitle: (name) => woojStore.updateTopic(woojStore.activeTopic?.id, { name }),
       },
     }
   })
 
   return {
-    topicParamsMap,
+    woojStore,
+
+    onLoaded,
     setRouteListeners,
+
+    topicParamsMap,
+    createWooj,
   }
 }

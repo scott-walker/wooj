@@ -5,10 +5,10 @@ import Modal from "@ui/Modal.vue"
 import Skeleton from "@ui/Skeleton.vue"
 import SidebarLink from "@components/SidebarLink.vue"
 import CreateTopic from "@components/CreateTopic.vue"
-import useDataStore from "@stores/data"
+import useWoojsStore from "@stores/woojs"
 
 const isShowedCreateTopic = ref(false)
-const store = useDataStore()
+const store = useWoojsStore()
 
 const onShowCreateTopic = () => isShowedCreateTopic.value = true
 const onHideCreateTopic = () => isShowedCreateTopic.value = false

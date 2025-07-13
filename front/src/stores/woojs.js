@@ -4,7 +4,7 @@ import { defineStore } from "pinia"
 /**
  * Стор вуджей
  */
-export default defineStore("data", () => {
+export default defineStore("woojs", () => {
   const { woojService, topicService } = inject("services")
 
   const TOPIC_TYPE_ALL = "all"
@@ -82,12 +82,20 @@ export default defineStore("data", () => {
   const publishedWoojs = computed(() => topicWoojsMap.value[topicPublished.value?.id] || [])
   const removedWoojs = computed(() => normalizedWoojs.value.filter((wooj) => wooj.is_deleted))
 
+  const hasActiveTopic = computed(() => !!activeTopic.value?.id)
+  const hasActiveWooj = computed(() => !!activeWooj.value?.id)
+
   // Требуется ли обновление списка вуджей и топиков
   const isNeedUpdate = ref(false)
 
   const isLoadedTopics = ref(false)
   const isLoadedWoojs = ref(false)
   const isLoaded = computed(() => isLoadedTopics.value && isLoadedWoojs.value)
+
+  const isCreatingTopic = ref(false)
+  const isCreatingWooj = ref(false)
+  const isUpdatingTopic = ref(false)
+  const isUpdatingWooj = ref(false)
 
   /**
    * Получить список топиков
@@ -135,25 +143,128 @@ export default defineStore("data", () => {
   async function fetchAll(options) {
     options = options || {}
 
-    console.log("fetchAll")
-    await fetchTopics(options)
-    await fetchWoojs(options)
+    try {
+      await Promise.all([fetchTopics(options), fetchWoojs(options)])
+    } catch (message) {
+      console.error(message)
+    }
 
     isNeedUpdate.value = false
   }
 
   /**
    * Создать топик
+   * @param {Object} fields
+   * @returns {Promise}
    */
-  // async function createTopic({ name }) {
-  //   try {
-  //     topics.value = await topicService.create({ name })
+  async function createTopic(fields) {
+    fields = fields || {}
+    isCreatingTopic.value = true
 
-  //     await fetchAll()
-  //   } catch (message) {
-  //     alert(message)
-  //   }
-  // }
+    try {
+      await topicService.create({ name })
+      await fetchAll()
+    } catch (message) {
+      alert(message)
+    }
+
+    isCreatingTopic.value = false
+  }
+
+  /**
+   * Обновить топик
+   * @param {Number} topicId
+   * @param {Object} fields
+   * @returns {Promise}
+   */
+  const updateTopic = async (topicId, fields) => {
+    fields = fields || {}
+    isUpdatingTopic.value = true
+
+    try {
+      await topicService.update(topicId, fields)
+      await fetchAll()
+    } catch (message) {
+      alert(message)
+    }
+
+    isUpdatingTopic.value = false
+  }
+
+  /**
+   * Создать вудж
+   * @param {Object} fields
+   * @returns {Promise}
+   */
+  const createWooj = async (fields) => {
+    fields = fields || {}
+    isCreatingWooj.value = true
+
+    let wooj = null
+
+    try {
+      wooj = await woojService.create(fields)
+
+      // await fetchAll()
+      isNeedUpdate.value = true
+    } catch (message) {
+      alert(message)
+    }
+
+    isCreatingWooj.value = false
+
+    return wooj
+  }
+
+  /**
+   * Обновить вудж
+   * @param {Number} woojId
+   * @param {Object} fields
+   * @returns {Promise}
+   */
+  const updateWooj = async (woojId, fields) => {
+    fields = fields || {}
+    isUpdatingWooj.value = true
+
+    let wooj = null
+
+    try {
+      wooj = await woojService.update(woojId, fields)
+
+      // await fetchAll()
+      isNeedUpdate.value = true
+    } catch (message) {
+      alert(message)
+    }
+
+    isUpdatingWooj.value = false
+
+    return wooj
+  }
+
+  /**
+   * Установка топиков для вуджа
+   * @param {Number} woojId
+   * @param {Object} topicsMap
+   * @returns {Promise}
+   */
+  const setWoojTopics = async (woojId, topicsMap) => {
+    isUpdatingWooj.value = true
+
+    let wooj = null
+
+    try {
+      wooj = await woojService.setTopics(woojId, topicsMap)
+
+      isNeedUpdate.value = true
+    } catch (message) {
+      alert(message)
+    }
+
+    isUpdatingWooj.value = false
+
+    return wooj
+  }
 
   /**
    * Активировать топик
@@ -285,11 +396,19 @@ export default defineStore("data", () => {
     publishedWoojs,
     removedWoojs,
 
+    hasActiveTopic,
+    hasActiveWooj,
+
     isNeedUpdate,
 
     isLoadedTopics,
     isLoadedWoojs,
     isLoaded,
+
+    isCreatingTopic,
+    isCreatingWooj,
+    isUpdatingTopic,
+    isUpdatingWooj,
 
     fetchAll,
     fetchTopics,
@@ -300,7 +419,11 @@ export default defineStore("data", () => {
     deactivateTopic,
     deactivateWooj,
 
-    // createTopic,
+    createTopic,
+    updateTopic,
+    createWooj,
+    updateWooj,
+    setWoojTopics,
 
     pin,
     unpin,

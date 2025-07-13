@@ -1,19 +1,16 @@
 <script setup>
 import { ref, computed } from "vue"
-import { useWoojStore } from "@stores/wooj"
+import useWoojs from "@hooks/woojs"
 import Button from "@ui/Button.vue"
 import LightInput from "@ui/LightInput.vue"
 
-const store = useWoojStore()
+const { woojStore } = useWoojs()
 const emit = defineEmits(["created"])
 const name = ref("")
-const loading = ref(false)
 const isDisabledButton = computed(() => !name.value.length)
 
 const onCreate = async () => {
-  loading.value = true
-  await store.createTopic({ name: name.value })
-  loading.value = false
+  await woojStore.createTopic({ name: name.value })
 
   emit("created")
 } 
@@ -33,7 +30,7 @@ const onCreate = async () => {
       text="Создать"
       icon="plus"
       :disabled="isDisabledButton"
-      :loading="loading"
+      :loading="woojStore.isCreatingTopic"
       @click="onCreate" />
   </div>
 </template>

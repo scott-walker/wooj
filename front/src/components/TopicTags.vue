@@ -2,13 +2,14 @@
 import { ref, computed, inject, watch } from 'vue'
 import Tag from "@ui/Tag.vue"
 
-const topicIds = defineModel()
+const checkedTopicIds = defineModel()
 const props = defineProps({
-  items: { type: Array },
+  topics: { type: Array },
 })
 const emit = defineEmits(["update", "save"])
 const deferredTimer = inject("createDeferredTimer")()
-const checkedMap = ref(topicIds.value.reduce((map, id) => {
+
+const checkedMap = ref(checkedTopicIds.value.reduce((map, id) => {
   map[id] = true
 
   return map
@@ -16,12 +17,13 @@ const checkedMap = ref(topicIds.value.reduce((map, id) => {
 const normalizedCheckedMap = computed(() => {
   const map = {}
 
-  props.items.forEach(topic => {
+  props.topics.forEach(topic => {
     map[topic.id] = checkedMap.value[topic.id] || false
   })
 
   return map
 })
+
 const onChange = () => {
   emit("update", normalizedCheckedMap.value)
 
@@ -35,7 +37,7 @@ watch(checkedMap.value, onChange)
   <div class="topic-tags">
     <Tag
       class="topics__item"
-      v-for="topic of props.items"
+      v-for="topic of props.topics"
       icon="tag"
       :text="topic.name"
       :clickable="true"

@@ -6,15 +6,14 @@ import LightInput from "@ui/LightInput.vue"
 import Editor from "@ui/Editor/Editor.vue"
 import Skeleton from "@ui/Skeleton.vue"
 import TopicTags from "@components/TopicTags.vue"
-import { useWoojStore } from "@stores/wooj"
 
 const wooj = defineModel()
-const emit = defineEmits(["save", "change-topics"])
+const emit = defineEmits(["change-content", "change-topics"])
 const props = defineProps({
+  topics: { type: Array, default: [] },
   loaded: { type: Boolean, default: true },
-  isSaving: { type: Boolean, default: false },
+  saving: { type: Boolean, default: false },
 })
-const woojStore = useWoojStore()
 
 const isShowedTopics = ref(false)
 const isShowedShare = ref(false)
@@ -31,7 +30,7 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
       </div>
 
       <div class="wooj__paper">
-        <span v-show="props.isSaving" class="wooj__save-status tag is-medium">Сохранено</span>
+        <span v-show="props.saving" class="wooj__save-status tag is-medium">Сохранено</span>
 
         <div class="wooj__title">
           <LightInput
@@ -39,10 +38,10 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
             :max="60"
             fieldClass="wooj__title-field"
             placeholder="Кликни сюда и напиши заголовок"
-            @save="emit('save', wooj)" />
+            @save="emit('change-content', wooj)" />
         </div>
         <div class="wooj__content">
-          <Editor v-model="wooj.content" @save="emit('save', wooj)" />
+          <Editor v-model="wooj.content" @save="emit('change-content', wooj)" />
         </div>
       </div>
     </div>
@@ -50,7 +49,7 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
     <Skeleton v-else type="block-list" :itemsNum="1" class="wooj__skeleton" />
 
     <Modal v-model="isShowedTopics" title="Топики">
-      <TopicTags :items="woojStore.topics" v-model="wooj.topicIds" @save="onSaveTopics" />
+      <TopicTags :topics="topics" v-model="wooj.topicIds" @save="onSaveTopics" />
     </Modal>
     <Modal v-model="isShowedShare" title="Публиковать вуддж">
       Публиковать!!!
