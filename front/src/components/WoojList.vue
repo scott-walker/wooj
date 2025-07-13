@@ -78,14 +78,7 @@ const initSortable = () => {
   });
 
   sortableDriver.on('sortable:stop', () => {
-    nextTick(() => {
-      positions.value = getPositions()
-
-      // const elements = Array.from(items.value.querySelectorAll('.wooj-list__item'))
-      // const positions = elements.map(item => parseInt(item.dataset.id))
-
-      // emit("sort", positions)
-    })
+    nextTick(() => positions.value = getPositions())
   })
 
   positions.value = getPositions()
@@ -95,7 +88,7 @@ watch(() => props.loaded, (value) => nextTick(() => {
   value && props.hasSort && initSortable()
 }))
 watch(() => positions.value, (currentPositions, prevPositions) => {
-  if (!prevPositions.length || _.isEqual(currentPositions, prevPositions)) {
+  if (!props.hasSort || !prevPositions.length || _.isEqual(currentPositions, prevPositions)) {
     return
   }
 

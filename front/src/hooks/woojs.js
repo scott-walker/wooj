@@ -89,6 +89,7 @@ export default () => {
         woojs: woojStore.removedWoojs,
         isLoaded: woojStore.isLoaded,
         restore: woojStore.restore,
+        clearTrash: woojStore.clearTrash,
       },
       custom: {
         id: `woojs-${woojStore.activeTopic?.id || "custom"}`,

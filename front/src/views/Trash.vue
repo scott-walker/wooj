@@ -25,7 +25,7 @@ onBeforeMount(() => setRouteListeners())
       emptyText="Корзина пуста"
       @restore="topic.restore">
       <template #panel>
-        <button v-if="isShowedButton" class="button is-danger" @click="onClearTrash">
+        <button v-if="isShowedButton" class="button is-danger" @click="topic.clearTrash">
           <span class="icon">
             <i class="fas fa-times"></i>
           </span>

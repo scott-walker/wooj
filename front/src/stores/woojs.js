@@ -162,7 +162,7 @@ export default defineStore("woojs", () => {
     isCreatingTopic.value = true
 
     try {
-      await topicService.create({ name })
+      await topicService.create(fields)
       await fetchAll()
     } catch (message) {
       alert(message)
@@ -361,8 +361,8 @@ export default defineStore("woojs", () => {
    */
   const clearTrash = async () => {
     await woojService.clearTrash()
-
-    isNeedUpdate.value = true
+    await fetchAll()
+    // isNeedUpdate.value = true
   }
 
   /**
