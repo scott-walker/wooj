@@ -89,67 +89,75 @@ export default defineStore("woojs", () => {
   const isNeedUpdate = ref(false)
 
   const isLoadedTopics = ref(false)
-  const isLoadedWoojs = ref(false)
-  const isLoaded = computed(() => isLoadedTopics.value && isLoadedWoojs.value)
+  // const isLoadedWoojs = ref(false)
+  // const isLoaded = computed(() => isLoadedTopics.value && isLoadedWoojs.value)
+  const isLoaded = ref(false)
 
   const isCreatingTopic = ref(false)
   const isCreatingWooj = ref(false)
   const isUpdatingTopic = ref(false)
   const isUpdatingWooj = ref(false)
 
-  /**
-   * Получить список топиков
-   * @param {Object} options
-   * @returns {Promise}
-   */
-  async function fetchTopics(options) {
-    options = options || {}
+  // /**
+  //  * Получить список топиков
+  //  * @param {Object} options
+  //  * @returns {Promise}
+  //  */
+  // async function fetchTopics(options) {
+  //   options = options || {}
 
-    if (!options.quiet) isLoadedTopics.value = false
+  //   if (!options.quiet) isLoadedTopics.value = false
 
-    try {
-      topics.value = await topicService.getAll()
-    } catch (message) {
-      alert(message)
-    }
+  //   try {
+  //     topics.value = await topicService.getAll()
+  //   } catch (message) {
+  //     alert(message)
+  //   }
 
-    if (!options.quiet) isLoadedTopics.value = true
-  }
+  //   if (!options.quiet) isLoadedTopics.value = true
+  // }
 
-  /**
-   * Получить список вуджей
-   * @param {Object} options
-   * @returns {Promise}
-   */
-  async function fetchWoojs(options) {
-    options = options || {}
+  // /**
+  //  * Получить список вуджей
+  //  * @param {Object} options
+  //  * @returns {Promise}
+  //  */
+  // async function fetchWoojs(options) {
+  //   options = options || {}
 
-    if (!options.quiet) isLoadedWoojs.value = false
+  //   if (!options.quiet) isLoadedWoojs.value = false
 
-    try {
-      woojs.value = await woojService.getAll()
-    } catch (message) {
-      alert(message)
-    }
+  //   try {
+  //     woojs.value = await woojService.getAll()
+  //   } catch (message) {
+  //     alert(message)
+  //   }
 
-    if (!options.quiet) isLoadedWoojs.value = true
-  }
+  //   if (!options.quiet) isLoadedWoojs.value = true
+  // }
 
   /**
    * Собрать топики и вуджы
-   * @param {Object} options
    * @returns {Promise}
    */
-  async function fetchAll(options) {
-    options = options || {}
+  async function fetchAll() {
+    isLoaded.value = false
+    // isLoadedTopics.value = false
+    // isLoadedWoojs.value = false
 
     try {
-      await Promise.all([fetchTopics(options), fetchWoojs(options)])
+      const data = await Promise.all([topicService.getAll(), woojService.getAll()])
+
+      topics.value = data[0]
+      woojs.value = data[1]
     } catch (message) {
       console.error(message)
     }
 
     isNeedUpdate.value = false
+    isLoaded.value = true
+    // isLoadedWoojs.value = true
+    // isLoadedTopics.value = true
   }
 
   /**
@@ -160,15 +168,21 @@ export default defineStore("woojs", () => {
   async function createTopic(fields) {
     fields = fields || {}
     isCreatingTopic.value = true
+    isLoadedTopics.value = false
+
+    let topic = null
 
     try {
-      await topicService.create(fields)
+      topic = await topicService.create(fields)
       await fetchAll()
     } catch (message) {
       alert(message)
     }
 
+    isLoadedTopics.value = true
     isCreatingTopic.value = false
+
+    return topic
   }
 
   /**
@@ -180,15 +194,21 @@ export default defineStore("woojs", () => {
   const updateTopic = async (topicId, fields) => {
     fields = fields || {}
     isUpdatingTopic.value = true
+    isLoadedTopics.value = false
+
+    let topic = null
 
     try {
-      await topicService.update(topicId, fields)
+      topic = await topicService.update(topicId, fields)
       await fetchAll()
     } catch (message) {
       alert(message)
     }
 
+    isLoadedTopics.value = true
     isUpdatingTopic.value = false
+
+    return topic
   }
 
   /**
@@ -198,15 +218,21 @@ export default defineStore("woojs", () => {
    */
   const deleteTopic = async (topicId) => {
     isUpdatingTopic.value = true
+    isLoadedTopics.value = false
+
+    let topic = null
 
     try {
-      await topicService.delete(topicId)
+      topic = await topicService.delete(topicId)
       await fetchAll()
     } catch (message) {
       alert(message)
     }
 
+    isLoadedTopics.value = true
     isUpdatingTopic.value = false
+
+    return topic
   }
 
   /**
@@ -217,18 +243,18 @@ export default defineStore("woojs", () => {
   const createWooj = async (fields) => {
     fields = fields || {}
     isCreatingWooj.value = true
+    // isLoadedWoojs.value = false
 
     let wooj = null
 
     try {
       wooj = await woojService.create(fields)
-
-      // await fetchAll()
-      isNeedUpdate.value = true
+      await fetchAll()
     } catch (message) {
       alert(message)
     }
 
+    // isLoadedWoojs.value = true
     isCreatingWooj.value = false
 
     return wooj
@@ -327,6 +353,7 @@ export default defineStore("woojs", () => {
     pinnedWoojsMap.value[wooj.id] = true
 
     await woojService.pin(wooj.id)
+    // await fetchAll()
 
     isNeedUpdate.value = true
   }
@@ -340,6 +367,7 @@ export default defineStore("woojs", () => {
     pinnedWoojsMap.value[wooj.id] = false
 
     await woojService.unpin(wooj.id)
+    // await fetchAll()
 
     isNeedUpdate.value = true
   }
@@ -374,16 +402,6 @@ export default defineStore("woojs", () => {
   }
 
   /**
-   * Очистить корзину
-   * @returns {Promise}
-   */
-  const clearTrash = async () => {
-    await woojService.clearTrash()
-    await fetchAll()
-    // isNeedUpdate.value = true
-  }
-
-  /**
    * Применить сортировку вуджей в топике
    * @param {String|Number} topic
    * @param {Array} positions
@@ -393,6 +411,19 @@ export default defineStore("woojs", () => {
     await topicService.sort(topic, positions)
 
     isNeedUpdate.value = true
+  }
+
+  /**
+   * Очистить корзину
+   * @returns {Promise}
+   */
+  const clearTrash = async () => {
+    // isLoadedWoojs.value = false
+
+    await woojService.clearTrash()
+    await fetchAll()
+
+    // isLoadedWoojs.value = true
   }
 
   return {
@@ -420,7 +451,7 @@ export default defineStore("woojs", () => {
     isNeedUpdate,
 
     isLoadedTopics,
-    isLoadedWoojs,
+    // isLoadedWoojs,
     isLoaded,
 
     isCreatingTopic,
@@ -429,8 +460,8 @@ export default defineStore("woojs", () => {
     isUpdatingWooj,
 
     fetchAll,
-    fetchTopics,
-    fetchWoojs,
+    // fetchTopics,
+    // fetchWoojs,
 
     activateTopic,
     activateWooj,

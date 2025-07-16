@@ -9,7 +9,7 @@ const { topicParamsMap, onLoaded, setRouteListeners } = useWoojs()
 const woojStore = useWoojsStore()
 const topic = computed(() => topicParamsMap.value.custom)
 
-const activateTopic = () => woojStore.isLoadedTopics && woojStore.activateTopic(props.topicId)
+const activateTopic = () => woojStore.isLoaded && woojStore.activateTopic(props.topicId)
 
 watch(() => props.topicId, () => activateTopic())
 

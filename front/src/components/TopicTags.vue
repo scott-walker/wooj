@@ -27,7 +27,7 @@ const normalizedCheckedMap = computed(() => {
 const onChange = () => {
   emit("update", normalizedCheckedMap.value)
 
-  deferredTimer.start(1000, () => emit("save", normalizedCheckedMap.value))
+  deferredTimer.start(500, () => emit("save", normalizedCheckedMap.value))
 }
 
 watch(checkedMap.value, onChange)

@@ -26,13 +26,25 @@ export default () => {
   }
 
   /**
+   * Создать топик
+   * @param {Object} fields
+   * @returns {Promise}
+   */
+  const createTopic = async (fields) => {
+    const topic = await woojStore.createTopic(fields)
+
+    router.push({ name: "Topic", params: { topicId: topic.id } })
+  }
+
+  /**
    * Удалить топик
+   * @param {Number} topicId
    * @returns {Promise}
    */
   const deleteTopic = async (topicId) => {
-    await woojStore.deleteTopic(topicId)
-
     router.push({ name: "All" })
+
+    await woojStore.deleteTopic(topicId)
   }
 
   /**
@@ -123,6 +135,7 @@ export default () => {
     setRouteListeners,
 
     topicParamsMap,
+    createTopic,
     createWooj,
   }
 }

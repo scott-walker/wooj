@@ -74,6 +74,7 @@ class TopicService
     {
         return Topic::where('author_id', $authorId)
             ->with("woojTopics")
+            ->orderBy('id')
             ->paginate(self::ITEMS_PER_PAGE);
     }
 

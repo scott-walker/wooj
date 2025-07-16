@@ -4,13 +4,13 @@ import useWoojs from "@hooks/woojs"
 import Button from "@ui/Button.vue"
 import LightInput from "@ui/LightInput.vue"
 
-const { woojStore } = useWoojs()
+const { woojStore, createTopic } = useWoojs()
 const emit = defineEmits(["created"])
 const name = ref("")
 const isDisabledButton = computed(() => !name.value.length)
 
 const onCreate = async () => {
-  await woojStore.createTopic({ name: name.value })
+  await createTopic({ name: name.value })
 
   emit("created")
 } 
