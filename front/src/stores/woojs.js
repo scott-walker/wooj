@@ -156,8 +156,8 @@ export default defineStore("woojs", () => {
 
     isNeedUpdate.value = false
     isLoaded.value = true
+    isLoadedTopics.value = true
     // isLoadedWoojs.value = true
-    // isLoadedTopics.value = true
   }
 
   /**

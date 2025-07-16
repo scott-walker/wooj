@@ -14,7 +14,6 @@ const name = ref(user.value.name)
 const password = ref("")
 
 const onClickProfile = () => (isShowProfile.value = true)
-const onChangeName = ({ target }) => (name.value = target.innerText)
 const onSubmit = () => {
   console.log({
     avatar: null,

@@ -1,5 +1,5 @@
 <script setup>
-import { inject, useTemplateRef, onMounted } from 'vue'
+import { inject, useTemplateRef, onMounted, nextTick } from 'vue'
 
 const props = defineProps({
   fieldClass: { type: String, default: "" },
@@ -19,7 +19,7 @@ const onChange = () => {
 }
 
 onMounted(() => {
-  props.focused && input.value.focus()
+  nextTick(() => props.focused && input.value.focus())
 })
 </script>
 
@@ -38,7 +38,10 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
+@use "sass:color";
 @use "@styles/colors";
+
+$grey: color.change(colors.$grey, $lightness: 80%);
 
 .ui-light-input {
   &__field {
@@ -48,18 +51,19 @@ onMounted(() => {
     border: none;
     border-bottom: 2px solid transparent;
     // border-radius: 10px;
-    transition: all .2s;
+    transition: all .3s;
     width: 100%;
     color: colors.$basic;
 
     &::placeholder {
-      color: #adb5bd;
+      color: $grey;
       font-style: italic;
+      // font-weight: bold;
     }
 
     &:hover,
     &:focus {
-      border-color: rgba(16, 0, 75, 0.05);
+      border-color: $grey;
     }
   }
 }
