@@ -1,14 +1,15 @@
 <script setup>
 import { ref, computed } from "vue"
-import { useAuthStore } from "@stores/auth"
+import useUserStore from "@stores/user"
 import IconLink from "@ui/IconLink.vue"
 import Modal from "@ui/Modal.vue"
 import EditableBlock from "@ui/EditableBlock.vue"
 import Input from "@ui/Input.vue"
 import Button from "@ui/Button.vue"
+import Avatar from "./Avatar.vue"
 
-const authStore = useAuthStore()
-const user = computed(() => authStore.user)
+const userStore = useUserStore()
+const user = computed(() => userStore.user)
 const isShowProfile = ref(false)
 const name = ref(user.value.name)
 const password = ref("")
@@ -27,20 +28,19 @@ const onSubmit = () => {
   <div class="user-panel">
     <div class="user-panel__user" @click="onClickProfile">
       <figure class="user-panel__user-avatar image is-32x32">
-        <img class="is-rounded" src="@assets/avatar.jpeg" />
+        <img class="is-rounded" :src="userStore.avatar" />
       </figure>
+
       <div class="user-panel__user-name">{{ user.name }}</div>
     </div>
     <div class="user-panel__logout">
-      <IconLink icon="right-from-bracket" @click="authStore.logout" />
+      <IconLink icon="right-from-bracket" @click="userStore.logout" />
     </div>
 
     <Modal v-model="isShowProfile" title="Профиль" :center="true">
       <div class="profile">
         <div class="profile__avatar">
-          <figure class="user-panel__user-avatar image is-128x128">
-            <img class="is-rounded" src="@assets/avatar.jpeg" />
-          </figure>
+          <Avatar />
         </div>
         <EditableBlock class="profile__name" v-model="name" :max="20" />
         <div class="profile__email">{{ user.email }}</div>

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\WoojController;
 use App\Http\Controllers\TopicController;
 
@@ -26,6 +27,11 @@ Route::middleware(['throttle:api'])->group(function () {
         // Topics
         Route::put('/topics/{topic}/sort', [TopicController::class, 'sort']);
         Route::apiResource('/topics', TopicController::class);
+
+        // User
+        // Route::get('/user/avatar/{file}', [UserController::class, 'avatar']);
+        // Route::get('/user/avatar', [UserController::class, 'avatar']);
+        Route::post('/user/avatar', [UserController::class, 'uploadAvatar']);
 
         // Auth
         Route::post('/logout', [AuthController::class, 'logout']);

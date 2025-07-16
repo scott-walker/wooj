@@ -10,9 +10,10 @@ use Laravel\Sanctum\HasApiTokens;
 
 /**
  * Модель пользователя
- * @param int $name
- * @param int $email
- * @param int $password
+ * @param string $name
+ * @param string $email
+ * @param string $password
+ * @param string $avatar
  **/
 class User extends Authenticatable
 {
@@ -30,6 +31,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar',
     ];
 
     /**

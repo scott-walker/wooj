@@ -60,6 +60,24 @@ export default class UserService {
     }
   }
 
+  /**
+   * Поменять аватар
+   */
+  async changeAvatar(avatar) {
+    try {
+      const formData = new FormData()
+      const headers = { "Content-Type": "multipart/form-data" }
+
+      formData.append("avatar", avatar)
+
+      const { user } = await this.http.post("user/avatar", formData, { headers })
+
+      return user
+    } catch {
+      throw "Не удалось поменять аватар"
+    }
+  }
+
   async getTest() {
     const { version } = await this.http.get("version")
 

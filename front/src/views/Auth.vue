@@ -1,14 +1,14 @@
 <script setup>
 import { reactive } from "vue"
-import { useAuthStore } from "@stores/auth"
+import useUserStore from "@stores/user"
 
-const authStore = useAuthStore()
+const userStore = useUserStore()
 const form = reactive({
   email: "",
   password: "",
 })
 
-const onSubmit = (form) => authStore.login(form)
+const onSubmit = (form) => userStore.login(form)
 </script>
 
 <template>

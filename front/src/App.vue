@@ -1,15 +1,15 @@
 <script setup>
 import { computed, onBeforeMount } from "vue"
-import { useAuthStore } from "@stores/auth"
+import useUserStore from "@stores/user"
 import useWoojsStore from "@stores/woojs"
 
 // import Notifies from "@components/Notifies.vue"
 import MainLayout from "@layouts/Main.vue"
 import Auth from "@views/Auth.vue"
 
-const authStore = useAuthStore()
+const userStore = useUserStore()
 const woojsStore = useWoojsStore()
-const isLogged = computed(() => authStore.isLogged)
+const isLogged = computed(() => userStore.isLogged)
 
 onBeforeMount(() => isLogged.value && woojsStore.fetchAll())
 </script>

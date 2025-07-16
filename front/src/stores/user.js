@@ -2,15 +2,16 @@ import { ref, computed, inject } from "vue"
 import { defineStore } from "pinia"
 
 /**
- * Стор авторизационных данных
+ * Стор для пользователя
  */
-export const useAuthStore = defineStore("auth", () => {
+export default defineStore("user", () => {
   const { storage } = inject("utils")
   const { userService } = inject("services")
 
   const token = ref(null)
   const user = ref(null)
   const isLogged = computed(() => !!token.value)
+  const avatar = computed(() => import.meta.env.VITE_API_BASE_URL + "/" + user.value.avatar)
 
   /**
    * Инициализация
@@ -56,8 +57,29 @@ export const useAuthStore = defineStore("auth", () => {
     }
   }
 
+  /**
+   * Поменять аватар
+   */
+  async function changeAvatar(avatar) {
+    try {
+      user.value = await userService.changeAvatar(avatar)
+
+      storage.set("user", user.value)
+    } catch (message) {
+      alert(message)
+    }
+  }
+
   // Инициализировать
   init()
 
-  return { token, user, isLogged, login, logout }
+  return {
+    token,
+    user,
+    avatar,
+    isLogged,
+    login,
+    logout,
+    changeAvatar,
+  }
 })

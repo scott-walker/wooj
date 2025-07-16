@@ -4,6 +4,8 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Auth\AuthenticationException;
 use Laravel\Sanctum\PersonalAccessToken;
 use App\Helpers\User as UserHelper;
@@ -94,15 +96,39 @@ class UserService
 
     /**
      * Создать токен
+     * @param User $user
      * @return string
      */
-    public function createToken(): string
+    public function createToken(User $user): string
     {
-        /**
-         * @var User
-         */
-        $user = Auth::user();
-
         return $user->createToken('')->plainTextToken;
+    }
+
+    /**
+     * Поменять автар пльзователя
+     * @param User $user
+     * @param UploadedFile $file
+     * @return User
+     */
+    public function changeAvatar(User $user, UploadedFile $file): User
+    {
+        Storage::disk('public')->delete($user->avatar);
+        $avatar = $file->store('avatar', 'public');
+
+        return $this->update($user, ["avatar" => $avatar]);
+    }
+
+    /**
+     * Обновить данные пользователя
+     * @param User $user
+     * @param array $fields
+     * @return User
+     */
+    public function update(User $user, array $fields): User
+    {
+        $user = User::find($user->id);
+        $user->update($fields);
+
+        return $user;
     }
 }
