@@ -1,11 +1,16 @@
 <script setup>
-import { computed, onBeforeMount } from "vue"
+import { ref, computed, onBeforeMount } from "vue"
+import Button from "@ui/Button.vue"
+import Dialog from "@ui/Dialog.vue"
 import WoojList from "@components/WoojList.vue"
 import useWoojs from "@hooks/woojs"
 
 const { topicParamsMap, setRouteListeners } = useWoojs()
 const topic = computed(() => topicParamsMap.value.trash)
 const isShowedButton = computed(() => topic.value.woojs.length)
+const isShowedDeleteDialog = ref(false)
+
+const onClear = () => (isShowedDeleteDialog.value = true)
 
 onBeforeMount(() => setRouteListeners())
 </script>
@@ -26,12 +31,20 @@ onBeforeMount(() => setRouteListeners())
       emptyText="Корзина пуста"
       @restore="topic.restore">
       <template #panel>
-        <button v-if="isShowedButton" class="button is-danger" @click="topic.clearTrash">
-          <span class="icon">
-            <i class="fas fa-times"></i>
-          </span>
-          <span>Очистить корзину</span>
-        </button>
+        <Button
+          v-if="isShowedButton"
+          text="Очистить корзину"
+          icon="times"
+          type="danger"
+          @click="onClear" />
+
+        <Dialog
+          v-model="isShowedDeleteDialog"
+          title="Очистить корзину"
+          type="danger"
+          @approve="topic.clearTrash">
+          Ты действительно хочешь очистить корзину?
+        </Dialog>
       </template>
     </WoojList>
   </div>
