@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
+import Input from '@ui/Input.vue'
 
 const props = defineProps({
   placeholder: { type: String, default: "Пароль" },
@@ -32,10 +33,10 @@ watch(() => password.value, value => {
 <template>
   <div class="ui-password-input">
     <div class="ui-password-input__wrap">
-      <input
+      <Input
         class="ui-password-input__field"
-        :type="type"
         v-model="password"
+        :type="type"
         :placeholder="props.placeholder" />
 
       <i class="ui-password-input__icon fa-solid"
@@ -64,27 +65,27 @@ $grey: color.change(colors.$grey, $lightness: 80%);
     position: relative;
   }
 
-  &__field {
-    padding: 10px 50px 10px 20px;
-    box-shadow: none !important;
-    outline: none;
-    border: 2px solid $grey;
-    // border-radius: 10px;
-    transition: all .3s;
-    width: 100%;
-    color: colors.$basic;
+  // &__field {
+  //   padding: 10px 50px 10px 20px;
+  //   box-shadow: none !important;
+  //   outline: none;
+  //   border: 2px solid $grey;
+  //   // border-radius: 10px;
+  //   transition: all .3s;
+  //   width: 100%;
+  //   color: colors.$basic;
 
-    &::placeholder {
-      color: $grey;
-      font-style: italic;
-      font-weight: bold;
-    }
+  //   &::placeholder {
+  //     color: $grey;
+  //     font-style: italic;
+  //     font-weight: bold;
+  //   }
 
-    &:hover,
-    &:focus {
-      border-color: $grey;
-    }
-  }
+  //   &:hover,
+  //   &:focus {
+  //     border-color: $grey;
+  //   }
+  // }
 
   &__icon {
     position: absolute;

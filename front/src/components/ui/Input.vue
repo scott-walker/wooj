@@ -50,7 +50,8 @@ $grey: color.change(colors.$grey, $lightness: 80%);
     box-shadow: none !important;
     outline: none;
     border: none;
-    border: 2px solid $grey;
+    // border: 2px solid $grey;
+    border-bottom: 2px solid $grey;
     transition: all .2s;
     width: 100%;
     color: colors.$basic;
@@ -64,7 +65,8 @@ $grey: color.change(colors.$grey, $lightness: 80%);
 
     &:hover,
     &:focus {
-      border-color: colors.$basic;
+      background-color: color.change(colors.$grey, $lightness: 96%);
+      // border-color: color.change(colors.$grey, $lightness: 60%);
       // border-color: $grey;
     }
   }
