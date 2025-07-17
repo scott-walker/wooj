@@ -78,9 +78,16 @@ export default class UserService {
     }
   }
 
-  async getTest() {
-    const { version } = await this.http.get("version")
+  /**
+   * Обновить пользователя
+   */
+  async update(fields) {
+    try {
+      const { user } = await this.http.put("user", fields)
 
-    return version
+      return user
+    } catch {
+      throw "Не удалось обновить пользователя"
+    }
   }
 }

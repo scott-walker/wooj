@@ -46,7 +46,7 @@ class AuthController extends Controller
     {
         try {
             $user = $this->userSerivce->login($request->email, $request->password);
-            $token = $this->userSerivce->createToken();
+            $token = $this->userSerivce->createToken($user);
 
             return response()->json([
                 'user' => $user,

@@ -11,7 +11,13 @@ export default defineStore("user", () => {
   const token = ref(null)
   const user = ref(null)
   const isLogged = computed(() => !!token.value)
-  const avatar = computed(() => import.meta.env.VITE_API_BASE_URL + "/" + user.value.avatar)
+  const avatar = computed(() => {
+    if (!user.value.avatar) {
+      return null
+    }
+
+    return import.meta.env.VITE_API_BASE_URL + "/" + user.value.avatar
+  })
 
   /**
    * Инициализация
@@ -70,6 +76,19 @@ export default defineStore("user", () => {
     }
   }
 
+  /**
+   * Обновить пользователя
+   */
+  async function update(fields) {
+    try {
+      user.value = await userService.update(fields)
+
+      storage.set("user", user.value)
+    } catch (message) {
+      alert(message)
+    }
+  }
+
   // Инициализировать
   init()
 
@@ -78,8 +97,10 @@ export default defineStore("user", () => {
     user,
     avatar,
     isLogged,
+
     login,
     logout,
     changeAvatar,
+    update,
   }
 })

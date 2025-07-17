@@ -32,8 +32,8 @@ const onInput = (event) => {
   const length = event.target.innerText.length
 
   if (length > props.max) {
-    // event.target.blur()
     event.target.innerText = event.target.innerText.substring(0, props.max)
+
     setEndOfContent(block.value)
   }
 }
@@ -57,6 +57,7 @@ const onBlur = (event) => {
 watch(() => focused.value, (focused) => {
   if (focused) {
     block.value.focus()
+
     setEndOfContent(block.value)
   }
 })

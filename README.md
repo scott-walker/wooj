@@ -26,6 +26,8 @@ https://tiptap.dev/docs/editor/getting-started/overview
 _Sortable_
 https://shopify.github.io/draggable/examples/multiple-containers.html
 
+https://advanced-cropper.github.io
+
 _Lodash_
 https://lodash.com/
 

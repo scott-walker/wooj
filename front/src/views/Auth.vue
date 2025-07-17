@@ -8,7 +8,7 @@ const form = reactive({
   password: "",
 })
 
-const onSubmit = (form) => userStore.login(form)
+const onSubmit = () => userStore.login(form)
 </script>
 
 <template>

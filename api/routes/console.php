@@ -2,7 +2,9 @@
 
 // use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+
 
 Artisan::command('app:test', function () {
     $email = 'Scott.walker.new-york.new12@gmail.com';
@@ -18,3 +20,7 @@ Artisan::command('app:test', function () {
         'name' => (string) $name
     ]);
 })->purpose('Test helpers');
+
+Artisan::command('app:genpass', function () {
+    echo Hash::make("longtime") . "\n";
+})->purpose('Generate password');

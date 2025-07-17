@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\User\UpdateRequest;
 use App\Http\Requests\User\UploadAvatarRequest;
 use App\Services\UserService;
 
@@ -43,7 +43,25 @@ class UserController extends Controller
     // }
 
     /**
+     * Обновить пользователя
+     * @param UpdateRequest $request
+     * @return JsonResponse
+     */
+    public function update(UpdateRequest $request): JsonResponse
+    {
+        $user = $this->userSerivce->update(
+            Auth::user(),
+            $request->all()
+        );
+
+        return response()->json([
+            'user' => $user
+        ]);
+    }
+
+    /**
      * Загрузить аватар
+     * @param UploadAvatarRequest $request
      * @return JsonResponse
      */
     public function uploadAvatar(UploadAvatarRequest $request): JsonResponse

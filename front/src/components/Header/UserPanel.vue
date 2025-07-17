@@ -4,23 +4,27 @@ import useUserStore from "@stores/user"
 import IconLink from "@ui/IconLink.vue"
 import Modal from "@ui/Modal.vue"
 import EditableBlock from "@ui/EditableBlock.vue"
-import Input from "@ui/Input.vue"
+import PasswordInput from "@ui/PasswordInput.vue"
 import Button from "@ui/Button.vue"
 import Avatar from "./Avatar.vue"
 
 const userStore = useUserStore()
 const user = computed(() => userStore.user)
 const isShowProfile = ref(false)
+const isUpdatingPassword = ref(false)
 const name = ref(user.value.name)
 const password = ref("")
+const disabledSavePassword = computed(() => password.value.length < 6)
 
 const onClickProfile = () => (isShowProfile.value = true)
-const onSubmit = () => {
-  console.log({
-    avatar: null,
-    name: name.value,
-    password: password.value,
-  })
+const onUpdateName = () => userStore.update({ name: name.value })
+const onUpdatePassword = async () => {
+  isUpdatingPassword.value = true
+
+  await userStore.update({ password: password.value })
+
+  isUpdatingPassword.value = false
+  password.value = ""
 }
 </script>
 
@@ -28,7 +32,8 @@ const onSubmit = () => {
   <div class="user-panel">
     <div class="user-panel__user" @click="onClickProfile">
       <figure class="user-panel__user-avatar image is-32x32">
-        <img class="is-rounded" :src="userStore.avatar" />
+        <img v-if="userStore.avatar" class="is-rounded" :src="userStore.avatar" />
+        <div v-else class="is-rounded not-avatar"></div>
       </figure>
 
       <div class="user-panel__user-name">{{ user.name }}</div>
@@ -42,12 +47,16 @@ const onSubmit = () => {
         <div class="profile__avatar">
           <Avatar />
         </div>
-        <EditableBlock class="profile__name" v-model="name" :max="20" />
+        <EditableBlock class="profile__name" v-model="name" :max="20" @change="onUpdateName" />
         <div class="profile__email">{{ user.email }}</div>
-        <form class="profile__form" @submit.prevent="onSubmit">
-          <Input v-model="password" type="password" placeholder="Новый пароль" />
-          <Button text="Сохранить" />
-        </form>
+        <div class="profile__form">
+          <PasswordInput v-model="password" :with-checker="true" placeholder="Новый пароль" />
+          <Button
+            :disabled="disabledSavePassword"
+            text="Сохранить пароль"
+            :loading="isUpdatingPassword"
+            @click="onUpdatePassword" />
+        </div>
       </div>
     </Modal>
   </div>
@@ -87,6 +96,13 @@ const onSubmit = () => {
       font-size: 18px;
       font-weight: bold;
     }
+  }
+
+  .not-avatar {
+    background-color: colors.$primary;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
   }
 }
 

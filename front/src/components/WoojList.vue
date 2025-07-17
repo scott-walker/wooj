@@ -38,6 +38,7 @@ const emit = defineEmits([
 ])
 
 const getRandMargin = (i) => {
+  return {}
   const FACTOR = 7;
 
   const vector = i % 2 === 0 ? -1 : 1;

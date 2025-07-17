@@ -39,7 +39,6 @@ const initDnd = () => {
 
 onMounted(async () => {
   layoutStore.setStatusBar({ title: "Дашборд", icon: "gauge" })
-  version.value = await userService.getTest()
 
   initDnd()
 })

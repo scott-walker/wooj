@@ -112,7 +112,10 @@ class UserService
      */
     public function changeAvatar(User $user, UploadedFile $file): User
     {
-        Storage::disk('public')->delete($user->avatar);
+        if ($user->avatar) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+
         $avatar = $file->store('avatar', 'public');
 
         return $this->update($user, ["avatar" => $avatar]);

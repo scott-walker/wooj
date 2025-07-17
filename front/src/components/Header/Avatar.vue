@@ -48,7 +48,8 @@ const onSavePhoto = async () => {
 
     <div v-else class="avatar__preview">
       <figure class="user-panel__user-avatar image is-128x128">
-        <img class="is-rounded" :src="avatar" />
+        <img v-if="avatar" class="is-rounded" :src="avatar" />
+        <div v-else class="is-rounded not-avatar"></div>
       </figure>
 
       <IconLink class="avatar__preview-uploader" icon="arrow-up-from-bracket" @click="onSelectPhoto" />
@@ -102,6 +103,13 @@ const onSavePhoto = async () => {
       // height: 300px;
       background: colors.$absorbing;
     }
+  }
+
+  .not-avatar {
+    background-color: colors.$primary;
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
   }
 }
 </style>

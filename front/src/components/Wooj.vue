@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue"
+import { ref, computed } from "vue"
 import Modal from "@ui/Modal.vue"
 import IconLink from "@ui/IconLink.vue"
 import LightInput from "@ui/LightInput.vue"
@@ -17,6 +17,7 @@ const props = defineProps({
 
 const isShowedTopics = ref(false)
 const isShowedShare = ref(false)
+const hasTopics = computed(() => !!props.topics.length)
 
 const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
 </script>
@@ -25,8 +26,8 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
   <div class="wooj">
     <div v-if="props.loaded" class="wooj__board">
       <div class="wooj__actions">
-        <IconLink icon="tags" @click="isShowedTopics = !isShowedTopics" />
-        <IconLink icon="link" @click="isShowedShare = !isShowedShare" />
+        <IconLink v-if="hasTopics" icon="tags" @click="isShowedTopics = !isShowedTopics" />
+        <!-- <IconLink icon="link" @click="isShowedShare = !isShowedShare" /> -->
       </div>
 
       <div class="wooj__paper">

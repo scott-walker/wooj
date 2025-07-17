@@ -31,6 +31,7 @@ Route::middleware(['throttle:api'])->group(function () {
         // User
         // Route::get('/user/avatar/{file}', [UserController::class, 'avatar']);
         // Route::get('/user/avatar', [UserController::class, 'avatar']);
+        Route::put('/user', [UserController::class, 'update']);
         Route::post('/user/avatar', [UserController::class, 'uploadAvatar']);
 
         // Auth
