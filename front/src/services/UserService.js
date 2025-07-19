@@ -27,6 +27,30 @@ export default class UserService {
   }
 
   /**
+   * Зарегистрироваться
+   * @param {String} email
+   * @param {String} password
+   * @returns
+   */
+  async register(email, password) {
+    try {
+      const { user, token } = await this.http.post("register", {
+        email,
+        password,
+      })
+
+      this.setToken(token)
+
+      return { user, token }
+    } catch ({ response }) {
+      throw {
+        message: "Не удалось зарегистрироваться",
+        errors: response.data.errors || {},
+      }
+    }
+  }
+
+  /**
    * Войти в систему
    * @param {String} email
    * @param {String} password
@@ -42,8 +66,11 @@ export default class UserService {
       this.setToken(token)
 
       return { user, token }
-    } catch {
-      throw "Не удалось войти"
+    } catch ({ response }) {
+      throw {
+        message: "Не удалось войти",
+        errors: response.data.errors || {},
+      }
     }
   }
 

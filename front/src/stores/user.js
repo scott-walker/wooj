@@ -30,6 +30,24 @@ export default defineStore("user", () => {
   }
 
   /**
+   * Зарегистрироваться
+   * @param {Object} data - email, password
+   */
+  async function register({ email, password }) {
+    try {
+      const data = await userService.register(email, password)
+
+      token.value = data.token
+      user.value = data.user
+
+      storage.set("token", data.token)
+      storage.set("user", data.user)
+    } catch ({ message, errors }) {
+      throw { message, errors }
+    }
+  }
+
+  /**
    * Войти в систему
    * @param {Object} data - email, password
    */
@@ -42,8 +60,8 @@ export default defineStore("user", () => {
 
       storage.set("token", data.token)
       storage.set("user", data.user)
-    } catch (message) {
-      alert(message)
+    } catch ({ message, errors }) {
+      throw { message, errors }
     }
   }
 
@@ -98,6 +116,7 @@ export default defineStore("user", () => {
     avatar,
     isLogged,
 
+    register,
     login,
     logout,
     changeAvatar,
