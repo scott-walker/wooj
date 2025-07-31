@@ -7,4 +7,4 @@ node_modules
 /api/storage/*.key
 /api/storage/pail
 /api/vendor
-/front/dist
+# /front/dist
