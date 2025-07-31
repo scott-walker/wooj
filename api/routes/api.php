@@ -11,6 +11,7 @@ Route::middleware(['throttle:api'])->group(function () {
     Route::get('/version', [IndexController::class, 'version']);
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/verify/{id}/{hash}', [AuthController::class, 'verify'])->name('verify_email');
 
     Route::middleware(['auth:sanctum'])->group(function () {
         // Woojs
@@ -35,6 +36,8 @@ Route::middleware(['throttle:api'])->group(function () {
         Route::post('/user/avatar', [UserController::class, 'uploadAvatar']);
 
         // Auth
+        Route::post('/resend', [AuthController::class, 'resend']);
+        Route::get('/check', [AuthController::class, 'check']);
         Route::post('/logout', [AuthController::class, 'logout']);
     });
 });

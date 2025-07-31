@@ -9,8 +9,10 @@ export default defineStore("user", () => {
   const { userService } = inject("services")
 
   const token = ref(null)
-  const user = ref(null)
+  const user = ref({})
+  const resendTimer = ref(null)
   const isLogged = computed(() => !!token.value)
+  const isVerified = computed(() => !!user.value.is_verified)
   const avatar = computed(() => {
     if (!user.value.avatar) {
       return null
@@ -24,9 +26,23 @@ export default defineStore("user", () => {
    */
   function init() {
     token.value = storage.get("token", null)
-    user.value = storage.get("user", null)
+    resendTimer.value = storage.get("resendTimer", null)
 
     userService.setToken(token.value)
+  }
+
+  /**
+   * Проверить авторизацию (и получить пользователя)
+   */
+  async function check() {
+    try {
+      user.value = await userService.check()
+    } catch {
+      token.value = null
+      user.value = {}
+
+      storage.clear()
+    }
   }
 
   /**
@@ -41,7 +57,6 @@ export default defineStore("user", () => {
       user.value = data.user
 
       storage.set("token", data.token)
-      storage.set("user", data.user)
     } catch ({ message, errors }) {
       throw { message, errors }
     }
@@ -59,7 +74,6 @@ export default defineStore("user", () => {
       user.value = data.user
 
       storage.set("token", data.token)
-      storage.set("user", data.user)
     } catch ({ message, errors }) {
       throw { message, errors }
     }
@@ -73,7 +87,7 @@ export default defineStore("user", () => {
       await userService.logout()
 
       token.value = null
-      user.value = null
+      user.value = {}
 
       storage.clear()
     } catch (message) {
@@ -87,8 +101,6 @@ export default defineStore("user", () => {
   async function changeAvatar(avatar) {
     try {
       user.value = await userService.changeAvatar(avatar)
-
-      storage.set("user", user.value)
     } catch (message) {
       alert(message)
     }
@@ -100,11 +112,45 @@ export default defineStore("user", () => {
   async function update(fields) {
     try {
       user.value = await userService.update(fields)
-
-      storage.set("user", user.value)
     } catch (message) {
       alert(message)
     }
+  }
+
+  /**
+   * Отправить сообщение с подтверждением email заново
+   */
+  async function resend() {
+    resendTimer.value = storage.set("resendTimer", 60)
+    startResendTimer()
+
+    try {
+      await userService.resend()
+    } catch (message) {
+      alert(message)
+    }
+  }
+
+  /**
+   * Запустить таймер переотправки email с верификацией
+   */
+  function startResendTimer() {
+    if (!resendTimer.value) return
+
+    let timer = null
+
+    const tick = () => {
+      if (resendTimer.value <= 0) {
+        resendTimer.value = storage.remove("resendTimer")
+
+        clearInterval(timer)
+        return
+      }
+
+      resendTimer.value = storage.set("resendTimer", --resendTimer.value)
+    }
+
+    timer = setInterval(tick, 1000)
   }
 
   // Инициализировать
@@ -113,13 +159,18 @@ export default defineStore("user", () => {
   return {
     token,
     user,
+    resendTimer,
     avatar,
     isLogged,
+    isVerified,
 
+    check,
     register,
     login,
     logout,
     changeAvatar,
     update,
+    resend,
+    startResendTimer,
   }
 })

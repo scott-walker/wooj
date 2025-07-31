@@ -5,9 +5,13 @@ namespace App\Services;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Auth\AuthenticationException;
 use Laravel\Sanctum\PersonalAccessToken;
+use App\Http\Resources\UserResource;
+use App\Mail\VerifyEmail;
 use App\Helpers\User as UserHelper;
 use App\Models\User;
 use App\Models\Topic;
@@ -17,6 +21,35 @@ use App\Models\Topic;
  */
 class UserService
 {
+    /**
+     * Обернуть пользователя
+     * @param User $user
+     * @return UserResource
+     */
+    public function wrap(User $user): UserResource
+    {
+        return new UserResource($user);
+    }
+
+    /**
+     * Обернуть пользователей
+     * @param mixed $users
+     * @return ResourceCollection
+     */
+    public function wrapCollection(mixed $users): ResourceCollection
+    {
+        return UserResource::collection($users);
+    }
+
+    /**
+     * Получить текущего пользователей
+     * @return User|null
+     */
+    public function getCurrentUser(): User|null
+    {
+        return Auth::user();
+    }
+
     /**
      * Зарегистрировать пользователя
      * @param string $email
@@ -54,6 +87,15 @@ class UserService
         return $user;
     }
 
+    /**
+     * Отправить письмо пользователю для подтверждения email
+     * @param \App\Models\User $user
+     * @return void
+     */
+    public function sendVerifyMail(User $user)
+    {
+        return Mail::to($user->email)->send(new VerifyEmail($user));
+    }
 
     /**
      * Залогинить пользователя
@@ -72,7 +114,7 @@ class UserService
             throw new AuthenticationException();
         }
 
-        return Auth::user();
+        return $this->getCurrentUser();
     }
 
     /**
@@ -81,10 +123,8 @@ class UserService
      */
     public function logout(): User
     {
-        /**
-         * @var User
-         */
-        $user = Auth::user();
+        $user = $this->getCurrentUser();
+
         /**
          * @var PersonalAccessToken
          */

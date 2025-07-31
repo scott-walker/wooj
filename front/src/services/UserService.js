@@ -27,10 +27,24 @@ export default class UserService {
   }
 
   /**
+   * Проверить авторизацию (и получить пользователя)
+   * @returns {Object}
+   */
+  async check() {
+    try {
+      const { user } = await this.http.get("check")
+
+      return user
+    } catch {
+      throw "Пользователь не авторизован"
+    }
+  }
+
+  /**
    * Зарегистрироваться
    * @param {String} email
    * @param {String} password
-   * @returns
+   * @returns {Object}
    */
   async register(email, password) {
     try {
@@ -107,6 +121,7 @@ export default class UserService {
 
   /**
    * Обновить пользователя
+   * @param {Object} fields
    */
   async update(fields) {
     try {
@@ -115,6 +130,17 @@ export default class UserService {
       return user
     } catch {
       throw "Не удалось обновить пользователя"
+    }
+  }
+
+  /**
+   * Отправить сообщение с подтверждением email заново
+   */
+  async resend() {
+    try {
+      await this.http.post("resend")
+    } catch {
+      throw "Не удалось отправить сообщение"
     }
   }
 }

@@ -58,4 +58,3 @@ RUN git clone https://github.com/seebi/dircolors-solarized
 
 WORKDIR /var/www
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-CMD ["php-fpm"]

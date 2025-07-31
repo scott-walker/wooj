@@ -55,7 +55,7 @@ class UserController extends Controller
         );
 
         return response()->json([
-            'user' => $user
+            'user' => $this->userSerivce->wrap($user)
         ]);
     }
 
@@ -72,7 +72,7 @@ class UserController extends Controller
         );
 
         return response()->json([
-            'user' => $user
+            'user' => $this->userSerivce->wrap($user)
         ]);
     }
 }

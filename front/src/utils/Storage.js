@@ -14,11 +14,12 @@ export default class Storage {
    * Установить данные в хранилище
    * @param {String} key
    * @param {*} value
+   * @returns {*}
    */
   set(key, value) {
-    value = JSON.stringify(value)
+    localStorage.setItem(key, JSON.stringify(value))
 
-    localStorage.setItem(key, value)
+    return value
   }
 
   /**

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -14,13 +15,24 @@ use Laravel\Sanctum\HasApiTokens;
  * @param string $email
  * @param string $password
  * @param string $avatar
+ * @param bool $isVerified
  **/
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens, MustVerifyEmail;
 
     public const int SCOTT_ID = 2;
+
+    public function getEmailHash(): string
+    {
+        return sha1($this->email);
+    }
+
+    public function getIsVerifiedAttribute(): bool
+    {
+        return (bool) $this->email_verified_at;
+    }
 
     /**
      * The attributes that are mass assignable.
