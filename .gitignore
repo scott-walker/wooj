@@ -1,6 +1,5 @@
 *.log
-/api/**/.env
-/front/**/.env
+.env
 node_modules
 
 /.vscode
