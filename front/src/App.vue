@@ -11,7 +11,6 @@ import Auth from "@views/Auth.vue"
 import Loading from "@views/Loading.vue"
 
 const userStore = useUserStore()
-const text = ref(import.meta.env.__MY_TEST__)
 const isReady = ref(false)
 const isLogged = computed(() => userStore.isLogged)
 const isVerified = computed(() => userStore.isVerified)
@@ -25,7 +24,6 @@ onBeforeMount(async () => {
 
 <template>
   <Toasts />
-  <h1>{{ text }}</h1>
 
   <template v-if="isReady">
     <RouterView v-if="isLogged && isVerified" v-slot="{ Component }">

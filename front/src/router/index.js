@@ -1,14 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router"
-// import IndexView from "@views/Index.vue"
-// import AllView from "@views/All.vue"
-// import PinnedView from "@views/Pinned.vue"
-// import TrashView from "@views/Trash.vue"
-
-// import DraftsView from "@views/Drafts.vue"
-// import ArchiveView from "@views/Archive.vue"
-// import PublishedView from "@views/Published.vue"
-// import TopicView from "@views/Topic.vue"
-// import WoojView from "@views/Wooj.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,11 +8,6 @@ const router = createRouter({
       name: "Index",
       component: () => import("@views/All.vue"),
     },
-    // {
-    //   path: "/all",
-    //   name: "All",
-    //   component: AllView,
-    // },
     {
       path: "/pinned",
       name: "Pinned",
