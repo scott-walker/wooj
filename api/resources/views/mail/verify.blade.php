@@ -5,8 +5,7 @@
     <title>WOOJ</title>
     <style>
         body {
-            width: 100%;
-            padding: 20px;
+            padding: 20px 20px 40px 20px;
             text-align: center;
             background-color: #f2f4f7;
             color: #10223f;
@@ -29,7 +28,7 @@
         }
 
         .box__bottom {
-            margin-top: 20px;
+            margin-top: 30px;
             text-align: center;
         }
 
