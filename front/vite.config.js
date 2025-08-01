@@ -16,6 +16,21 @@ const vueOptions = {
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [vue(vueOptions), vueDevTools()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("axios")) {
+            return "axios"
+          } else if (id.includes("lodash")) {
+            return "lodash"
+          } else if (id.includes("vue")) {
+            return "vue"
+          }
+        },
+      },
+    },
+  },
   resolve: {
     alias: {
       "@": PATH_SRC,

@@ -1,13 +1,14 @@
 import { createRouter, createWebHistory } from "vue-router"
 // import IndexView from "@views/Index.vue"
-import AllView from "@views/All.vue"
-import PinnedView from "@views/Pinned.vue"
+// import AllView from "@views/All.vue"
+// import PinnedView from "@views/Pinned.vue"
+// import TrashView from "@views/Trash.vue"
+
 // import DraftsView from "@views/Drafts.vue"
 // import ArchiveView from "@views/Archive.vue"
-import TrashView from "@views/Trash.vue"
 // import PublishedView from "@views/Published.vue"
-import TopicView from "@views/Topic.vue"
-import WoojView from "@views/Wooj.vue"
+// import TopicView from "@views/Topic.vue"
+// import WoojView from "@views/Wooj.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,7 +16,7 @@ const router = createRouter({
     {
       path: "/",
       name: "Index",
-      component: AllView,
+      component: () => import("@views/All.vue"),
     },
     // {
     //   path: "/all",
@@ -25,7 +26,7 @@ const router = createRouter({
     {
       path: "/pinned",
       name: "Pinned",
-      component: PinnedView,
+      component: () => import("@views/Pinned.vue"),
     },
     // {
     //   path: "/published",
@@ -45,25 +46,20 @@ const router = createRouter({
     {
       path: "/trash",
       name: "Trash",
-      component: TrashView,
+      component: () => import("@views/Trash.vue"),
     },
     {
       path: "/topic/:topicId(\\d+)",
       name: "Topic",
-      component: TopicView,
+      component: () => import("@views/Topic.vue"),
       props: true,
     },
     {
       path: "/wooj/:woojId(\\d+)",
       name: "Wooj",
-      component: WoojView,
+      component: () => import("@views/Wooj.vue"),
       props: true,
     },
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   component: () => import('../views/AboutView.vue'),
-    // },
   ],
 })
 
