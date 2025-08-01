@@ -29,7 +29,7 @@ export default class HttpClient {
 
     const options = {
       baseURL: this.options.baseUrl || null,
-      timeout: this.options.timeout || 1000,
+      timeout: this.options.timeout || 0,
       withCredentials: this.options.credentials || false,
       headers,
     }
