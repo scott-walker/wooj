@@ -1,9 +1,11 @@
 <script setup>
-import { ref, computed, onBeforeMount, TransitionGroup } from "vue"
+import { ref, computed, onBeforeMount } from "vue"
+import { RouterView } from "vue-router"
 import useUserStore from "@stores/user"
 import useWoojsStore from "@stores/woojs"
 
-// import Notifies from "@components/Notifies.vue"
+import Toasts from "@components/Toasts.vue"
+import GuardLayout from "@layouts/Guard.vue"
 import MainLayout from "@layouts/Main.vue"
 import Verify from "@views/Verify.vue"
 import Auth from "@views/Auth.vue"
@@ -27,24 +29,18 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <TransitionGroup name="views" v-if="isReady">
-    <!-- <Notifies /> -->
-    <MainLayout v-if="isLogged && isVerified" />
-    <Verify v-else-if="isLogged && !isVerified" />
-    <Auth v-else />
-  </TransitionGroup>
+  <Toasts />
+
+  <template v-if="isReady">
+    <MainLayout v-if="isLogged && isVerified">
+      <RouterView />
+    </MainLayout>
+
+    <GuardLayout v-else>
+      <Auth v-if="!isLogged" />
+      <Verify v-else />
+    </GuardLayout>
+  </template>
 
   <Loading v-else />
 </template>
-
-<style scoped>
-.views-enter-active,
-.views-leave-active {
-  transition: all .3s ease;
-}
-
-.views-enter-from,
-.views-leave-to {
-  opacity: 0.5;
-}
-</style>

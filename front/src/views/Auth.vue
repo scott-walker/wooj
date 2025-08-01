@@ -58,52 +58,45 @@ const onRegister = async () => {
 
 <template>
   <div class="view-auth">
-    <div class="auth">
-      <div class="auth__top">
-        <h1 class="auth__top-title">WOOJ</h1>
-        <p class="auth__top-title-subtitle">Создавай быстро простые заметки</p>
+    <div class="card">
+      <div class="card-tabs">
+        <a class="card-tabs-item" :class="{ active: isShowedLogin }" @click="isShowedLogin = true">
+          Войти
+        </a>
+        <a class="card-tabs-item" :class="{ active: isShowedRegister }" @click="isShowedLogin = false">
+          Зарегистрироваться
+        </a>
       </div>
 
-      <div class="auth__card">
-        <div class="auth__card-tabs">
-          <a class="auth__card-tabs-item" :class="{ active: isShowedLogin }" @click="isShowedLogin = true">
-            Войти
-          </a>
-          <a class="auth__card-tabs-item" :class="{ active: isShowedRegister }" @click="isShowedLogin = false">
-            Зарегистрироваться
-          </a>
+      <div v-show="isShowedLogin" class="form form-login">
+        <div class="form__field">
+          <Input type="email" placeholder="Email" v-model="loginForm.email" />
         </div>
-
-        <div v-show="isShowedLogin" class="auth__form auth__form-login">
-          <div class="auth__form-field">
-            <Input type="email" placeholder="Email" v-model="loginForm.email" />
-          </div>
-          <div class="auth__form-field">
-            <PasswordInput placeholder="Пароль" :with-checker="false" v-model="loginForm.password" />
-          </div>
-          <div class="auth__form-field">
-            <div class="auth__form-errors">
-              <div v-if="loginErrors.message" class="auth__form-errors-item">{{ loginErrors.message }}</div>
-            </div>
-            <Button text="Войти" :disabled="isDissqbledLoginButton" @click="onLogin" />
-          </div>
+        <div class="form__field">
+          <PasswordInput placeholder="Пароль" :with-checker="false" v-model="loginForm.password" />
         </div>
+        <div class="form__field">
+          <div class="form__errors">
+            <div v-if="loginErrors.message" class="form__errors-item">{{ loginErrors.message }}</div>
+          </div>
+          <Button text="Войти" :disabled="isDissqbledLoginButton" @click="onLogin" />
+        </div>
+      </div>
 
-        <div v-show="isShowedRegister" class="auth__form auth__form-register">
-          <div class="auth__form-field">
-            <Input type="email" placeholder="Email" v-model="registerForm.email" />
+      <div v-show="isShowedRegister" class="form form-register">
+        <div class="form__field">
+          <Input type="email" placeholder="Email" v-model="registerForm.email" />
+        </div>
+        <div class="form__field">
+          <PasswordInput placeholder="Пароль" :with-checker="true" v-model="registerForm.password" />
+        </div>
+        <div class="form__field">
+          <div class="form__errors">
+            <!-- <div v-if="registerErrors.message" class="form__errors-item">{{ registerErrors.message }}</div> -->
+            <div v-if="registerErrors.email" class="form__errors-item">{{ registerErrors.email }}</div>
+            <div v-if="registerErrors.password" class="form__errors-item">{{ registerErrors.password }}</div>
           </div>
-          <div class="auth__form-field">
-            <PasswordInput placeholder="Пароль" :with-checker="true" v-model="registerForm.password" />
-          </div>
-          <div class="auth__form-field">
-            <div class="auth__form-errors">
-              <!-- <div v-if="registerErrors.message" class="auth__form-errors-item">{{ registerErrors.message }}</div> -->
-              <div v-if="registerErrors.email" class="auth__form-errors-item">{{ registerErrors.email }}</div>
-              <div v-if="registerErrors.password" class="auth__form-errors-item">{{ registerErrors.password }}</div>
-            </div>
-            <Button text="Зарегистрироваться" :disabled="isDissqbledRegisterButton" @click="onRegister" />
-          </div>
+          <Button text="Зарегистрироваться" :disabled="isDissqbledRegisterButton" @click="onRegister" />
         </div>
       </div>
     </div>
@@ -116,94 +109,67 @@ const onRegister = async () => {
 @use "@styles/common";
 
 .view-auth {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  background-color: colors.$grey;
-  width: 100vw;
-  height: 100vh;
+  .card {
+    background: colors.$absorbing;
+    @include common.card($isHoverable: false);
+    width: fit-content;
 
-  .auth {
-    &__top {
+    &-tabs {
       display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      padding: 20px;
+      justify-content: center;
+      width: 100%;
 
-      &-title {
-        font-size: 52px;
-        font-weight: 900;
-      }
-
-      &-subtitle {
-        font-size: 22px;
-      }
-    }
-
-    &__card {
-      // padding: 20px 40px;
-      background: colors.$absorbing;
-      @include common.card($isHoverable: false);
-
-      &-tabs {
-        display: flex;
-        justify-content: center;
+      &-item {
+        padding: 20px;
         width: 100%;
+        text-align: center;
+        border-bottom: 2px solid color.change(colors.$grey, $lightness: 80%);
+        color: colors.$basic;
+        transition: all .3s;
 
-        &-item {
-          padding: 20px;
-          width: 100%;
-          text-align: center;
-          border-bottom: 2px solid color.change(colors.$grey, $lightness: 80%);
-          color: colors.$basic;
-          transition: all .3s;
+        &.active {
+          font-weight: bold;
+          background-color: colors.$primary;
+          border-color: colors.$basic;
+        }
 
-          &.active {
-            font-weight: bold;
-            background-color: colors.$primary;
-            border-color: colors.$basic;
-          }
-
-          &:hover {
-            font-weight: bold;
-            border-color: colors.$basic;
-          }
+        &:hover {
+          font-weight: bold;
+          border-color: colors.$basic;
         }
       }
     }
+  }
 
-    &__form {
+  .form {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    padding: 20px 40px;
+    min-height: 220px;
+
+    &__field {
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
-      align-items: stretch;
-      padding: 20px 40px;
-      min-height: 220px;
+      justify-content: flex-end;
+      align-items: center;
+      margin-bottom: 10px;
 
-      &-field {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        align-items: center;
-        margin-bottom: 10px;
-
-        &:last-child {
-          flex-grow: 1;
-        }
+      &:last-child {
+        flex-grow: 1;
       }
+    }
 
-      &-errors {
-        display: flex;
-        flex-direction: column;
-        gap: 0px;
-        margin-bottom: 10px;
+    &__errors {
+      display: flex;
+      flex-direction: column;
+      gap: 0px;
+      margin-bottom: 10px;
 
-        &-item {
-          font-size: 12px;
-          color: crimson;
-        }
+      &-item {
+        font-size: 12px;
+        color: crimson;
       }
     }
   }

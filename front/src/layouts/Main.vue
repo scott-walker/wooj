@@ -1,5 +1,4 @@
 <script setup>
-import { RouterView } from "vue-router"
 import { useLayoutStore } from "@stores/layout"
 
 import Header from "@components/Header/Header.vue"
@@ -9,24 +8,26 @@ const layoutStore = useLayoutStore()
 </script>
 
 <template>
-  <div class="layout">
-    <div class="layout__header">
+  <div class="layout-main">
+    <div class="layout-main__header">
       <Header />
     </div>
 
     <!-- Body -->
-    <div class="layout__body">
-      <div class="layout__body-sidebar"
+    <div class="layout-main__body">
+      <div class="layout-main__body-sidebar"
         :class="{ aired: layoutStore.hasAiredSidebar, hovered: layoutStore.isHoveredSidebar }"
         @mouseover="layoutStore.onOverSidebar">
-        <div class="layout__body-sidebar-separator"></div>
+        <div class="layout-main__body-sidebar-separator"></div>
         <Sidebar />
       </div>
 
-      <Scrollbar class="layout__body-content"
+      <Scrollbar class="layout-main__body-content"
         :class="{ aired: layoutStore.hasAiredSidebar }"
         @mouseover="layoutStore.onLeaveSidebar">
-        <RouterView />
+        <Transition name="view-transition">
+          <slot />
+        </Transition>
       </Scrollbar>
     </div>
   </div>
@@ -36,7 +37,7 @@ const layoutStore = useLayoutStore()
 @use "sass:math";
 @use "@styles/colors";
 
-.layout {
+.layout-main {
   $header-gap: 10px;
   $header-height: 50px;
   $sidebar-width: 200px;
@@ -114,6 +115,21 @@ const layoutStore = useLayoutStore()
         width: 100%;
       }
     }
+  }
+}
+
+.view-transition {
+
+  &-enter-active,
+  &-leave-active {
+    transition: all .3s ease;
+  }
+
+  &-enter-from,
+  &-leave-to {
+    opacity: 0;
+    transform: translateY(-10px);
+    // transform: scale(.98);
   }
 }
 </style>

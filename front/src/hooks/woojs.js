@@ -42,7 +42,7 @@ export default () => {
    * @returns {Promise}
    */
   const deleteTopic = async (topicId) => {
-    router.push({ name: "All" })
+    router.push({ name: "Index" })
 
     await woojStore.deleteTopic(topicId)
   }

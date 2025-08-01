@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router"
-import IndexView from "@views/Index.vue"
+// import IndexView from "@views/Index.vue"
 import AllView from "@views/All.vue"
 import PinnedView from "@views/Pinned.vue"
 // import DraftsView from "@views/Drafts.vue"
 // import ArchiveView from "@views/Archive.vue"
 import TrashView from "@views/Trash.vue"
-import PublishedView from "@views/Published.vue"
+// import PublishedView from "@views/Published.vue"
 import TopicView from "@views/Topic.vue"
 import WoojView from "@views/Wooj.vue"
 
@@ -15,23 +15,23 @@ const router = createRouter({
     {
       path: "/",
       name: "Index",
-      component: IndexView,
-    },
-    {
-      path: "/all",
-      name: "All",
       component: AllView,
     },
+    // {
+    //   path: "/all",
+    //   name: "All",
+    //   component: AllView,
+    // },
     {
       path: "/pinned",
       name: "Pinned",
       component: PinnedView,
     },
-    {
-      path: "/published",
-      name: "Published",
-      component: PublishedView,
-    },
+    // {
+    //   path: "/published",
+    //   name: "Published",
+    //   component: PublishedView,
+    // },
     // {
     //   path: "/drafts",
     //   name: "Drafts",

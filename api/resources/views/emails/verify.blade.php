@@ -1,11 +1,7 @@
 <x-mail::message>
-    # Introduction
+    # Подтверждение адреса электронной почты
 
-    The body of your message.
+    Перейдите по ссылке ниже для подтверждения адреса электронной почты
 
-    <x-mail::button :url="$url">
-        Verify
-    </x-mail::button>
-
-    Thanks,<br> {{ config('app.name') }}
+    **[Подтвердить]({{ $url }})**
 </x-mail::message>

@@ -19,14 +19,14 @@ const onHideCreateTopic = () => isShowedCreateTopic.value = false
     <p class="sidebar__label">Вуджи</p>
     <ul class="sidebar__menu">
       <li class="sidebar__menu-item">
-        <SidebarLink :route="{ name: 'All' }" text="Все" icon="tags" />
+        <SidebarLink :route="{ name: 'Index' }" text="Все" icon="tags" />
       </li>
       <li class="sidebar__menu-item">
         <SidebarLink :route="{ name: 'Pinned' }" text="Закрепленные" icon="thumbtack" />
       </li>
-      <li class="sidebar__menu-item">
+      <!-- <li class="sidebar__menu-item">
         <SidebarLink :route="{ name: 'Published' }" text="Опубликованные" icon="link" />
-      </li>
+      </li> -->
       <li class="sidebar__menu-item">
         <SidebarLink :route="{ name: 'Trash' }" text="Корзина" icon="trash" />
       </li>
