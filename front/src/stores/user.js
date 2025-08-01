@@ -1,5 +1,6 @@
 import { ref, computed, inject } from "vue"
 import { defineStore } from "pinia"
+import useToast from "@hooks/toasts"
 
 /**
  * Стор для пользователя
@@ -7,6 +8,7 @@ import { defineStore } from "pinia"
 export default defineStore("user", () => {
   const { storage } = inject("utils")
   const { userService } = inject("services")
+  const toasts = useToast()
 
   const token = ref(null)
   const user = ref({})
@@ -58,7 +60,7 @@ export default defineStore("user", () => {
 
       storage.set("token", data.token)
     } catch ({ message, errors }) {
-      throw { message, errors }
+      toasts.alert(message, errors, 5)
     }
   }
 
@@ -75,7 +77,7 @@ export default defineStore("user", () => {
 
       storage.set("token", data.token)
     } catch ({ message, errors }) {
-      throw { message, errors }
+      toasts.alert(message)
     }
   }
 
@@ -91,7 +93,7 @@ export default defineStore("user", () => {
 
       storage.clear()
     } catch (message) {
-      alert(message)
+      toasts.alert(message)
     }
   }
 
@@ -102,7 +104,7 @@ export default defineStore("user", () => {
     try {
       user.value = await userService.changeAvatar(avatar)
     } catch (message) {
-      alert(message)
+      toasts.alert(message)
     }
   }
 
@@ -113,7 +115,7 @@ export default defineStore("user", () => {
     try {
       user.value = await userService.update(fields)
     } catch (message) {
-      alert(message)
+      toasts.alert(message)
     }
   }
 
@@ -127,7 +129,7 @@ export default defineStore("user", () => {
     try {
       await userService.resend()
     } catch (message) {
-      alert(message)
+      toasts.alert(message)
     }
   }
 

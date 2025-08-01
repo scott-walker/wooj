@@ -7,20 +7,55 @@ const toasts = reactive([])
  * @param {Object}
  * @returns {void}
  */
-const addToast = ({ message, type = "info", duration = 3000 }) => {
+const add = ({ type, message, duration }) => {
   const id = Date.now() + Math.random()
 
-  toasts.push({ id, message, type })
+  type = type || "info"
+  duration = duration || 3
+  duration = duration * 1000
 
-  setTimeout(() => removeToast(id), duration)
+  toasts.push({ id, type, message })
+
+  setTimeout(() => remove(id), duration)
 }
+
+/**
+ * Добавить тервожное уведомление
+ * @param {String} message
+ * @param {Array} errors
+ * @param {Number} duration
+ * @returns {void}
+ */
+const alert = (message, errors, duration) => {
+  if (errors && errors.length) {
+    message = `<b>${message}:</b><br /> - ${errors.join("<br /> - ")}`
+  }
+
+  add({ type: "alert", message, duration })
+}
+
+/**
+ * Добавить информационное уведомление
+ * @param {String} message
+ * @param {Number} duration
+ * @returns {void}
+ */
+const info = (message, duration) => add({ type: "info", message, duration })
+
+/**
+ * Добавить успешное уведомление
+ * @param {String} message
+ * @param {Number} duration
+ * @returns {void}
+ */
+const success = (message, duration) => add({ type: "success", message, duration })
 
 /**
  * Удалить уведомление
  * @param {Number}
  * @returns {void}
  */
-const removeToast = (id) => {
+const remove = (id) => {
   const index = toasts.findIndex((t) => t.id === id)
 
   if (index !== -1) toasts.splice(index, 1)
@@ -29,7 +64,11 @@ const removeToast = (id) => {
 export default () => {
   return {
     toasts,
-    addToast,
-    removeToast,
+    get: () => toasts,
+    alert,
+    info,
+    success,
+    add,
+    remove,
   }
 }

@@ -103,12 +103,32 @@ export default class HttpClient {
   }
 
   /**
+   * Сформировать сообщение для исключения
+   * @param {Object} response
+   * @returns {Object}
+   */
+  makeError(response) {
+    const message = response?.data?.message || "Ошибка запроса к серверу"
+    let errors = response?.data?.errors
+
+    if (errors) {
+      errors = errors instanceof Object ? Object.values(errors).flat() : Array.from(errors)
+    }
+
+    return { message, errors }
+  }
+
+  /**
    * GET запрос
    * @param  {...any} params
    * @returns {Promise}
    */
-  get(...params) {
-    return this.instance.get(...params)
+  async get(...params) {
+    try {
+      return await this.instance.get(...params)
+    } catch ({ response }) {
+      throw this.makeError(response)
+    }
   }
 
   /**
@@ -116,8 +136,12 @@ export default class HttpClient {
    * @param  {...any} params
    * @returns {Promise}
    */
-  post(...params) {
-    return this.instance.post(...params)
+  async post(...params) {
+    try {
+      return await this.instance.post(...params)
+    } catch ({ response }) {
+      throw this.makeError(response)
+    }
   }
 
   /**
@@ -125,8 +149,12 @@ export default class HttpClient {
    * @param  {...any} params
    * @returns {Promise}
    */
-  put(...params) {
-    return this.instance.put(...params)
+  async put(...params) {
+    try {
+      return await this.instance.put(...params)
+    } catch ({ response }) {
+      throw this.makeError(response)
+    }
   }
 
   /**
@@ -134,7 +162,11 @@ export default class HttpClient {
    * @param  {...any} params
    * @returns {Promise}
    */
-  delete(...params) {
-    return this.instance.delete(...params)
+  async delete(...params) {
+    try {
+      return await this.instance.delete(...params)
+    } catch ({ response }) {
+      throw this.makeError(response)
+    }
   }
 }

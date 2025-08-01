@@ -1,11 +1,13 @@
 import { ref, computed, inject } from "vue"
 import { defineStore } from "pinia"
+import useToast from "@hooks/toasts"
 
 /**
  * Стор вуджей
  */
 export default defineStore("woojs", () => {
   const { woojService, topicService } = inject("services")
+  const toasts = useToast()
 
   const TOPIC_TYPE_ALL = "all"
   const TOPIC_TYPE_PINNED = "pinned"
@@ -111,7 +113,7 @@ export default defineStore("woojs", () => {
   //   try {
   //     topics.value = await topicService.getAll()
   //   } catch (message) {
-  //     alert(message)
+  //     toasts.alert(message)
   //   }
 
   //   if (!options.quiet) isLoadedTopics.value = true
@@ -130,7 +132,7 @@ export default defineStore("woojs", () => {
   //   try {
   //     woojs.value = await woojService.getAll()
   //   } catch (message) {
-  //     alert(message)
+  //     toasts.alert(message)
   //   }
 
   //   if (!options.quiet) isLoadedWoojs.value = true
@@ -151,7 +153,7 @@ export default defineStore("woojs", () => {
       topics.value = data[0]
       woojs.value = data[1]
     } catch (message) {
-      console.error(message)
+      toasts.alert(message)
     }
 
     isNeedUpdate.value = false
@@ -176,7 +178,7 @@ export default defineStore("woojs", () => {
       topic = await topicService.create(fields)
       await fetchAll()
     } catch (message) {
-      alert(message)
+      toasts.alert(message)
     }
 
     isLoadedTopics.value = true
@@ -202,7 +204,7 @@ export default defineStore("woojs", () => {
       topic = await topicService.update(topicId, fields)
       await fetchAll()
     } catch (message) {
-      alert(message)
+      toasts.alert(message)
     }
 
     isLoadedTopics.value = true
@@ -226,7 +228,7 @@ export default defineStore("woojs", () => {
       topic = await topicService.delete(topicId)
       await fetchAll()
     } catch (message) {
-      alert(message)
+      toasts.alert(message)
     }
 
     isLoadedTopics.value = true
@@ -251,7 +253,7 @@ export default defineStore("woojs", () => {
       wooj = await woojService.create(fields)
       await fetchAll()
     } catch (message) {
-      alert(message)
+      toasts.alert(message)
     }
 
     // isLoadedWoojs.value = true
@@ -278,7 +280,7 @@ export default defineStore("woojs", () => {
       // await fetchAll()
       isNeedUpdate.value = true
     } catch (message) {
-      alert(message)
+      toasts.alert(message)
     }
 
     isUpdatingWooj.value = false
@@ -302,7 +304,7 @@ export default defineStore("woojs", () => {
 
       isNeedUpdate.value = true
     } catch (message) {
-      alert(message)
+      toasts.alert(message)
     }
 
     isUpdatingWooj.value = false
@@ -352,8 +354,12 @@ export default defineStore("woojs", () => {
   const pin = async (wooj) => {
     pinnedWoojsMap.value[wooj.id] = true
 
-    await woojService.pin(wooj.id)
-    // await fetchAll()
+    try {
+      await woojService.pin(wooj.id)
+      // await fetchAll()
+    } catch (message) {
+      toasts.alert(message)
+    }
 
     isNeedUpdate.value = true
   }
@@ -366,8 +372,12 @@ export default defineStore("woojs", () => {
   const unpin = async (wooj) => {
     pinnedWoojsMap.value[wooj.id] = false
 
-    await woojService.unpin(wooj.id)
-    // await fetchAll()
+    try {
+      await woojService.unpin(wooj.id)
+      // await fetchAll()
+    } catch (message) {
+      toasts.alert(message)
+    }
 
     isNeedUpdate.value = true
   }
@@ -387,7 +397,11 @@ export default defineStore("woojs", () => {
   const remove = async (wooj) => {
     removedWoojsMap.value[wooj.id] = true
 
-    await woojService.delete(wooj.id)
+    try {
+      await woojService.delete(wooj.id)
+    } catch (message) {
+      toasts.alert(message)
+    }
   }
 
   /**
@@ -398,7 +412,11 @@ export default defineStore("woojs", () => {
   const restore = async (wooj) => {
     removedWoojsMap.value[wooj.id] = false
 
-    await woojService.restore(wooj.id)
+    try {
+      await woojService.restore(wooj.id)
+    } catch (message) {
+      toasts.alert(message)
+    }
   }
 
   /**
@@ -408,7 +426,11 @@ export default defineStore("woojs", () => {
    * @returns {Promise}
    */
   const sort = async (topic, positions) => {
-    await topicService.sort(topic, positions)
+    try {
+      await topicService.sort(topic, positions)
+    } catch (message) {
+      toasts.alert(message)
+    }
 
     isNeedUpdate.value = true
   }
@@ -420,8 +442,12 @@ export default defineStore("woojs", () => {
   const clearTrash = async () => {
     // isLoadedWoojs.value = false
 
-    await woojService.clearTrash()
-    await fetchAll()
+    try {
+      await woojService.clearTrash()
+      await fetchAll()
+    } catch (message) {
+      toasts.alert(message)
+    }
 
     // isLoadedWoojs.value = true
   }

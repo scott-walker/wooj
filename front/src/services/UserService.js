@@ -56,11 +56,8 @@ export default class UserService {
       this.setToken(token)
 
       return { user, token }
-    } catch ({ response }) {
-      throw {
-        message: "Не удалось зарегистрироваться",
-        errors: response.data.errors || {},
-      }
+    } catch ({ errors }) {
+      throw { message: "Не удалось зарегистрироваться", errors }
     }
   }
 
@@ -80,11 +77,8 @@ export default class UserService {
       this.setToken(token)
 
       return { user, token }
-    } catch ({ response }) {
-      throw {
-        message: "Не удалось войти",
-        errors: response.data.errors || {},
-      }
+    } catch ({ errors }) {
+      throw { message: "Не удалось войти", errors }
     }
   }
 
