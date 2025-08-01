@@ -53,7 +53,6 @@ onBeforeMount(() => woojsStore.fetchAll())
   &__header {
     height: $header-height;
     overflow: hidden;
-    // box-shadow: rgba(16, 0, 75, 1) 0px 12px 13px 5px;
 
     &-left {
       display: flex;
@@ -105,7 +104,7 @@ onBeforeMount(() => woojsStore.fetchAll())
           opacity: 1;
         }
 
-        & .layout__body-sidebar-separator {
+        & .layout-main__body-sidebar-separator {
           height: 10px;
         }
       }
