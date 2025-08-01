@@ -7,7 +7,7 @@ import IconLink from "@ui/IconLink.vue"
 
 const layoutStore = useLayoutStore()
 const { woojStore, createWooj } = useWoojs()
-const { addToast } = useToast()
+const toasts = useToast()
 
 const onOverBars = () => {
   layoutStore.onOverBars()
@@ -15,18 +15,22 @@ const onOverBars = () => {
 }
 
 const onCreateWooj = async () => {
-  const i = _.random(0, 2)
-  const j = _.random(0, 2)
-  const messages = ['Новое уведомление', 'Новое уведомление Новое уведомление', 'Новое уведомление Новое уведомление Новое уведомление']
-  const types = ['default', 'primary', 'danger']
+  // const i = _.random(0, 2)
+  // const j = _.random(0, 2)
+  // const k = _.random(0, 2)
 
-  addToast({
-    message: messages[j],
-    type: types[i]
-  })
-  // await createWooj()
+  // const messages = ['Новое уведомление', 'Новое уведомление Новое уведомление', 'Новое уведомление Новое уведомление Новое уведомление']
+  // const types = ['info', 'success', 'alert']
+  // const durations = [3000, 4000, 5000]
 
-  // layoutStore.onActivateCreateWooj()
+  // toasts.add({
+  //   message: messages[j],
+  //   type: types[i],
+  //   duration: durations[k]
+  // })
+  await createWooj()
+
+  layoutStore.onActivateCreateWooj()
 }
 </script>
 

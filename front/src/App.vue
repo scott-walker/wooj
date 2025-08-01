@@ -2,7 +2,6 @@
 import { ref, computed, onBeforeMount } from "vue"
 import { RouterView } from "vue-router"
 import useUserStore from "@stores/user"
-import useWoojsStore from "@stores/woojs"
 
 import Toasts from "@components/Toasts.vue"
 import GuardLayout from "@layouts/Guard.vue"
@@ -12,17 +11,12 @@ import Auth from "@views/Auth.vue"
 import Loading from "@views/Loading.vue"
 
 const userStore = useUserStore()
-const woojsStore = useWoojsStore()
 const isReady = ref(false)
 const isLogged = computed(() => userStore.isLogged)
 const isVerified = computed(() => userStore.isVerified)
 
 onBeforeMount(async () => {
   await userStore.check()
-
-  if (isLogged.value && isVerified.value) {
-    await woojsStore.fetchAll()
-  }
 
   isReady.value = true
 })
@@ -32,9 +26,11 @@ onBeforeMount(async () => {
   <Toasts />
 
   <template v-if="isReady">
-    <MainLayout v-if="isLogged && isVerified">
-      <RouterView />
-    </MainLayout>
+    <RouterView v-if="isLogged && isVerified" v-slot="{ Component }">
+      <MainLayout>
+        <component :is="Component" />
+      </MainLayout>
+    </RouterView>
 
     <GuardLayout v-else>
       <Auth v-if="!isLogged" />

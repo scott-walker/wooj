@@ -4,6 +4,7 @@ import Input from '@ui/Input.vue'
 
 const props = defineProps({
   placeholder: { type: String, default: "Пароль" },
+  autocomplete: { type: Boolean, default: false },
   withChecker: { type: Boolean, default: false },
 })
 const password = defineModel()
@@ -37,6 +38,7 @@ watch(() => password.value, value => {
         class="ui-password-input__field"
         v-model="password"
         :type="type"
+        :autocomplete="props.autocomplete"
         :placeholder="props.placeholder" />
 
       <i class="ui-password-input__icon fa-solid"

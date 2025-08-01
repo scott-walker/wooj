@@ -11,9 +11,8 @@ const { toasts } = useToast()
         v-for="toast in toasts"
         :key="toast.id"
         class="toasts__toast"
-        :class="toast.type">
-        {{ toast.message }}
-      </div>
+        :class="toast.type"
+        v-html="toast.message" />
     </TransitionGroup>
   </div>
 </template>
@@ -44,12 +43,12 @@ $toast-width: 500px;
     background: color.change(colors.$basic, $alpha: 80%);
     color: colors.$absorbing;
 
-    &.primary {
+    &.success {
       background: color.change(colors.$primary, $alpha: 80%);
       color: colors.$basic;
     }
 
-    &.danger {
+    &.alert {
       background: color.change(colors.$danger, $alpha: 90%);
     }
   }

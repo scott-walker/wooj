@@ -5,6 +5,7 @@ const props = defineProps({
   type: { type: String, default: "text" },
   fieldClass: { type: String, default: "" },
   placeholder: { type: String, default: "" },
+  autocomplete: { type: Boolean, default: false },
   focused: { type: Boolean, default: false },
   max: { type: Number, default: 255 },
 })
@@ -30,10 +31,11 @@ onMounted(() => {
       ref="input"
       class="ui-input__field"
       :class="props.fieldClass"
-      :type="type"
+      :type="props.type"
       v-model="content"
       :placeholder="props.placeholder"
       :maxlength="props.max"
+      :autocomplete="props.autocomplete ? 'on' : 'off'"
       @input="onChange" />
   </div>
 </template>
@@ -66,8 +68,6 @@ $grey: color.change(colors.$grey, $lightness: 80%);
     &:hover,
     &:focus {
       background-color: color.change(colors.$grey, $lightness: 96%);
-      // border-color: color.change(colors.$grey, $lightness: 60%);
-      // border-color: $grey;
     }
   }
 }

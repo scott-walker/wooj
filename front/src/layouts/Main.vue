@@ -1,10 +1,15 @@
 <script setup>
+import { onBeforeMount } from "vue"
 import { useLayoutStore } from "@stores/layout"
+import useWoojsStore from "@stores/woojs"
 
 import Header from "@components/Header/Header.vue"
 import Sidebar from "@components/Sidebar.vue"
 
 const layoutStore = useLayoutStore()
+const woojsStore = useWoojsStore()
+
+onBeforeMount(() => woojsStore.fetchAll())
 </script>
 
 <template>
@@ -25,7 +30,7 @@ const layoutStore = useLayoutStore()
       <Scrollbar class="layout-main__body-content"
         :class="{ aired: layoutStore.hasAiredSidebar }"
         @mouseover="layoutStore.onLeaveSidebar">
-        <Transition name="view-transition">
+        <Transition name="view-transition" mode="out-in">
           <slot />
         </Transition>
       </Scrollbar>
@@ -127,9 +132,8 @@ const layoutStore = useLayoutStore()
 
   &-enter-from,
   &-leave-to {
-    opacity: 0;
+    opacity: 0.5;
     transform: translateY(-10px);
-    // transform: scale(.98);
   }
 }
 </style>

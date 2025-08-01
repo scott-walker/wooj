@@ -7,7 +7,7 @@
       </div>
 
       <div class="layout-guard__content">
-        <Transition name="view-transition">
+        <Transition name="view-transition" mode="out-in">
           <slot />
         </Transition>
       </div>
@@ -60,9 +60,8 @@
 
   &-enter-from,
   &-leave-to {
-    position: absolute;
-    opacity: 0;
-    transform: scale(.5);
+    opacity: 0.5;
+    transform: scale(.8);
   }
 }
 </style>
