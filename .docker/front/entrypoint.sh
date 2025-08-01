@@ -1,4 +1,5 @@
 #!/bin/sh
 service nginx start
 
-tail -f /dev/null
+cd /var/www
+npm run dev
