@@ -1,4 +1,4 @@
-import { ref, onMounted, onUnmounted, inject } from "vue"
+import { ref } from "vue"
 import MediaDetector from "@utils/MediaDetector"
 
 // const md = inject("mediaDetector")

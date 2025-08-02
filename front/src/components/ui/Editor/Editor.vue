@@ -106,6 +106,7 @@ onBeforeUnmount(() => {
 </template>
 
 <style lang="scss">
+@use "sass:color";
 @use "@styles/colors";
 @use "@styles/wooj";
 
@@ -166,7 +167,7 @@ onBeforeUnmount(() => {
       }
 
       p.is-empty:first-child::before {
-        color: #adb5bd;
+        color: color.change(colors.$grey, $lightness: 80%);
         font-style: italic;
         content: attr(data-placeholder);
         float: left;

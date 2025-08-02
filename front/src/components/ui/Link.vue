@@ -23,10 +23,10 @@ const onClick = () => !props.loading && emit('click')
 </script>
 
 <template>
-  <span class="ui-link" :class="cssClass" @click="onClick">
+  <a class="ui-link" :class="cssClass" @click="onClick">
     <i v-if="props.loading" class="ui-link__loader fa-solid fa-spinner"></i>
     <slot v-else />
-  </span>
+  </a>
 </template>
 
 <style lang="scss" scoped>
@@ -34,10 +34,11 @@ const onClick = () => !props.loading && emit('click')
 
 .ui-link {
   display: inline-block;
-  padding: 2px 5px;
+  padding: 5px;
   border-radius: 5px;
   transition: all 0.2s;
   cursor: pointer;
+  user-select: none;
 
   &:hover,
   &.active,

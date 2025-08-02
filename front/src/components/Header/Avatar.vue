@@ -47,10 +47,8 @@ const onSavePhoto = async () => {
     </div>
 
     <div v-else class="avatar__preview">
-      <figure class="user-panel__user-avatar image is-128x128">
-        <img v-if="avatar" class="is-rounded" :src="avatar" />
-        <div v-else class="is-rounded not-avatar"></div>
-      </figure>
+      <img v-if="avatar" class="avatar__preview-avatar" :src="avatar" />
+      <div v-else class="avatar__preview-avatar default"></div>
 
       <IconLink class="avatar__preview-uploader" icon="arrow-up-from-bracket" @click="onSelectPhoto" />
       <input class="avatar__preview-uploader-file" ref="file" type="file" @change="onUploadPhoto">
@@ -68,6 +66,17 @@ const onSavePhoto = async () => {
     justify-content: center;
     align-items: center;
     position: relative;
+
+    &-avatar {
+      width: 128px;
+      height: 128px;
+      border-radius: 50%;
+      object-fit: cover;
+
+      &.default {
+        background-color: colors.$primary;
+      }
+    }
 
     &-uploader {
       opacity: 0;
@@ -103,13 +112,6 @@ const onSavePhoto = async () => {
       // height: 300px;
       background: colors.$absorbing;
     }
-  }
-
-  .not-avatar {
-    background-color: colors.$primary;
-    width: 128px;
-    height: 128px;
-    border-radius: 50%;
   }
 }
 </style>

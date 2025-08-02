@@ -50,7 +50,7 @@ $grey: color.change(colors.$grey, $lightness: 80%);
     outline: none;
     border: none;
     border-bottom: 2px solid transparent;
-    // border-radius: 10px;
+    box-sizing: border-box;
     transition: all .3s;
     width: 100%;
     color: colors.$basic;

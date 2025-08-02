@@ -28,10 +28,10 @@ $toast-width: 500px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
-  z-index: 9999;
-  top: 20px;
-  left: calc(50% - $toast-width / 2);
+  align-items: flex-end;
+  z-index: 10010;
+  top: 60px;
+  right: 20px;
   width: $toast-width;
   gap: 10px;
   font-size: 18px;
@@ -40,11 +40,11 @@ $toast-width: 500px;
     padding: 10px 40px;
     max-width: $toast-width;
     border-radius: 5px;
-    background: color.change(colors.$basic, $alpha: 80%);
+    background: color.change(colors.$basic, $alpha: 90%);
     color: colors.$absorbing;
 
     &.success {
-      background: color.change(colors.$primary, $alpha: 80%);
+      background: color.change(colors.$primary, $alpha: 90%);
       color: colors.$basic;
     }
 
@@ -64,7 +64,7 @@ $toast-width: 500px;
   &-enter-from,
   &-leave-to {
     opacity: 0.3;
-    transform: translateY(-100px);
+    transform: translateX(200px);
   }
 }
 </style>

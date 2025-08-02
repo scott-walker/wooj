@@ -1,28 +1,36 @@
 import { ref, computed, inject } from "vue"
 import { defineStore } from "pinia"
 import { useMediaDetector } from "@hooks/mediaDetector"
+import { useRouter } from "vue-router"
 
 /**
  * Стор для работы с макетом
  */
 export const useLayoutStore = defineStore("layout", () => {
+  const router = useRouter()
   const { storage } = inject("utils")
   const md = useMediaDetector()
 
   const isAiredSidebarMode = ref(false)
-
   const isHoveredSidebar = ref(false)
   const isHoveredBars = ref(false)
   const isCreateWoojActive = ref(false)
   const statusBar = ref(null)
 
-  const hasAiredSidebar = computed(() => md.isSm.value || isAiredSidebarMode.value)
+  const isMobile = computed(() => md.isSm.value)
+  const hasAiredSidebar = computed(() => isMobile.value || isAiredSidebarMode.value)
 
   /**
    * Инициализация
    */
   function init() {
     isAiredSidebarMode.value = storage.get("isAiredSidebarMode", false)
+
+    router.afterEach(() => {
+      if (isMobile.value) {
+        isHoveredSidebar.value = false
+      }
+    })
   }
 
   const setStatusBar = ({ title, icon }) => {

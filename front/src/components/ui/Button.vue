@@ -24,7 +24,7 @@ const onClick = () => !isLocked.value && emit('click')
 </script>
 
 <template>
-  <button class="ui-button" :class="cssClass" @click="onClick">
+  <button class="ui-button" :class="cssClass" @click="onClick" :disabled="disabled">
     <Loader v-if="props.loading" class="ui-button__loader" />
 
     <span class="ui-button__wrapper">
@@ -43,7 +43,7 @@ const onClick = () => !isLocked.value && emit('click')
   align-items: center;
   position: relative;
   width: fit-content;
-  padding: 7px 15px;
+  padding: 10px 17px;
   border-radius: 20px;
   transition: all 0.3s;
   border: 4px solid colors.$absorbing;
@@ -54,6 +54,7 @@ const onClick = () => !isLocked.value && emit('click')
   text-align: center;
   text-transform: uppercase;
   cursor: pointer;
+  user-select: none;
 
   &:hover {
     box-shadow: 0px 0px 1px 3px colors.$grey-strong;

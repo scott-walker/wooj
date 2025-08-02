@@ -1,4 +1,4 @@
-import "bulma"
+import "normalize.css"
 import "@styles/app.scss"
 
 import { createApp } from "vue"

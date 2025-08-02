@@ -96,7 +96,7 @@ $grey: color.change(colors.$grey, $lightness: 80%);
   }
 
   &__level {
-    padding: 2px 18px;
+    padding: 6px 18px;
     font-weight: bold;
 
     &.level-1 {

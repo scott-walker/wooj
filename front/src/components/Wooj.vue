@@ -31,7 +31,7 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
       </div>
 
       <div class="wooj__paper">
-        <span v-show="props.saving" class="wooj__save-status tag is-medium">Сохранено</span>
+        <span v-show="props.saving" class="wooj__save-status tag">Сохранено</span>
 
         <div class="wooj__title">
           <LightInput

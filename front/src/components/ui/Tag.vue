@@ -27,9 +27,11 @@ const onCheck = () => {
 
 <template>
   <span class="ui-tag" :class="cssClass" @click="onCheck">
-    <i v-if="props.icon" class="ui-tag__icon" :class="['fa-solid', `fa-${props.icon}`]"></i>
-    <span v-if="props.text">{{ props.text }}</span>
-    <slot v-else />
+    <span class="ui-tag__wrap">
+      <i v-if="props.icon" class="ui-tag__icon" :class="['fa-solid', `fa-${props.icon}`]"></i>
+      <span v-if="props.text">{{ props.text }}</span>
+      <slot v-else />
+    </span>
   </span>
 </template>
 
@@ -39,7 +41,7 @@ const onCheck = () => {
 
 .ui-tag {
   display: inline-block;
-  padding: 0px 10px;
+  padding: 3px 7px;
   border-radius: 5px;
   border: 4px solid colors.$grey;
   background-color: colors.$grey;
@@ -49,6 +51,12 @@ const onCheck = () => {
   min-width: 24px;
   text-align: center;
   user-select: none;
+
+  &__wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
   &__icon {
     margin-right: 10px;

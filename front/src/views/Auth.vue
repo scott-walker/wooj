@@ -19,8 +19,8 @@ const isShowedRegister = computed(() => !isShowedLogin.value)
 const isDissqbledLoginButton = computed(() => !loginForm.email || !loginForm.password)
 const isDissqbledRegisterButton = computed(() => !registerForm.email || !registerForm.password)
 
-const onLogin = async () => userStore.login(loginForm)
-const onRegister = async () => userStore.register(registerForm)
+const onLogin = () => userStore.login(loginForm)
+const onRegister = () => userStore.register(registerForm)
 </script>
 
 <template>
@@ -82,6 +82,8 @@ const onRegister = async () => userStore.register(registerForm)
       border-bottom: 2px solid color.change(colors.$grey, $lightness: 80%);
       color: colors.$basic;
       transition: all .3s;
+      user-select: none;
+      cursor: pointer;
 
       &.active {
         font-weight: bold;
@@ -102,7 +104,7 @@ const onRegister = async () => userStore.register(registerForm)
     justify-content: flex-start;
     align-items: stretch;
     padding: 20px 40px;
-    min-height: 210px;
+    min-height: 180px;
 
     &__field {
       display: flex;

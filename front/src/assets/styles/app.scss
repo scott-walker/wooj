@@ -14,6 +14,19 @@ body {
   font-style: normal;
   color: colors.$basic;
 }
+div {
+  box-sizing: border-box;
+}
+.icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 2px 10px;
+  box-sizing: border-box;
+  text-align: center;
+}
 
 // Scrollbar
 .ps {

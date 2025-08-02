@@ -103,6 +103,7 @@ export default defineStore("user", () => {
   async function changeAvatar(avatar) {
     try {
       user.value = await userService.changeAvatar(avatar)
+      toasts.success("Успешно поменяли аватар")
     } catch (message) {
       toasts.alert(message)
     }
@@ -114,6 +115,7 @@ export default defineStore("user", () => {
   async function update(fields) {
     try {
       user.value = await userService.update(fields)
+      toasts.success("Данные сохранены")
     } catch (message) {
       toasts.alert(message)
     }
@@ -128,6 +130,7 @@ export default defineStore("user", () => {
 
     try {
       await userService.resend()
+      toasts.success(`Сообщение отправлено повторно на <b>${user.email}</b>`)
     } catch (message) {
       toasts.alert(message)
     }

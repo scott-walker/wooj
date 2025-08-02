@@ -94,6 +94,7 @@ $grey: color.change(colors.$grey, $lightness: 80%);
   background: none;
   color: colors.$basic;
   text-wrap: wrap;
+  box-sizing: border-box;
 
   &.editable {
 

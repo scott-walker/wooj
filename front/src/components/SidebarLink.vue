@@ -36,6 +36,7 @@ const iconClass = computed(() => `fas fa-${props.icon}`)
   font-weight: 400;
   cursor: pointer;
   color: colors.$basic-light;
+  text-decoration: none;
 
   &:hover {
     // background-color: colors.$primary-light;

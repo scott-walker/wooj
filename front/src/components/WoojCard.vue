@@ -20,24 +20,24 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
     <div v-if="hasPanel" class="wooj-card__panel">
       <span
         v-if="hasPin"
-        class="wooj-card__panel-button icon is-medium"
+        class="wooj-card__panel-button icon"
         @click.stop="$emit('pin', wooj)">
         <i class="fas" :class="wooj.is_pinned ? 'fa-thumbtack-slash' : 'fa-thumbtack'"></i>
       </span>
       <span
         v-if="hasEdit"
-        class="wooj-card__panel-button icon is-medium"
+        class="wooj-card__panel-button icon"
         @click="$emit('edit', wooj)">
         <i class="fas fa-edit"></i></span>
       <span
         v-if="hasRemove"
-        class="wooj-card__panel-button icon is-medium"
+        class="wooj-card__panel-button icon"
         @click="$emit('remove', wooj)">
         <i class="fas fa-trash"></i>
       </span>
       <span
         v-if="hasRestore"
-        class="wooj-card__panel-button icon is-medium"
+        class="wooj-card__panel-button icon"
         @click="$emit('restore', wooj)">
         <i class="fa fa-undo"></i>
       </span>

@@ -1,14 +1,19 @@
 <script setup>
+import _ from "lodash"
 import { Sortable, Plugins } from "@shopify/draggable"
 import { ref, inject, onMounted, onUnmounted } from "vue"
 import { useLayoutStore } from "@stores/layout"
 import { useMediaDetector } from "@hooks/mediaDetector"
-const { userService } = inject("services")
+import useToast from '@hooks/toasts'
+import Button from "@ui/Button.vue"
+
+// const { userService } = inject("services")
 const layoutStore = useLayoutStore()
 const md = useMediaDetector()
+const toasts = useToast()
 
-const version = ref("0.0")
-const target = ref(null)
+// const version = ref("0.0")
+// const target = ref(null)
 
 const initDnd = () => {
   const sortable = new Sortable(document.querySelector('.dnd-container'), {
@@ -39,19 +44,38 @@ const initDnd = () => {
   })
 }
 
+const onAddToast = () => {
+  const i = _.random(0, 2)
+  const j = _.random(0, 2)
+  const k = _.random(0, 2)
+
+  const messages = ['Новое уведомление', 'Новое уведомление Новое уведомление', 'Новое уведомление Новое уведомление Новое уведомление']
+  const types = ['info', 'success', 'alert']
+  const durations = [3, 4, 5]
+
+  toasts.add({
+    message: messages[j],
+    type: types[i],
+    duration: durations[k]
+  })
+}
+
 onMounted(async () => {
-  layoutStore.setStatusBar({ title: "Дашборд", icon: "gauge" })
+  layoutStore.setStatusBar({ title: "DEBUG", icon: "gauge" })
 
   initDnd()
 })
 onUnmounted(() => layoutStore.unsetStatusBar())
-
 </script>
 
 <template>
   <div class="view-index">
-    <p class="view-index__title">WOOJ v{{ version }}</p>
-    <p class="view-index__subtitle">Создавай быстро простые заметки</p>
+    <!-- <p class="view-index__title">WOOJ v{{ version }}</p>
+    <p class="view-index__subtitle">Создавай быстро простые заметки</p> -->
+
+    <div class="box">
+      <Button text="Вызвать тост" @click="onAddToast" />
+    </div>
 
     <div class="dnd-container">
       <div class="dnd-target" v-for="i in 5"
@@ -77,6 +101,10 @@ onUnmounted(() => layoutStore.unsetStatusBar())
 
 <style lang="scss" scoped>
 .view-index {
+  .box {
+    margin-bottom: 20px;
+  }
+
   &__title {
     font-size: 38px;
     font-weight: bold;

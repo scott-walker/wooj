@@ -31,10 +31,8 @@ const onUpdatePassword = async () => {
 <template>
   <div class="user-panel">
     <div class="user-panel__user" @click="onClickProfile">
-      <figure class="user-panel__user-avatar image is-32x32">
-        <img v-if="userStore.avatar" class="is-rounded" :src="userStore.avatar" />
-        <div v-else class="is-rounded not-avatar"></div>
-      </figure>
+      <img v-if="userStore.avatar" class="user-panel__user-avatar" :src="userStore.avatar" />
+      <div v-else class="user-panel__user-avatar default"></div>
 
       <div class="user-panel__user-name">{{ user.name }}</div>
     </div>
@@ -71,7 +69,7 @@ const onUpdatePassword = async () => {
   justify-content: flex-start;
   align-items: center;
   height: 100%;
-  gap: 5px;
+  gap: 10px;
 
   &__user {
     display: flex;
@@ -92,17 +90,21 @@ const onUpdatePassword = async () => {
       }
     }
 
+    &-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+
+      &.default {
+        background-color: colors.$primary;
+      }
+    }
+
     &-name {
       font-size: 18px;
       font-weight: bold;
     }
-  }
-
-  .not-avatar {
-    background-color: colors.$primary;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
   }
 }
 
@@ -118,15 +120,15 @@ const onUpdatePassword = async () => {
   &__avatar {}
 
   &__name {
-    margin-top: 15px;
-    width: 100%;
+    margin-top: 25px;
+    min-width: none;
     font-size: 32px;
     font-weight: bold;
     text-align: center;
   }
 
   &__email {
-    margin-top: 5px;
+    margin-top: 7px;
     font-size: 18px;
     font-style: italic;
     color: color.change(colors.$grey, $lightness: 50%);

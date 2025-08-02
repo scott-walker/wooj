@@ -36,12 +36,14 @@
     padding: 20px;
 
     &__title {
+      margin: 0;
       font-size: 52px;
       font-weight: 900;
     }
 
     &__subtitle {
-      font-size: 22px;
+      margin: 5px 0;
+      font-size: 20px;
     }
   }
 

@@ -53,6 +53,11 @@ const onHideCreateTopic = () => isShowedCreateTopic.value = false
 @use "@styles/colors";
 
 .sidebar {
+  &__menu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
 
   &__label,
   &__item {

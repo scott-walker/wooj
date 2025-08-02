@@ -16,7 +16,7 @@ const colorStyle = computed(() => ({
 
 <template>
   <button class="ui-editor-button" :disabled="disabled" :class="buttonClass">
-    <span class="ui-editor-button__icon icon is-medium" :style="colorStyle"><i :class="iconClass"></i></span>
+    <span class="ui-editor-button__icon icon" :style="colorStyle"><i :class="iconClass"></i></span>
   </button>
 </template>
 
@@ -24,9 +24,12 @@ const colorStyle = computed(() => ({
 @use "@styles/colors";
 
 .ui-editor-button {
+  background: colors.$absorbing;
   border: 2px solid transparent;
   border-radius: 10px;
   transition: all .1s;
+  color: colors.$basic;
+  cursor: pointer;
 
   &.active {
     background: colors.$primary;
