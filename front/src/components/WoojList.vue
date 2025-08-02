@@ -2,6 +2,8 @@
 import _ from "lodash"
 import { Sortable, Plugins } from "@shopify/draggable"
 import { ref, useTemplateRef, computed, onMounted, onUnmounted, watch, nextTick } from "vue"
+import { useMediaDetector } from "@hooks/mediaDetector"
+
 import Tag from "@ui/Tag.vue"
 import IconLink from "@ui/IconLink.vue"
 import Skeleton from "@ui/Skeleton.vue"
@@ -20,12 +22,14 @@ const props = defineProps({
   loaded: { type: Boolean, default: true },
   hasEditableTopic: { type: Boolean, default: false },
   hasSort: { type: Boolean, default: true },
+  hasMove: { type: Boolean, default: true },
   hasPin: { type: Boolean, default: true },
   hasEdit: { type: Boolean, default: true },
   hasRemove: { type: Boolean, default: true },
   hasRestore: { type: Boolean, default: false },
 })
 
+const md = useMediaDetector()
 const items = useTemplateRef("items")
 const emit = defineEmits([
   "sort",
@@ -38,7 +42,16 @@ const emit = defineEmits([
 ])
 
 const getRandMargin = (i) => {
-  return {}
+  if (!md.isSm.value) {
+    return null
+  }
+
+  const BODY_PADDING = 30
+
+  return {
+    "max-width": md.width.value / 2 - BODY_PADDING + "px"
+  }
+
   const FACTOR = 7;
 
   const vector = i % 2 === 0 ? -1 : 1;
@@ -87,7 +100,7 @@ const initSortable = () => {
 
   sortableDriver = new Sortable(document.querySelectorAll('.wooj-list__items'), {
     draggable: '.wooj-list__item',
-    handle: '.wooj-card__wrapper',
+    handle: '.wooj-card__mover',
     sortAnimation: {
       duration: 300,
       easingFunction: 'ease-in-out',
@@ -160,6 +173,7 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
             :style="woojPositions[wooj.id]">
             <WoojCard
               :data="wooj"
+              :hasMove="props.hasMove"
               :hasPin="props.hasPin"
               :hasEdit="props.hasEdit"
               :hasRemove="props.hasRemove"
@@ -184,6 +198,7 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
 <style lang="scss" scoped>
 @use "sass:color";
 @use "@styles/common";
+@use "@styles/media";
 @use "@styles/colors";
 
 .wooj-list {
@@ -191,7 +206,7 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    gap: 20px;
+    gap: 30px;
     margin-bottom: 20px;
 
     &-title {
@@ -251,7 +266,7 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
     border: 2px solid transparent;
     border-radius: 20px;
     transition: all .5s;
-    border-color: hsla(232, 31%, 85%, 0.6);
+    border-color: color.change(colors.$grey, $lightness: 90%);
   }
 
   &__items {
@@ -264,7 +279,7 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
 
     &.sortable {
       .wooj-list__item {
-        cursor: grab;
+        // cursor: grab;
 
         &.dragging {
           opacity: .5;
@@ -287,6 +302,59 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
 
     &:last-child {
       flex-grow: 0;
+    }
+  }
+}
+
+@include media.sm() {
+  .wooj-list {
+    &__header {
+      gap: 20px;
+      margin-bottom: 20px;
+
+      &-title {
+        padding: 0;
+        font-size: 22px;
+      }
+
+      &-panel {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 10px;
+
+        &-edit {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          gap: 10px;
+          @include common.card();
+          padding: 7px;
+          border-radius: 7px;
+          background-color: colors.$absorbing;
+        }
+      }
+    }
+
+    &__board {
+      padding: 0;
+      border: none;
+    }
+
+    &__items {
+      gap: 10px;
+    }
+
+    &__item {
+      flex-grow: 1;
+
+      min-width: inherit;
+      max-width: inherit;
+
+      overflow: hidden;
+
+      // min-width: 40px;
+      // max-width: 210px;
     }
   }
 }

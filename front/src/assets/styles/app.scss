@@ -17,6 +17,7 @@ body {
 div {
   box-sizing: border-box;
 }
+
 .icon {
   display: flex;
   justify-content: center;
@@ -38,5 +39,102 @@ div {
   &__thumb-y {
     background-color: color.change(colors.$basic, $alpha: 70%) !important;
     width: 10px !important;
+  }
+}
+
+// WOOJ
+.wooj-content {
+  font-size: 1rem;
+
+  p {
+    margin: 0;
+    margin-bottom: 20px;
+  }
+
+  /* List styles */
+  ul,
+  ol {
+    padding: 0 1rem;
+    margin: 1.25rem 1rem 1.25rem 0.4rem;
+  }
+
+  /* Heading styles */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    line-height: 1.1;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    text-wrap: pretty;
+    font-weight: bold;
+  }
+
+  // h1,
+  // h2 {
+  //   // margin-top: 3.5rem;
+  //   // margin-bottom: 1.5rem;
+  // }
+
+  h1 {
+    font-size: 1.4rem;
+  }
+  // h2 {
+  //   font-size: 1.2rem;
+  // }
+  // h3 {
+  //   font-size: 1.1rem;
+  // }
+  // h4,
+  // h5,
+  // h6 {
+  //   font-size: 1rem;
+  // }
+
+  /* Code and preformatted text styles */
+  code {
+    background-color: colors.$grey;
+    border-radius: 0.4rem;
+    color: colors.$basic;
+    font-size: 1.2rem;
+    padding: 0.25em 0.3em;
+  }
+
+  pre {
+    background: colors.$basic;
+    border-radius: 0.5rem;
+    color: colors.$absorbing;
+    font-family: monospace;
+    // font-weight: bold;
+    margin: 1.5rem 0;
+    padding: 20px 30px;
+
+    code {
+      background: none;
+      color: colors.$primary;
+      font-size: 1.2rem;
+      padding: 0;
+    }
+  }
+
+  blockquote {
+    border-left: 6px solid colors.$grey;
+    font-style: italic;
+    margin: 0;
+    margin-bottom: 20px;
+    padding-left: 1rem;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid colors.$grey;
+    margin: 15px 0;
+  }
+
+  strong {
+    color: inherit;
+    font-weight: 800;
   }
 }

@@ -6,31 +6,31 @@ $xl: 1280px;
 $xxl: 1536px;
 
 @mixin xs() {
-  @media (min-width: $xs) {
+  @media (max-width: $xs) {
     @content;
   }
 }
 
 @mixin sm() {
-  @media (min-width: $sm) {
+  @media (max-width: $sm) {
     @content;
   }
 }
 
 @mixin md() {
-  @media (min-width: $md) {
+  @media (max-width: $md) {
     @content;
   }
 }
 
 @mixin lg() {
-  @media (min-width: $lg) {
+  @media (max-width: $lg) {
     @content;
   }
 }
 
 @mixin xl() {
-  @media (min-width: $xl) {
+  @media (max-width: $xl) {
     @content;
   }
 }

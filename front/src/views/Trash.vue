@@ -24,6 +24,7 @@ onBeforeMount(() => setRouteListeners())
       :woojs="topic.woojs"
       :loaded="topic.isLoaded"
       :hasSort="false"
+      :hasMove="false"
       :hasPin="false"
       :hasEdit="false"
       :hasRemove="false"

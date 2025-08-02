@@ -40,6 +40,7 @@ onBeforeMount(() => woojsStore.fetchAll())
 
 <style lang="scss" scoped>
 @use "sass:math";
+@use "@styles/media";
 @use "@styles/colors";
 
 .layout-main {
@@ -133,6 +134,22 @@ onBeforeMount(() => woojsStore.fetchAll())
   &-leave-to {
     opacity: 0.5;
     transform: translateY(-10px);
+  }
+}
+
+@include media.sm() {
+  .layout-main {
+    &__body {
+      &-sidebar {
+        &.aired {
+          margin-left: -200px;
+        }
+      }
+
+      &-content {
+        padding: 20px;
+      }
+    }
   }
 }
 </style>
