@@ -6,6 +6,7 @@ import { useLayoutStore } from "@stores/layout"
 import { useMediaDetector } from "@hooks/mediaDetector"
 import useToast from '@hooks/toasts'
 import Button from "@ui/Button.vue"
+import BoublePanel from "@ui/Editor/BoublePanel.vue"
 
 // const { userService } = inject("services")
 const layoutStore = useLayoutStore()
@@ -75,6 +76,11 @@ onUnmounted(() => layoutStore.unsetStatusBar())
 
     <div class="box">
       <Button text="Вызвать тост" @click="onAddToast" />
+    </div>
+
+    <div class="box">
+      <p contenteditable="true">Выдели этот текст на мобильном, и появится панель!</p>
+      <BoublePanel />
     </div>
 
     <div class="dnd-container">

@@ -1,13 +1,13 @@
 <script setup>
-import { ref, computed, watch, useTemplateRef, nextTick } from "vue"
+import { ref, computed, watch } from "vue"
 import IconLink from "@ui/IconLink.vue"
 
 const show = defineModel()
 const props = defineProps({
   title: { type: String, default: "" },
   center: { type: Boolean, default: false },
+  class: { type: String, default: "" },
 })
-const modal = useTemplateRef("modal")
 const mousePosition = ref(null)
 const contentPosition = computed(() => {
   const { x, y } = mousePosition.value || {}
@@ -24,9 +24,7 @@ const contentPosition = computed(() => {
 })
 
 watch(show, (value) => {
-  if (value) {
-    nextTick(() => document.body.append(modal.value))
-  } else {
+  if (!value) {
     mousePosition.value = null
   }
 })
@@ -41,20 +39,22 @@ const onClose = () => show.value = false
 </script>
 
 <template>
-  <div class="ui-modal" v-if="show" @mouseover="onCheckPosition" ref="modal">
-    <div class=" ui-modal__background" @click="onClose"></div>
-    <div class="ui-modal__content" :style="contentPosition">
-      <div class="ui-modal__content-header">
-        <div v-if="props.title" class="ui-modal__content-header-title">
-          {{ props.title }}
+  <Teleport v-if="show" to="body">
+    <div class="ui-modal" :class="props.class" @mouseover="onCheckPosition">
+      <div class=" ui-modal__background" @click="onClose"></div>
+      <div class="ui-modal__content" :style="contentPosition">
+        <div class="ui-modal__content-header">
+          <div v-if="props.title" class="ui-modal__content-header-title">
+            {{ props.title }}
+          </div>
+          <IconLink icon="xmark" type="default" @click="onClose" />
         </div>
-        <IconLink icon="xmark" type="default" @click="onClose" />
-      </div>
-      <div class="ui-modal__content-body">
-        <slot />
+        <div class="ui-modal__content-body">
+          <slot />
+        </div>
       </div>
     </div>
-  </div>
+  </Teleport>
 </template>
 
 <style lang="scss" scoped>

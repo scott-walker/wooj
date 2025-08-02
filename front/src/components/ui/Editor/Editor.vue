@@ -10,6 +10,7 @@ import { EditorContent } from '@tiptap/vue-3'
 import { useMediaDetector } from "@hooks/mediaDetector"
 import Editor from "./lib/CustomEditor"
 import EditorPanel from "./Panel.vue"
+import EditorBoublePanel from "./BoublePanel.vue"
 
 const props = defineProps({
   placeholder: { type: String, default: null },
@@ -111,6 +112,7 @@ onBeforeUnmount(() => {
 
     <EditorPanel :style="panelStyle" class="ui-editor__panel" :class="{ 'hidden': !isFocused }" :editor="editor" />
     <EditorContent class="ui-editor__content wooj-content" :editor="editor" />
+    <EditorBoublePanel :editor="editor" @mouseover="onMouseOver" />
   </div>
 </template>
 
