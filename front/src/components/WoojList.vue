@@ -42,26 +42,33 @@ const emit = defineEmits([
 ])
 
 const getRandMargin = (i) => {
+  const MIN_SIZE = 330
+  const BODY_PADDING = 30
+
   if (!md.isSm.value) {
     return null
   }
-
-  const BODY_PADDING = 30
+  if (md.width.value <= MIN_SIZE) {
+    return {
+      "min-width": "100%",
+      "max-width": "100%"
+    }
+  }
 
   return {
     "max-width": md.width.value / 2 - BODY_PADDING + "px"
   }
 
-  const FACTOR = 7;
+  // const FACTOR = 7;
 
-  const vector = i % 2 === 0 ? -1 : 1;
-  const top = _.random(0, FACTOR) * vector
-  const left = _.random(0, FACTOR) * vector
+  // const vector = i % 2 === 0 ? -1 : 1;
+  // const top = _.random(0, FACTOR) * vector
+  // const left = _.random(0, FACTOR) * vector
 
-  return {
-    top: `${top}px`,
-    left: `${left}px`,
-  }
+  // return {
+  //   top: `${top}px`,
+  //   left: `${left}px`,
+  // }
 }
 
 const changedTitle = ref(props.title)
@@ -279,15 +286,9 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
 
     &.sortable {
       .wooj-list__item {
-        // cursor: grab;
-
         &.dragging {
           opacity: .5;
           cursor: grabbing;
-
-          // &-mirror {
-
-          // }
         }
       }
     }
@@ -297,6 +298,7 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
     position: relative;
     display: flex;
     flex-direction: column;
+    align-items: stretch;
     max-width: 400px;
     user-select: none;
 
@@ -347,14 +349,6 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
 
     &__item {
       flex-grow: 1;
-
-      min-width: inherit;
-      max-width: inherit;
-
-      overflow: hidden;
-
-      // min-width: 40px;
-      // max-width: 210px;
     }
   }
 }

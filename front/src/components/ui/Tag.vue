@@ -37,6 +37,7 @@ const onCheck = () => {
 
 <style lang="scss" scoped>
 @use "sass:color";
+@use "@styles/media";
 @use "@styles/colors";
 
 .ui-tag {
@@ -90,6 +91,14 @@ const onCheck = () => {
     background: none;
     transition: all .3s;
     cursor: pointer;
+  }
+}
+
+@include media.sm() {
+  .ui-tag {
+    padding: 2px 5px;
+    font-size: 12px;
+    min-width: 18px;
   }
 }
 </style>

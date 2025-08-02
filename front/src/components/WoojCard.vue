@@ -105,10 +105,6 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
   }
 
   &__wrapper {
-    width: 100%;
-    // min-height: 100%;
-    // max-height: 100%;
-
     min-width: 40px;
     max-width: 210px;
     padding: 25px 30px;
@@ -137,10 +133,6 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
 
 @include media.sm() {
   .wooj-card {
-
-    min-width: 40px;
-    max-width: 210px;
-
     &__panel {
       display: flex;
       position: absolute;
@@ -163,10 +155,9 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
     }
 
     &__wrapper {
-      width: 100%;
-      min-height: 100%;
-      max-height: 100%;
       padding: 10px;
+      min-width: 100%;
+      max-width: 100%;
 
       &.pinned {
         background: linear-gradient(349deg, rgba(212, 255, 56, 1) 12%, rgba(255, 255, 255, 1) 12%);
@@ -181,6 +172,7 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
 
     &__content {
       // max-height: 90px;
+      width: 100%;
       overflow: hidden;
     }
   }
