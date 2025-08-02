@@ -299,7 +299,7 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    max-width: 400px;
+    max-width: 300px;
     user-select: none;
 
     &:last-child {

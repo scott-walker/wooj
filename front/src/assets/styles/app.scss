@@ -38,8 +38,8 @@ div {
     z-index: 10;
   }
   &__thumb-y {
-    background-color: color.change(colors.$basic, $alpha: 70%) !important;
-    width: 10px !important;
+    background-color: color.change(colors.$basic, $alpha: 40%) !important;
+    width: 7px !important;
   }
 }
 

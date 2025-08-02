@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from "vue"
 import useUserStore from "@stores/user"
+import { useMediaDetector } from "@hooks/mediaDetector"
 import IconLink from "@ui/IconLink.vue"
 import Modal from "@ui/Modal.vue"
 import EditableBlock from "@ui/EditableBlock.vue"
@@ -9,12 +10,15 @@ import Button from "@ui/Button.vue"
 import Avatar from "./Avatar.vue"
 
 const userStore = useUserStore()
+const md = useMediaDetector()
+
 const user = computed(() => userStore.user)
 const isShowProfile = ref(false)
 const isUpdatingPassword = ref(false)
 const name = ref(user.value.name)
 const password = ref("")
 const disabledSavePassword = computed(() => password.value.length < 6)
+const isMobile = computed(() => md.isSm.value)
 
 const onClickProfile = () => (isShowProfile.value = true)
 const onUpdateName = () => userStore.update({ name: name.value })
@@ -26,17 +30,26 @@ const onUpdatePassword = async () => {
   isUpdatingPassword.value = false
   password.value = ""
 }
+const onLogout = () => {
+  isShowProfile.value = false
+  userStore.logout()
+}
 </script>
 
 <template>
   <div class="user-panel">
-    <div class="user-panel__user" @click="onClickProfile">
+    <div v-if="isMobile" class="user-panel__user" @click="onClickProfile">
+      <img v-if="userStore.avatar" class="user-panel__user-avatar" :src="userStore.avatar" />
+      <div v-else class="user-panel__user-avatar default"></div>
+    </div>
+    <div v-else class="user-panel__user" @click="onClickProfile">
       <img v-if="userStore.avatar" class="user-panel__user-avatar" :src="userStore.avatar" />
       <div v-else class="user-panel__user-avatar default"></div>
 
       <div class="user-panel__user-name">{{ user.name }}</div>
     </div>
-    <div class="user-panel__logout">
+
+    <div v-if="!isMobile" class="user-panel__logout">
       <IconLink icon="right-from-bracket" @click="userStore.logout" />
     </div>
 
@@ -47,13 +60,16 @@ const onUpdatePassword = async () => {
         </div>
         <EditableBlock class="profile__name" v-model="name" :max="20" @change="onUpdateName" />
         <div class="profile__email">{{ user.email }}</div>
-        <div class="profile__form">
+        <form class="profile__form">
           <PasswordInput v-model="password" :with-checker="true" placeholder="Новый пароль" />
           <Button
             :disabled="disabledSavePassword"
             text="Сохранить пароль"
             :loading="isUpdatingPassword"
             @click="onUpdatePassword" />
+        </form>
+        <div class="profile__logout">
+          <Button type="danger" text="Выйти" @click="onLogout" />
         </div>
       </div>
     </Modal>
@@ -141,6 +157,10 @@ const onUpdatePassword = async () => {
     align-items: center;
     margin-top: 20px;
     gap: 10px;
+  }
+
+  &__logout {
+    margin-top: 20px;
   }
 }
 </style>

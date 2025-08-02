@@ -7,6 +7,7 @@ import Underline from '@tiptap/extension-underline'
 import Placeholder from '@tiptap/extension-placeholder'
 import StarterKit from '@tiptap/starter-kit'
 import { EditorContent } from '@tiptap/vue-3'
+import { useMediaDetector } from "@hooks/mediaDetector"
 import Editor from "./lib/CustomEditor"
 import EditorPanel from "./Panel.vue"
 
@@ -15,6 +16,7 @@ const props = defineProps({
 })
 const content = defineModel()
 const emit = defineEmits(["update", "save"])
+const md = useMediaDetector()
 
 const editor = ref(null)
 const isMouseOver = ref(false)
@@ -26,6 +28,13 @@ const placeholder = computed(() => {
   }
 
   return isFocused.value ? "Напиши текст..." : "Кликни сюда и напиши текст..."
+})
+const panelStyle = computed(() => {
+  const OFFSET_FACTOR = 60
+
+  return {
+    width: md.width.value - OFFSET_FACTOR + "px"
+  }
 })
 
 const onMouseOver = () => {
@@ -100,15 +109,15 @@ onBeforeUnmount(() => {
     @mouseover="onMouseOver"
     @mouseleave="onMouseLeave">
 
-    <EditorPanel class="ui-editor__panel" :class="{ 'hidden': !isFocused }" :editor="editor" />
-    <EditorContent class="ui-editor__content" :editor="editor" />
+    <EditorPanel :style="panelStyle" class="ui-editor__panel" :class="{ 'hidden': !isFocused }" :editor="editor" />
+    <EditorContent class="ui-editor__content wooj-content" :editor="editor" />
   </div>
 </template>
 
 <style lang="scss">
 @use "sass:color";
 @use "@styles/colors";
-@use "@styles/wooj";
+@use "@styles/media";
 
 .ui-editor {
   position: relative;
@@ -136,7 +145,7 @@ onBeforeUnmount(() => {
     background: white;
     z-index: 10;
     width: 100%;
-    height: 60px;
+    height: 50px;
     margin-top: -2px;
     overflow: hidden;
     transform: translateY(0px);
@@ -174,9 +183,32 @@ onBeforeUnmount(() => {
         height: 0;
         pointer-events: none;
       }
-
-      @include wooj.contentFormat();
     }
   }
+}
+
+@include media.sm() {
+
+  .ui-editor {
+    &__panel {
+      position: sticky;
+      top: 0;
+      left: 0;
+      height: inherit;
+      overflow-x: auto;
+
+      &.hidden {
+        height: 0;
+        transform: translateY(-50px);
+      }
+    }
+
+    &__content {
+      .tiptap {
+        padding: 10px;
+      }
+    }
+  }
+
 }
 </style>

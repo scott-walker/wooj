@@ -21,15 +21,18 @@ const colorStyle = computed(() => ({
 </template>
 
 <style lang="scss" scoped>
+@use "@styles/media";
 @use "@styles/colors";
 
 .ui-editor-button {
+  padding: 0;
   background: colors.$absorbing;
   border: 2px solid transparent;
   border-radius: 10px;
   transition: all .1s;
   color: colors.$basic;
   cursor: pointer;
+  outline: none;
 
   &.active {
     background: colors.$primary;
@@ -39,6 +42,20 @@ const colorStyle = computed(() => ({
     background: colors.$primary;
   }
 
-  &__icon {}
+  &__icon {
+    width: 26px;
+    height: 26px;
+    font-size: 14px;
+  }
+}
+
+@include media.sm() {
+  .ui-editor-button {
+    &__icon {
+      width: 22px;
+      height: 22px;
+      font-size: 12px;
+    }
+  }
 }
 </style>

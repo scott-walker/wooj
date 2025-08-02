@@ -105,9 +105,10 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
   }
 
   &__wrapper {
-    min-width: 40px;
-    max-width: 210px;
-    padding: 25px 30px;
+    // min-width: 40px;
+    // max-width: 210px;
+    max-width: 100%;
+    padding: 17px;
     border: 3px solid colors.$absorbing;
     background: colors.$absorbing;
     overflow: hidden;
@@ -119,13 +120,13 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
   }
 
   &__title {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: bold;
-    margin-bottom: 10px;
     overflow-wrap: break-word;
   }
 
   &__content {
+    margin-top: 20px;
     max-height: 90px;
     overflow: hidden;
   }
@@ -135,15 +136,8 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
   .wooj-card {
     &__panel {
       display: flex;
-      position: absolute;
       top: -15px;
       right: -15px;
-      background: colors.$absorbing;
-      border-radius: 10px;
-      box-shadow: rgba(16, 0, 75, 0.2) 0px 1px 2px 0px;
-      overflow: hidden;
-      opacity: 0;
-      transition: all .3s;
 
       &-button {
         cursor: pointer;
@@ -158,20 +152,14 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
       padding: 10px;
       min-width: 100%;
       max-width: 100%;
-
-      &.pinned {
-        background: linear-gradient(349deg, rgba(212, 255, 56, 1) 12%, rgba(255, 255, 255, 1) 12%);
-        // background: linear-gradient(352deg, colors.$primary 18%, rgba(255, 255, 255, 1) 18%);
-      }
     }
 
     &__title {
       font-size: 18px;
-      margin-bottom: 15px;
     }
 
     &__content {
-      // max-height: 90px;
+      margin-top: 15px;
       width: 100%;
       overflow: hidden;
     }

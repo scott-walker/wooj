@@ -20,6 +20,7 @@ const { toasts } = useToast()
 <style lang="scss" scoped>
 @use "sass:color";
 @use "@styles/colors";
+@use "@styles/media";
 
 $toast-width: 500px;
 
@@ -65,6 +66,19 @@ $toast-width: 500px;
   &-leave-to {
     opacity: 0.3;
     transform: translateX(200px);
+  }
+}
+
+@include media.sm() {
+  .toasts {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    width: inherit;
+
+    &__toast {
+      max-width: 100%;
+    }
   }
 }
 </style>

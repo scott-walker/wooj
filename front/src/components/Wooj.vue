@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from "vue"
+import { useMediaDetector } from "@hooks/mediaDetector"
 import Modal from "@ui/Modal.vue"
 import IconLink from "@ui/IconLink.vue"
 import LightInput from "@ui/LightInput.vue"
@@ -7,6 +8,7 @@ import Editor from "@ui/Editor/Editor.vue"
 import Skeleton from "@ui/Skeleton.vue"
 import TopicTags from "@components/TopicTags.vue"
 
+const md = useMediaDetector()
 const wooj = defineModel()
 const emit = defineEmits(["change-content", "change-topics"])
 const props = defineProps({
@@ -18,6 +20,7 @@ const props = defineProps({
 const isShowedTopics = ref(false)
 const isShowedShare = ref(false)
 const hasTopics = computed(() => !!props.topics.length)
+const isMobile = computed(() => md.isSm.value)
 
 const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
 </script>
@@ -25,7 +28,11 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
 <template>
   <div class="wooj">
     <div v-if="props.loaded" class="wooj__board">
-      <div class="wooj__actions">
+      <div v-if="isMobile" class="wooj__actions">
+        <IconLink v-if="hasTopics" icon="tags" label="Топики" @click="isShowedTopics = !isShowedTopics" />
+        <!-- <IconLink icon="link" @click="isShowedShare = !isShowedShare" /> -->
+      </div>
+      <div v-else class="wooj__actions">
         <IconLink v-if="hasTopics" icon="tags" @click="isShowedTopics = !isShowedTopics" />
         <!-- <IconLink icon="link" @click="isShowedShare = !isShowedShare" /> -->
       </div>
@@ -59,12 +66,14 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
 </template>
 
 <style lang="scss">
+@use "@styles/media";
 @use "@styles/colors";
 
 .wooj {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
   height: 100%;
 
   &__board {
@@ -72,6 +81,7 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
     justify-content: center;
     align-items: flex-start;
     padding: 40px;
+    width: 100%;
     height: 100%;
   }
 
@@ -90,12 +100,13 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
 
   &__paper {
     position: relative;
-    padding: 40px 30px;
+    padding: 20px;
     border-radius: 10px;
     background: colors.$absorbing;
     box-shadow: rgba(16, 0, 75, 0.1) 0px 5px 10px 0px;
-    min-width: 900px;
-    max-width: 900px;
+    width: 100%;
+    // min-width: 900px;
+    max-width: 800px;
   }
 
   &__save-status {
@@ -141,6 +152,51 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
     align-items: flex-start;
     flex-wrap: wrap;
     gap: 10px;
+  }
+}
+
+@include media.sm() {
+
+  .wooj {
+    &__board {
+      display: flex;
+      flex-direction: column-reverse;
+      justify-content: flex-start;
+      align-items: flex-start;
+      padding: 10px;
+      height: 100%;
+    }
+
+    &__actions {
+      padding: 0px;
+      margin-top: 20px;
+    }
+
+    &__paper {
+      padding: 10px;
+      border-radius: 6px;
+      min-width: inherit;
+      max-width: inherit;
+    }
+
+    &__save-status {
+      display: none;
+    }
+
+    &__title {
+      &-field {
+        padding: 10px !important;
+        font-size: 18px;
+      }
+    }
+
+    &__content {
+      // margin-top: 5px;
+    }
+
+    .topics {
+      gap: 10px;
+    }
   }
 }
 </style>

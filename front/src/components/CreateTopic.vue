@@ -45,7 +45,7 @@ const onCreate = async () => {
   gap: 20px;
 
   &__field {
-    font-size: 32px;
+    font-size: 22px;
     // border-color: colors.$primary !important;
 
     // &:focus {
@@ -54,7 +54,7 @@ const onCreate = async () => {
   }
 
   &__button {
-    font-size: 18px !important;
+    font-size: 12px !important;
   }
 }
 </style>

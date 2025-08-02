@@ -35,6 +35,7 @@ const isVisibleStatus = computed(() => !md.isSm.value && layoutStore.statusBar)
 
 <style lang="scss">
 @use "@styles/colors";
+@use "@styles/media";
 
 .header {
   display: flex;
@@ -53,6 +54,14 @@ const isVisibleStatus = computed(() => !md.isSm.value && layoutStore.statusBar)
   &-right {
     height: 100%;
     padding-right: 20px;
+  }
+}
+
+@include media.sm() {
+  .header {
+    &-right {
+      padding-right: 0;
+    }
   }
 }
 </style>

@@ -121,9 +121,9 @@ const onRedo = () => {
   <div class="ui-editor-pamel">
     <section class="ui-editor-pamel__group">
       <Button @click="onBold" icon="bold" :disabled="isBoldDisabled" :active="isBoldActive" />
-      <Button @click="onItalic" icon="italic" :disabled="isItalicDisabled" :active="isItalicActive" />
+      <!-- <Button @click="onItalic" icon="italic" :disabled="isItalicDisabled" :active="isItalicActive" /> -->
       <Button @click="onUnderline" icon="underline" :disabled="isUnderlineDisabled" :active="isUnderlineActive" />
-      <Button @click="onStrike" icon="strikethrough" :disabled="isStrikeDisabled" :active="isStrikeActive" />
+      <!-- <Button @click="onStrike" icon="strikethrough" :disabled="isStrikeDisabled" :active="isStrikeActive" /> -->
       <Button @click="onHeading(1)" icon="heading" :disabled="isH1Disabled" :active="isH1Active" />
       <!-- <Button @click="onHeading(2)" icon="heading" :disabled="isH2Disabled" :active="isH2Active" />
       <Button @click="onHeading(3)" icon="heading" :disabled="isH3Disabled" :active="isH3Active" />
@@ -147,17 +147,17 @@ const onRedo = () => {
       <Button @click="onHorizontalRule" icon="window-minimize" />
     </section>
 
-    <div class="ui-editor-pamel__delimiter"></div>
+    <!-- <div class="ui-editor-pamel__delimiter"></div> -->
 
-    <section class="ui-editor-pamel__group">
+    <!-- <section class="ui-editor-pamel__group">
       <Button @click="onColor(null, true)" icon="circle" />
       <Button @click="onColor(colorsMap.purple, isColorPurpleActive)" icon="circle" :color="colorsMap.purple"
         :disabled="isColorPurpleDisabled" :active="isColorPurpleActive" />
       <Button @click="onColor(colorsMap.pink, isColorPinkActive)" icon="circle" :color="colorsMap.pink"
         :disabled="isColorPinkDisabled" :active="isColorPinkActive" />
-      <!-- <Button @click="onColor(colorsMap.green, isColorGreenActive)" icon="circle" :color="colorsMap.green"
-        :disabled="isColorGreenDisabled" :active="isColorGreenActive" /> -->
-    </section>
+      <Button @click="onColor(colorsMap.green, isColorGreenActive)" icon="circle" :color="colorsMap.green"
+        :disabled="isColorGreenDisabled" :active="isColorGreenActive" />
+    </section> -->
 
     <div class="ui-editor-pamel__delimiter"></div>
 
@@ -169,6 +169,7 @@ const onRedo = () => {
 </template>
 
 <style lang="scss" scoped>
+@use "@styles/media";
 @use "@styles/colors";
 
 .ui-editor-pamel {
@@ -177,10 +178,10 @@ const onRedo = () => {
   justify-content: flex-start;
   align-items: stretch;
   flex-wrap: wrap;
+  overflow: hidden;
   gap: 20px;
   border-radius: 5px;
-  overflow: hidden;
-  width: 100%;
+  max-width: 100%;
   padding: 10px;
   box-shadow: rgba(16, 0, 75, 0.1) 0px 1px 3px 0px;
   background: colors.$absorbing;
@@ -205,6 +206,20 @@ const onRedo = () => {
     &:last-child {
       // padding-right: 0;
       // border-right: none;
+    }
+  }
+}
+
+@include media.sm() {
+
+  .ui-editor-pamel {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    padding: 5px;
+    gap: 5px;
+
+    &__delimiter {
+      display: none;
     }
   }
 }
