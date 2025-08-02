@@ -2,8 +2,10 @@
 import { Sortable, Plugins } from "@shopify/draggable"
 import { ref, inject, onMounted, onUnmounted } from "vue"
 import { useLayoutStore } from "@stores/layout"
+import { useMediaDetector } from "@hooks/mediaDetector"
 const { userService } = inject("services")
 const layoutStore = useLayoutStore()
+const md = useMediaDetector()
 
 const version = ref("0.0")
 const target = ref(null)
@@ -55,6 +57,21 @@ onUnmounted(() => layoutStore.unsetStatusBar())
       <div class="dnd-target" v-for="i in 5"
         :style="{ height: `${(i + 10) * i}px` }"></div>
     </div>
+
+    <div class="media-detector">
+      <div>Width: {{ md.width }}</div>
+      <div>Height: {{ md.height }}</div>
+      <div>isPortrait: {{ md.isPortrait }}</div>
+      <div>isLandscape: {{ md.isLandscape }}</div>
+      <div>isMobile: {{ md.isMobile }}</div>
+      <div>isTablet: {{ md.isTablet }}</div>
+      <div>isDesctop: {{ md.isDesctop }}</div>
+      <div>isXs: {{ md.isXs }}</div>
+      <div>isSm: {{ md.isSm }}</div>
+      <div>isMd: {{ md.isMd }}</div>
+      <div>isLg: {{ md.isLg }}</div>
+      <div>isXl: {{ md.isXl }}</div>
+    </div>
   </div>
 </template>
 
@@ -91,6 +108,13 @@ onUnmounted(() => layoutStore.unsetStatusBar())
   .placed {
     transition: all .2s;
     outline: 2px solid crimson;
+  }
+
+  .media-detector {
+    margin-top: 20px;
+    padding: 20px;
+    outline: 2px solid crimson;
+    font-weight: bold;
   }
 }
 </style>

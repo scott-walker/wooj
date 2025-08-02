@@ -13,6 +13,11 @@ const router = createRouter({
       name: "Pinned",
       component: () => import("@views/Pinned.vue"),
     },
+    {
+      path: "/debug",
+      name: "Debug",
+      component: () => import("@views/Debug.vue"),
+    },
     // {
     //   path: "/published",
     //   name: "Published",

@@ -1,13 +1,17 @@
 <script setup>
 import _ from "lodash"
+import { computed } from "vue"
 import { useLayoutStore } from "@stores/layout"
 import useWoojs from "@hooks/woojs"
-import useToast from '@hooks/toasts'
+import { useMediaDetector } from "@hooks/mediaDetector"
+// import useToast from '@hooks/toasts'
 import IconLink from "@ui/IconLink.vue"
 
 const layoutStore = useLayoutStore()
 const { woojStore, createWooj } = useWoojs()
-const toasts = useToast()
+const md = useMediaDetector()
+const isMobile = computed(() => md.isSm.value)
+// const toasts = useToast()
 
 const onOverBars = () => {
   layoutStore.onOverBars()
@@ -37,6 +41,11 @@ const onCreateWooj = async () => {
 <template>
   <div class="header-bars">
     <IconLink
+      v-if="isMobile"
+      :icon="layoutStore.isHoveredSidebar ? 'chevron-left' : 'bars'"
+      @click="layoutStore.onToggleMobileSidebar" />
+    <IconLink
+      v-else
       :icon="layoutStore.isHoveredBars ? 'chevron-left' : 'bars'"
       :mirror="layoutStore.hasAiredSidebar"
       @mouseover="onOverBars"

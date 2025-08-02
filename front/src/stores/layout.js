@@ -1,23 +1,28 @@
-import { ref, inject } from "vue"
+import { ref, computed, inject } from "vue"
 import { defineStore } from "pinia"
+import { useMediaDetector } from "@hooks/mediaDetector"
 
 /**
  * Стор для работы с макетом
  */
 export const useLayoutStore = defineStore("layout", () => {
   const { storage } = inject("utils")
+  const md = useMediaDetector()
 
-  const hasAiredSidebar = ref(false)
+  const isAiredSidebarMode = ref(false)
+
   const isHoveredSidebar = ref(false)
   const isHoveredBars = ref(false)
   const isCreateWoojActive = ref(false)
   const statusBar = ref(null)
 
+  const hasAiredSidebar = computed(() => md.isSm.value || isAiredSidebarMode.value)
+
   /**
    * Инициализация
    */
   function init() {
-    hasAiredSidebar.value = storage.get("hasAiredSidebar", false)
+    isAiredSidebarMode.value = storage.get("isAiredSidebarMode", false)
   }
 
   const setStatusBar = ({ title, icon }) => {
@@ -35,9 +40,12 @@ export const useLayoutStore = defineStore("layout", () => {
   const onOverBars = () => (isHoveredBars.value = true)
   const onLeaveBars = () => (isHoveredBars.value = false)
   const onToggleSidebar = () => {
-    hasAiredSidebar.value = !hasAiredSidebar.value
+    isAiredSidebarMode.value = !isAiredSidebarMode.value
 
-    storage.set("hasAiredSidebar", hasAiredSidebar.value)
+    storage.set("isAiredSidebarMode", isAiredSidebarMode.value)
+  }
+  const onToggleMobileSidebar = () => {
+    isHoveredSidebar.value = !isHoveredSidebar.value
   }
   const onActivateCreateWooj = () => (isCreateWoojActive.value = true)
   const onDeactivateCreateWooj = () => (isCreateWoojActive.value = false)
@@ -60,6 +68,7 @@ export const useLayoutStore = defineStore("layout", () => {
     onOverBars,
     onLeaveBars,
     onToggleSidebar,
+    onToggleMobileSidebar,
     onActivateCreateWooj,
     onDeactivateCreateWooj,
   }

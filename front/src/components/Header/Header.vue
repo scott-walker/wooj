@@ -1,5 +1,7 @@
 <script setup>
+import { computed } from "vue"
 import { useLayoutStore } from "@stores/layout"
+import { useMediaDetector } from "@hooks/mediaDetector"
 
 import Tag from "@ui/Tag.vue"
 import Logo from "@components/Header/Logo.vue"
@@ -7,6 +9,9 @@ import Bars from "@components/Header/Bars.vue"
 import UserPanel from "@components/Header/UserPanel.vue"
 
 const layoutStore = useLayoutStore()
+const md = useMediaDetector()
+
+const isVisibleStatus = computed(() => !md.isSm.value && layoutStore.statusBar)
 </script>
 
 <template>
@@ -17,7 +22,7 @@ const layoutStore = useLayoutStore()
     </div>
 
     <div class="header-center">
-      <Tag v-if="layoutStore.statusBar"
+      <Tag v-if="isVisibleStatus"
         :icon="layoutStore.statusBar.icon"
         :text="layoutStore.statusBar.title" />
     </div>
@@ -29,11 +34,14 @@ const layoutStore = useLayoutStore()
 </template>
 
 <style lang="scss">
+@use "@styles/colors";
+
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 100%;
+  background: colors.$absorbing;
 
   &-left {
     display: flex;
