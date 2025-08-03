@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script setup>
 //  <!-- Yandex.Metrika counter -->
 ; (function (m, e, t, r, i, k, a) {
   m[i] =

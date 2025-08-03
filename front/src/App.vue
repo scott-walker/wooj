@@ -15,6 +15,7 @@ import Counter from "@components/Counter.vue"
 
 const userStore = useUserStore()
 const isReady = ref(false)
+const isDevMode = import.meta.env.VITE_APP_MODE === "dev"
 const isLogged = computed(() => userStore.isLogged)
 const isVerified = computed(() => userStore.isVerified)
 
@@ -26,7 +27,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <Counter />
+  <Counter v-if="!isDevMode" />
   <Toasts />
 
   <template v-if="isReady">
