@@ -12,11 +12,11 @@ const panel = useTemplateRef("panel")
 
 const updatePosition = ({ target }) => {
   const panelElement = document.querySelector(".ui-editor-bouble-pamel")
-  // const editorElement = document.querySelector(".ui-editor .tiptap")
+  const editorElement = document.querySelector(".ui-editor .tiptap")
 
-  // if (document.activeElement !== editorElement) {
-  //   return
-  // }
+  if (document.activeElement !== editorElement) {
+    return
+  }
 
   // console.log("START")
   // console.log(target)
@@ -70,11 +70,9 @@ const updatePosition = ({ target }) => {
 // }
 
 onMounted(() => {
-  const editorElement = document.querySelector(".ui-editor")
-
-  editorElement.addEventListener('mouseup', updatePosition)
-  editorElement.addEventListener('touchend', updatePosition)
-  editorElement.addEventListener('selectionchange', () => {
+  document.addEventListener('mouseup', updatePosition)
+  document.addEventListener('touchend', updatePosition)
+  document.addEventListener('selectionchange', () => {
     if (window.getSelection()?.isCollapsed) {
       visible.value = false
     }
@@ -82,10 +80,8 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  const editorElement = document.querySelector(".ui-editor")
-
-  editorElement.removeEventListener('mouseup', updatePosition)
-  editorElement.removeEventListener('touchend', updatePosition)
+  document.removeEventListener('mouseup', updatePosition)
+  document.removeEventListener('touchend', updatePosition)
 })
 </script>
 

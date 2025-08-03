@@ -31,11 +31,11 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
         @click.stop="$emit('pin', wooj)">
         <i class="fas" :class="wooj.is_pinned ? 'fa-thumbtack-slash' : 'fa-thumbtack'"></i>
       </span>
-      <span
+      <!-- <span
         v-if="hasEdit"
         class="wooj-card__panel-button icon"
         @click="$emit('edit', wooj)">
-        <i class="fas fa-edit"></i></span>
+        <i class="fas fa-edit"></i></span> -->
       <span
         v-if="hasRemove"
         class="wooj-card__panel-button icon"
@@ -50,7 +50,10 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
       </span>
     </div>
 
-    <div class="wooj-card__wrapper" :class="{ 'pinned': wooj.is_pinned }">
+    <div
+      class="wooj-card__wrapper"
+      :class="{ 'pinned': wooj.is_pinned, 'editable': hasEdit }"
+      @click="$emit('edit', wooj)">
       <div class="wooj-card__title">{{ title }}</div>
       <div class="wooj-card__content wooj-content" v-html="content" />
     </div>
@@ -112,6 +115,10 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
     border: 3px solid colors.$absorbing;
     background: colors.$absorbing;
     overflow: hidden;
+
+    &.editable {
+      cursor: pointer;
+    }
 
     &.pinned {
       background: linear-gradient(349deg, rgba(212, 255, 56, 1) 12%, rgba(255, 255, 255, 1) 12%);

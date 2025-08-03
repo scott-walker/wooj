@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+// import { ref, computed, useTemplateRef, watch, nextTick } from 'vue'
 
 import { useMediaStore } from "@stores/media"
 import { useEditor } from "./lib/useEditor"
@@ -20,27 +20,27 @@ const { editor, isFocused, onMouseOver, onMouseLeave } = useEditor({
   emit,
   props,
 })
-
-const panelStyle = computed(() => {
-  const OFFSET_FACTOR = 60
-
-  return {
-    width: mediaStore.width - OFFSET_FACTOR + "px"
-  }
-})
 </script>
 
 <template>
   <div
-    v-if="editor"
     class="ui-editor"
     :class="{ focused: isFocused }"
     @mouseover="onMouseOver"
     @mouseleave="onMouseLeave">
+    <!-- {{ editorPosition }}
+    {{ panelHeight }} -->
+    <!-- {{ panelStyle }} -->
 
-    <EditorPanel :style="panelStyle" class="ui-editor__panel" :class="{ 'hidden': !isFocused }" :editor="editor" />
-    <EditorContent class="ui-editor__content wooj-content" :editor="editor" />
-    <EditorBoublePanel :editor="editor" @mouseover="onMouseOver" />
+    <EditorContent v-if="mediaStore.isSmall" class="ui-editor__content wooj-content" :editor="editor" />
+    <EditorPanel
+      :style="panelStyle"
+      class="ui-editor__panel"
+      :class="{ 'hidden': !isFocused }"
+      :editor="editor" />
+    <EditorContent v-if="!mediaStore.isSmall" class="ui-editor__content wooj-content" :editor="editor" />
+
+    <!-- <EditorBoublePanel :editor="editor" @mouseover="onMouseOver" /> -->
   </div>
 </template>
 
@@ -72,27 +72,25 @@ const panelStyle = computed(() => {
     position: sticky;
     top: -27px;
     left: 0;
-    background: white;
+    background: colors.$absorbing;
     z-index: 10;
     width: 100%;
-    height: 50px;
+    height: fit-content;
     margin-top: -2px;
     overflow: hidden;
     transform: translateY(0px);
     opacity: 1;
     transition: all .3s;
-    // border-top: 2px solid colors.$grey;
 
     &.hidden {
-      height: 10px;
+      height: 0;
+      padding: 0;
       opacity: 0;
       transform: translateY(-50px);
     }
   }
 
   &__content {
-
-    /* Basic editor styles */
     .tiptap {
       padding: 20px;
       transition: all .2s;
@@ -122,20 +120,20 @@ const panelStyle = computed(() => {
   .ui-editor {
     &__panel {
       position: sticky;
-      top: 0;
-      left: 0;
+      z-index: 100;
+      top: inherit;
+      bottom: -20px;
       height: inherit;
-      overflow-x: auto;
+      width: 100%;
 
       &.hidden {
-        height: 0;
-        transform: translateY(-50px);
+        transform: translateY(30px);
       }
     }
 
     &__content {
       .tiptap {
-        padding: 10px;
+        padding: 20px 10px;
       }
     }
   }

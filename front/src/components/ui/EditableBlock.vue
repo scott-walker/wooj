@@ -1,4 +1,5 @@
 <script setup>
+import _ from "lodash"
 import { ref, useTemplateRef, watch } from 'vue'
 
 const props = defineProps({
@@ -38,21 +39,24 @@ const onInput = (event) => {
   }
 }
 
-const onFocus = () => (isError.value = false)
+const onEnter = ({ target }) => {
+  const length = target.innerText.length
 
-const onBlur = (event) => {
-  const length = event.target.innerText.length
+  if (_.isEqual(text.value, target.innerText)) {
+    return
+  }
 
   if (length < props.min || length > props.max) {
     isError.value = true
     return
   }
 
-  text.value = event.target.innerText
+  text.value = target.innerText
   focused.value = false
 
   emit("change", text.value)
 }
+const onFocus = () => (isError.value = false)
 
 watch(() => focused.value, (focused) => {
   if (focused) {
@@ -69,10 +73,10 @@ watch(() => focused.value, (focused) => {
     class="ui-editable-block"
     :class="{ editable: !props.locked, error: isError }"
     :contenteditable="!props.locked"
-    @keydown.enter.exact.prevent
+    @keydown.enter.exact.prevent="onEnter"
     @input="onInput"
     @focus="onFocus"
-    @blur="onBlur">
+    @blur="onEnter">
     {{ text }}
   </div>
 </template>

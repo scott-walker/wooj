@@ -7,12 +7,14 @@ const props = defineProps({
   text: { type: String, default: null },
   icon: { type: String, default: null },
   clickable: { type: Boolean, default: false },
+  nowrap: { type: Boolean, default: false },
 })
 
 const cssClass = computed(() => {
   const classes = [props.type]
 
   props.clickable && classes.push("clickable")
+  props.nowrap && classes.push("nowrap")
   checked.value && classes.push("checked")
 
   return classes
@@ -29,7 +31,7 @@ const onCheck = () => {
   <span class="ui-tag" :class="cssClass" @click="onCheck">
     <span class="ui-tag__wrap">
       <i v-if="props.icon" class="ui-tag__icon" :class="['fa-solid', `fa-${props.icon}`]"></i>
-      <span v-if="props.text">{{ props.text }}</span>
+      <span v-if="props.text" class="ui-tag__text">{{ props.text }}</span>
       <slot v-else />
     </span>
   </span>
@@ -91,6 +93,18 @@ const onCheck = () => {
     background: none;
     transition: all .3s;
     cursor: pointer;
+  }
+
+  &.nowrap {
+    .ui-tag__wrap {
+      justify-content: flex-start;
+    }
+
+    .ui-tag__text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }
 

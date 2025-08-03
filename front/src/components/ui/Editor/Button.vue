@@ -54,7 +54,7 @@ const colorStyle = computed(() => ({
     &__icon {
       width: 22px;
       height: 22px;
-      font-size: 12px;
+      font-size: 13px;
     }
   }
 }

@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount } from "vue"
+import { onBeforeMount, onMounted } from "vue"
 
 import { useLayoutStore } from "@stores/layout"
 import { useWoojsStore } from "@stores/woojs"
@@ -11,6 +11,16 @@ const layoutStore = useLayoutStore()
 const woojsStore = useWoojsStore()
 
 onBeforeMount(() => woojsStore.fetchAll())
+onMounted(() => {
+  // document.querySelector(".layout-main__body-content").addEventListener("scroll", (event) => {
+  //   console.log({
+  //     target: event.target.getBoundingClientRect(),
+  //     // window: [window.pageXOffset, window.pageYOffset],
+  //     // document: document.clie,
+  //     body: document.body.getBoundingClientRect(),
+  //   })
+  // })
+})
 </script>
 
 <template>
@@ -138,6 +148,17 @@ onBeforeMount(() => woojsStore.fetchAll())
   }
 }
 
+
+@include media.lg() {
+  .layout-main {
+    &__body {
+      &-content {
+        padding: 20px;
+      }
+    }
+  }
+}
+
 @include media.sm() {
   .layout-main {
     &__body {
@@ -145,10 +166,6 @@ onBeforeMount(() => woojsStore.fetchAll())
         &.aired {
           margin-left: -200px;
         }
-      }
-
-      &-content {
-        padding: 20px;
       }
     }
   }

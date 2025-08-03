@@ -11,11 +11,20 @@ const onHome = () => router.push({ name: 'Debug' })
 </template>
 
 <style lang="scss">
+@use "@styles/media";
+
 .logo {
   display: inline-block;
-  padding: 10px;
+  padding: 15px;
   padding-right: 16px;
   font-size: 22px;
   font-weight: 900;
+}
+
+@include media.sm() {
+  .logo {
+    padding: 15px 10px;
+    font-size: 18px;
+  }
 }
 </style>

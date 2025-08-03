@@ -23,6 +23,8 @@ const isVisibleStatus = computed(() => !mediaStore.isSmall && layoutStore.status
 
     <div class="header-center">
       <Tag v-if="isVisibleStatus"
+        class="status"
+        nowrap
         :icon="layoutStore.statusBar.icon"
         :text="layoutStore.statusBar.title" />
     </div>
@@ -33,7 +35,7 @@ const isVisibleStatus = computed(() => !mediaStore.isSmall && layoutStore.status
   </header>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @use "@styles/colors";
 @use "@styles/media";
 
@@ -43,6 +45,7 @@ const isVisibleStatus = computed(() => !mediaStore.isSmall && layoutStore.status
   align-items: center;
   height: 100%;
   background: colors.$absorbing;
+  gap: 10px;
 
   &-left {
     display: flex;
@@ -54,6 +57,10 @@ const isVisibleStatus = computed(() => !mediaStore.isSmall && layoutStore.status
   &-right {
     height: 100%;
     padding-right: 20px;
+  }
+
+  .status {
+    max-width: 300px;
   }
 }
 

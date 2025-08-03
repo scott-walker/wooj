@@ -3,6 +3,7 @@
  *
  * @property {Object} resizeListenersMap
  * @property {Object} orientationListenersMap
+ * @property {Object} scrollListenersMap
  * @property {Number} width ширина окна
  * @property {Number} height высота окна
  *
@@ -20,6 +21,7 @@ export default class MediaDetector {
   constructor() {
     this.resizeListenersMap = {}
     this.orientationListenersMap = {}
+    this.scrollListenersMap = {}
 
     this.WIDTH_XS = 480
     this.WIDTH_SM = 640
@@ -92,7 +94,7 @@ export default class MediaDetector {
   }
 
   /**
-   * Отписаться на изменений ориентации экрана
+   * Отписаться от изменений ориентации экрана
    * @param {String} id
    * @returns {void}
    */
@@ -104,6 +106,37 @@ export default class MediaDetector {
       screen.orientation.removeEventListener("change", cb)
     } else {
       throw `ID "${id}" для слушателя изменений ориентации экрана не существует`
+    }
+  }
+
+  /**
+   * Подписаться на изменения позиции окна (скролл)
+   * @param {String} id
+   * @param {Function} cb
+   * @returns {void}
+   */
+  onScroll(id, cb) {
+    if (this.scrollListenersMap[id]) {
+      throw `ID "${id}" для слушателя изменений позиции окна уже занят`
+    }
+
+    this.scrollListenersMap[id] = cb
+    window.addEventListener("scroll", cb)
+  }
+
+  /**
+   * Отписаться от изменений позиции окна (от скролла)
+   * @param {String} id
+   * @returns {void}
+   */
+  offScroll(id) {
+    const cb = this.scrollListenersMap[id]
+
+    if (cb) {
+      delete this.scrollListenersMap[id]
+      window.removeEventListener("scroll", cb)
+    } else {
+      throw `ID "${id}" для слушателя изменений позиции окна не существует`
     }
   }
 

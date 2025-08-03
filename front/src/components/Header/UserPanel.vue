@@ -59,6 +59,7 @@ const onLogout = () => {
         <div class="profile__avatar">
           <Avatar />
         </div>
+
         <EditableBlock class="profile__name" v-model="name" :max="20" @change="onUpdateName" />
         <div class="profile__email">{{ user.email }}</div>
         <form class="profile__form">
@@ -69,6 +70,7 @@ const onLogout = () => {
             :loading="isUpdatingPassword"
             @click="onUpdatePassword" />
         </form>
+
         <div v-if="mediaStore.isSmall" class="profile__logout">
           <Button type="danger" text="Выйти" @click="onLogout" />
         </div>

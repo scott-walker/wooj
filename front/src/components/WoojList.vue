@@ -155,7 +155,7 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
         v-model:focused="isTitleFocused"
         :locked="!hasEditableTopic"
         :max="20"
-        @blur="onUpdateTitle" />
+        @change="onUpdateTitle" />
 
       <Tag v-if="nums">{{ nums }}</Tag>
 

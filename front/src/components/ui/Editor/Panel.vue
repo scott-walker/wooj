@@ -169,6 +169,7 @@ const onRedo = () => {
 </template>
 
 <style lang="scss" scoped>
+@use "sass:color";
 @use "@styles/media";
 @use "@styles/colors";
 
@@ -183,12 +184,12 @@ const onRedo = () => {
   border-radius: 5px;
   max-width: 100%;
   padding: 10px;
-  box-shadow: rgba(16, 0, 75, 0.1) 0px 1px 3px 0px;
+  box-shadow: color.change(colors.$basic, $alpha: 5%) 0px 15px 60px 5px;
   background: colors.$absorbing;
 
   &__delimiter {
     width: 1px;
-    background: rgba(16, 0, 75, 0.2);
+    background: color.change(colors.$basic, $alpha: 20%);
   }
 
   &__group {
@@ -213,10 +214,11 @@ const onRedo = () => {
 @include media.sm() {
 
   .ui-editor-pamel {
-    justify-content: flex-start;
-    flex-wrap: nowrap;
-    padding: 5px;
-    gap: 5px;
+    justify-content: space-evenly;
+    // flex-wrap: nowrap;
+    padding: 10px 5px;
+    gap: 10px;
+    box-shadow: color.change(colors.$basic, $alpha: 10%) 0px -15px 100px 5px;
 
     &__delimiter {
       display: none;

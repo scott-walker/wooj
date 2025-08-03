@@ -1,15 +1,17 @@
 <script setup>
 import { ref, computed } from "vue"
+import { useRouter } from "vue-router"
 
 import { useMediaStore } from "@stores/media"
 
 import Modal from "@ui/Modal.vue"
 import IconLink from "@ui/IconLink.vue"
-import LightInput from "@ui/LightInput.vue"
+import EditableBlock from "@ui/EditableBlock.vue"
 import Editor from "@ui/Editor/Editor.vue"
 import Skeleton from "@ui/Skeleton.vue"
 import TopicTags from "@components/TopicTags.vue"
 
+const router = useRouter()
 const mediaStore = useMediaStore()
 const wooj = defineModel()
 const emit = defineEmits(["change-content", "change-topics"])
@@ -23,6 +25,8 @@ const isShowedTopics = ref(false)
 const isShowedShare = ref(false)
 const hasTopics = computed(() => !!props.topics.length)
 
+const onBack = () => router.back()
+const onShowTopics = () => (isShowedTopics.value = !isShowedTopics.value)
 const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
 </script>
 
@@ -30,11 +34,12 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
   <div class="wooj">
     <div v-if="props.loaded" class="wooj__board">
       <div v-if="mediaStore.isSmall" class="wooj__actions">
-        <IconLink v-if="hasTopics" icon="tags" label="Топики" @click="isShowedTopics = !isShowedTopics" />
+        <IconLink v-if="hasTopics" icon="tags" label="Топики" @click="onShowTopics" />
         <!-- <IconLink icon="link" @click="isShowedShare = !isShowedShare" /> -->
       </div>
       <div v-else class="wooj__actions">
-        <IconLink v-if="hasTopics" icon="tags" @click="isShowedTopics = !isShowedTopics" />
+        <IconLink v-if="hasTopics" icon="arrow-left" @click="onBack" />
+        <IconLink v-if="hasTopics" icon="tags" @click="onShowTopics" />
         <!-- <IconLink icon="link" @click="isShowedShare = !isShowedShare" /> -->
       </div>
 
@@ -42,12 +47,13 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
         <span v-show="props.saving" class="wooj__save-status tag">Сохранено</span>
 
         <div class="wooj__title">
-          <LightInput
-            v-model="wooj.title"
-            :max="60"
-            fieldClass="wooj__title-field"
+          <EditableBlock
+            class="wooj__title-field"
             placeholder="Кликни сюда и напиши заголовок"
-            @save="emit('change-content', wooj)" />
+            v-model="wooj.title"
+            :key="wooj.title"
+            :max="120"
+            @change="emit('change-content', wooj)" />
         </div>
         <div class="wooj__content">
           <Editor v-model="wooj.content" @save="emit('change-content', wooj)" />
@@ -66,7 +72,8 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
+@use "sass:color";
 @use "@styles/media";
 @use "@styles/colors";
 
@@ -81,7 +88,7 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding: 40px;
+    padding: 20px;
     width: 100%;
     height: 100%;
   }
@@ -104,9 +111,8 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
     padding: 20px;
     border-radius: 10px;
     background: colors.$absorbing;
-    box-shadow: rgba(16, 0, 75, 0.1) 0px 5px 10px 0px;
+    box-shadow: color.change(colors.$basic, $alpha: 3%) 0px 15px 50px 10px;
     width: 100%;
-    // min-width: 900px;
     max-width: 800px;
   }
 
@@ -125,6 +131,7 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
     border-bottom: 2px solid colors.$grey;
 
     &-field {
+      width: 100%;
       padding: 20px !important;
       font-size: 28px;
       font-weight: bold;
@@ -138,12 +145,8 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
     }
   }
 
-  &__content {
-    // margin-top: 5px;
-  }
-
   &__skeleton {
-    max-width: 900px;
+    max-width: 800px;
   }
 
   .topics {
@@ -156,15 +159,34 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
   }
 }
 
-@include media.sm() {
 
+@include media.lg() {
+  .wooj {
+    &__board {
+      padding: 10px 20px;
+    }
+
+    &__paper {
+      padding: 10px;
+    }
+
+    &__title {
+      &-field {
+        padding: 15px !important;
+        font-size: 26px;
+      }
+    }
+  }
+}
+
+@include media.sm() {
   .wooj {
     &__board {
       display: flex;
       flex-direction: column-reverse;
       justify-content: flex-start;
       align-items: flex-start;
-      padding: 10px;
+      padding: 0px;
       height: 100%;
     }
 
@@ -174,7 +196,7 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
     }
 
     &__paper {
-      padding: 10px;
+      padding: 5px;
       border-radius: 6px;
       min-width: inherit;
       max-width: inherit;
@@ -189,14 +211,6 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
         padding: 10px !important;
         font-size: 18px;
       }
-    }
-
-    &__content {
-      // margin-top: 5px;
-    }
-
-    .topics {
-      gap: 10px;
     }
   }
 }
