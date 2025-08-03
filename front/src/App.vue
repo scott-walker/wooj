@@ -11,6 +11,7 @@ import Auth from "@views/Auth.vue"
 import Loading from "@views/Loading.vue"
 
 import Toasts from "@components/Toasts.vue"
+import Counter from "@components/Counter.vue"
 
 const userStore = useUserStore()
 const isReady = ref(false)
@@ -25,6 +26,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
+  <Counter />
   <Toasts />
 
   <template v-if="isReady">
