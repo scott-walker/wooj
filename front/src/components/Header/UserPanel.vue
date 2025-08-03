@@ -1,7 +1,9 @@
 <script setup>
 import { ref, computed } from "vue"
+
+import { useMediaStore } from "@stores/media"
 import useUserStore from "@stores/user"
-import { useMediaDetector } from "@hooks/mediaDetector"
+
 import IconLink from "@ui/IconLink.vue"
 import Modal from "@ui/Modal.vue"
 import EditableBlock from "@ui/EditableBlock.vue"
@@ -9,8 +11,8 @@ import PasswordInput from "@ui/PasswordInput.vue"
 import Button from "@ui/Button.vue"
 import Avatar from "./Avatar.vue"
 
+const mediaStore = useMediaStore()
 const userStore = useUserStore()
-const md = useMediaDetector()
 
 const user = computed(() => userStore.user)
 const isShowProfile = ref(false)
@@ -18,7 +20,6 @@ const isUpdatingPassword = ref(false)
 const name = ref(user.value.name)
 const password = ref("")
 const disabledSavePassword = computed(() => password.value.length < 6)
-const isMobile = computed(() => md.isSm.value)
 
 const onClickProfile = () => (isShowProfile.value = true)
 const onUpdateName = () => userStore.update({ name: name.value })
@@ -38,7 +39,7 @@ const onLogout = () => {
 
 <template>
   <div class="user-panel">
-    <div v-if="isMobile" class="user-panel__user" @click="onClickProfile">
+    <div v-if="mediaStore.isSmall" class="user-panel__user" @click="onClickProfile">
       <img v-if="userStore.avatar" class="user-panel__user-avatar" :src="userStore.avatar" />
       <div v-else class="user-panel__user-avatar default"></div>
     </div>
@@ -49,7 +50,7 @@ const onLogout = () => {
       <div class="user-panel__user-name">{{ user.name }}</div>
     </div>
 
-    <div v-if="!isMobile" class="user-panel__logout">
+    <div v-if="!mediaStore.isSmall" class="user-panel__logout">
       <IconLink icon="right-from-bracket" @click="userStore.logout" />
     </div>
 
@@ -68,7 +69,7 @@ const onLogout = () => {
             :loading="isUpdatingPassword"
             @click="onUpdatePassword" />
         </form>
-        <div class="profile__logout">
+        <div v-if="mediaStore.isSmall" class="profile__logout">
           <Button type="danger" text="Выйти" @click="onLogout" />
         </div>
       </div>

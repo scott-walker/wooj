@@ -1,11 +1,13 @@
 <script setup>
 import { ref } from "vue"
+
+import { useWoojsStore } from "@stores/woojs"
+
 import Button from "@ui/Button.vue"
 import Modal from "@ui/Modal.vue"
 import Skeleton from "@ui/Skeleton.vue"
 import SidebarLink from "@components/SidebarLink.vue"
 import CreateTopic from "@components/CreateTopic.vue"
-import useWoojsStore from "@stores/woojs"
 
 const isShowedCreateTopic = ref(false)
 const store = useWoojsStore()

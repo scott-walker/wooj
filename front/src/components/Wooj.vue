@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed } from "vue"
-import { useMediaDetector } from "@hooks/mediaDetector"
+
+import { useMediaStore } from "@stores/media"
+
 import Modal from "@ui/Modal.vue"
 import IconLink from "@ui/IconLink.vue"
 import LightInput from "@ui/LightInput.vue"
@@ -8,7 +10,7 @@ import Editor from "@ui/Editor/Editor.vue"
 import Skeleton from "@ui/Skeleton.vue"
 import TopicTags from "@components/TopicTags.vue"
 
-const md = useMediaDetector()
+const mediaStore = useMediaStore()
 const wooj = defineModel()
 const emit = defineEmits(["change-content", "change-topics"])
 const props = defineProps({
@@ -20,7 +22,6 @@ const props = defineProps({
 const isShowedTopics = ref(false)
 const isShowedShare = ref(false)
 const hasTopics = computed(() => !!props.topics.length)
-const isMobile = computed(() => md.isSm.value)
 
 const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
 </script>
@@ -28,7 +29,7 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
 <template>
   <div class="wooj">
     <div v-if="props.loaded" class="wooj__board">
-      <div v-if="isMobile" class="wooj__actions">
+      <div v-if="mediaStore.isSmall" class="wooj__actions">
         <IconLink v-if="hasTopics" icon="tags" label="Топики" @click="isShowedTopics = !isShowedTopics" />
         <!-- <IconLink icon="link" @click="isShowedShare = !isShowedShare" /> -->
       </div>

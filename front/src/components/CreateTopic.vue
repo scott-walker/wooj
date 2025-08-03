@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from "vue"
-import useWoojs from "@hooks/woojs"
+import { useWoojs } from "@composables/woojs"
 import Button from "@ui/Button.vue"
 import LightInput from "@ui/LightInput.vue"
 

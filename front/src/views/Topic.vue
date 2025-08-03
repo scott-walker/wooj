@@ -1,8 +1,10 @@
 <script setup>
 import { computed, watch, onBeforeMount } from "vue"
+
+import { useWoojsStore } from "@stores/woojs"
+import { useWoojs } from "@composables/woojs"
+
 import WoojList from "@components/WoojList.vue"
-import useWoojsStore from "@stores/woojs"
-import useWoojs from "@hooks/woojs"
 
 const props = defineProps(["topicId"])
 const { topicParamsMap, onLoaded, setRouteListeners } = useWoojs()

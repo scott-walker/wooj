@@ -1,7 +1,7 @@
 <script setup>
-import useToast from "@hooks/toasts"
+import { useToastsStore } from "@stores/toasts"
 
-const { toasts } = useToast()
+const { toasts } = useToastsStore()
 </script>
 
 <template>

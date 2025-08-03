@@ -1,13 +1,13 @@
 import { ref, computed, inject } from "vue"
 import { defineStore } from "pinia"
-import useToast from "@hooks/toasts"
+import { useToastsStore } from "@stores/toasts"
 
 /**
  * Стор вуджей
  */
-export default defineStore("woojs", () => {
+export const useWoojsStore = defineStore("woojs", () => {
   const { woojService, topicService } = inject("services")
-  const toasts = useToast()
+  const toastsStore = useToastsStore()
 
   const TOPIC_TYPE_ALL = "all"
   const TOPIC_TYPE_PINNED = "pinned"
@@ -113,7 +113,7 @@ export default defineStore("woojs", () => {
   //   try {
   //     topics.value = await topicService.getAll()
   //   } catch (message) {
-  //     toasts.alert(message)
+  //     toastsStore.alert(message)
   //   }
 
   //   if (!options.quiet) isLoadedTopics.value = true
@@ -132,7 +132,7 @@ export default defineStore("woojs", () => {
   //   try {
   //     woojs.value = await woojService.getAll()
   //   } catch (message) {
-  //     toasts.alert(message)
+  //     toastsStore.alert(message)
   //   }
 
   //   if (!options.quiet) isLoadedWoojs.value = true
@@ -153,7 +153,7 @@ export default defineStore("woojs", () => {
       topics.value = data[0]
       woojs.value = data[1]
     } catch (message) {
-      toasts.alert(message)
+      toastsStore.alert(message)
     }
 
     isNeedUpdate.value = false
@@ -176,11 +176,11 @@ export default defineStore("woojs", () => {
 
     try {
       topic = await topicService.create(fields)
-      toasts.success("Вы создали новый топик 🙌🔥")
+      toastsStore.success("Вы создали новый топик 🙌🔥")
 
       await fetchAll()
     } catch (message) {
-      toasts.alert(message)
+      toastsStore.alert(message)
     }
 
     isLoadedTopics.value = true
@@ -204,11 +204,11 @@ export default defineStore("woojs", () => {
 
     try {
       topic = await topicService.update(topicId, fields)
-      toasts.info("Топик обновлен")
+      toastsStore.info("Топик обновлен")
 
       await fetchAll()
     } catch (message) {
-      toasts.alert(message)
+      toastsStore.alert(message)
     }
 
     isLoadedTopics.value = true
@@ -230,11 +230,11 @@ export default defineStore("woojs", () => {
 
     try {
       topic = await topicService.delete(topicId)
-      toasts.info("Топик удален")
+      toastsStore.info("Топик удален")
 
       await fetchAll()
     } catch (message) {
-      toasts.alert(message)
+      toastsStore.alert(message)
     }
 
     isLoadedTopics.value = true
@@ -257,11 +257,11 @@ export default defineStore("woojs", () => {
 
     try {
       wooj = await woojService.create(fields)
-      toasts.success("Вы создали новый вуууудж 🤠👍")
+      toastsStore.success("Вы создали новый вуууудж 🤠👍")
 
       await fetchAll()
     } catch (message) {
-      toasts.alert(message)
+      toastsStore.alert(message)
     }
 
     // isLoadedWoojs.value = true
@@ -284,12 +284,12 @@ export default defineStore("woojs", () => {
 
     try {
       wooj = await woojService.update(woojId, fields)
-      toasts.info("Вудж сохранен")
+      toastsStore.info("Вудж сохранен")
 
       // await fetchAll()
       isNeedUpdate.value = true
     } catch (message) {
-      toasts.alert(message)
+      toastsStore.alert(message)
     }
 
     isUpdatingWooj.value = false
@@ -313,7 +313,7 @@ export default defineStore("woojs", () => {
 
       isNeedUpdate.value = true
     } catch (message) {
-      toasts.alert(message)
+      toastsStore.alert(message)
     }
 
     isUpdatingWooj.value = false
@@ -367,7 +367,7 @@ export default defineStore("woojs", () => {
       await woojService.pin(wooj.id)
       // await fetchAll()
     } catch (message) {
-      toasts.alert(message)
+      toastsStore.alert(message)
     }
 
     isNeedUpdate.value = true
@@ -385,7 +385,7 @@ export default defineStore("woojs", () => {
       await woojService.unpin(wooj.id)
       // await fetchAll()
     } catch (message) {
-      toasts.alert(message)
+      toastsStore.alert(message)
     }
 
     isNeedUpdate.value = true
@@ -408,9 +408,9 @@ export default defineStore("woojs", () => {
 
     try {
       await woojService.delete(wooj.id)
-      toasts.info("Вудж отправлен в корзину")
+      toastsStore.info("Вудж отправлен в корзину")
     } catch (message) {
-      toasts.alert(message)
+      toastsStore.alert(message)
     }
   }
 
@@ -424,9 +424,9 @@ export default defineStore("woojs", () => {
 
     try {
       await woojService.restore(wooj.id)
-      toasts.info("Вудж восстановлен из корзины")
+      toastsStore.info("Вудж восстановлен из корзины")
     } catch (message) {
-      toasts.alert(message)
+      toastsStore.alert(message)
     }
   }
 
@@ -440,7 +440,7 @@ export default defineStore("woojs", () => {
     try {
       await topicService.sort(topic, positions)
     } catch (message) {
-      toasts.alert(message)
+      toastsStore.alert(message)
     }
 
     isNeedUpdate.value = true
@@ -455,11 +455,11 @@ export default defineStore("woojs", () => {
 
     try {
       await woojService.clearTrash()
-      toasts.success("Корзины очищена 💩✨")
+      toastsStore.success("Корзины очищена 💩✨")
 
       await fetchAll()
     } catch (message) {
-      toasts.alert(message)
+      toastsStore.alert(message)
     }
 
     // isLoadedWoojs.value = true

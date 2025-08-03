@@ -1,7 +1,8 @@
 <script setup>
 import { onBeforeMount } from "vue"
+
 import { useLayoutStore } from "@stores/layout"
-import useWoojsStore from "@stores/woojs"
+import { useWoojsStore } from "@stores/woojs"
 
 import Header from "@components/Header/Header.vue"
 import Sidebar from "@components/Sidebar.vue"

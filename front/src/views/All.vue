@@ -1,7 +1,9 @@
 <script setup>
 import { computed, onBeforeMount } from "vue"
+
+import { useWoojs } from "@composables/woojs"
+
 import WoojList from "@components/WoojList.vue"
-import useWoojs from "@hooks/woojs"
 
 const { topicParamsMap, setRouteListeners } = useWoojs()
 const topic = computed(() => topicParamsMap.value.all)

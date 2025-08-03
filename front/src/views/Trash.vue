@@ -1,11 +1,16 @@
 <script setup>
 import { ref, computed, onBeforeMount } from "vue"
+
+import { useMediaStore } from "@stores/media"
+import { useWoojs } from "@composables/woojs"
+
 import Button from "@ui/Button.vue"
 import Dialog from "@ui/Dialog.vue"
 import WoojList from "@components/WoojList.vue"
-import useWoojs from "@hooks/woojs"
 
+const mediaStore = useMediaStore()
 const { topicParamsMap, setRouteListeners } = useWoojs()
+
 const topic = computed(() => topicParamsMap.value.trash)
 const isShowedButton = computed(() => topic.value.woojs.length)
 const isShowedDeleteDialog = ref(false)
@@ -34,8 +39,9 @@ onBeforeMount(() => setRouteListeners())
       <template #panel>
         <Button
           v-if="isShowedButton"
-          text="Очистить корзину"
-          icon="times"
+          :text="mediaStore.isSmall ? 'Очистить' : 'Очистить корзину'"
+          :size="mediaStore.isSmall ? 'small' : 'default'"
+          :icon="mediaStore.isSmall ? null : 'times'"
           type="danger"
           @click="onClear" />
 

@@ -1,6 +1,6 @@
 import { ref, computed, inject } from "vue"
 import { defineStore } from "pinia"
-import useToast from "@hooks/toasts"
+import { useToastsStore } from "@stores/toasts"
 
 /**
  * Стор для пользователя
@@ -8,7 +8,7 @@ import useToast from "@hooks/toasts"
 export default defineStore("user", () => {
   const { storage } = inject("utils")
   const { userService } = inject("services")
-  const toasts = useToast()
+  const toastsStore = useToastsStore()
 
   const token = ref(null)
   const user = ref({})
@@ -60,7 +60,7 @@ export default defineStore("user", () => {
 
       storage.set("token", data.token)
     } catch ({ message, errors }) {
-      toasts.alert(message, errors, 5)
+      toastsStore.alert(message, errors, 5)
     }
   }
 
@@ -77,7 +77,7 @@ export default defineStore("user", () => {
 
       storage.set("token", data.token)
     } catch ({ message, errors }) {
-      toasts.alert(message)
+      toastsStore.alert(message)
     }
   }
 
@@ -93,7 +93,7 @@ export default defineStore("user", () => {
 
       storage.clear()
     } catch (message) {
-      toasts.alert(message)
+      toastsStore.alert(message)
     }
   }
 
@@ -103,9 +103,9 @@ export default defineStore("user", () => {
   async function changeAvatar(avatar) {
     try {
       user.value = await userService.changeAvatar(avatar)
-      toasts.success("Успешно поменяли аватар")
+      toastsStore.success("Успешно поменяли аватар")
     } catch (message) {
-      toasts.alert(message)
+      toastsStore.alert(message)
     }
   }
 
@@ -115,9 +115,9 @@ export default defineStore("user", () => {
   async function update(fields) {
     try {
       user.value = await userService.update(fields)
-      toasts.success("Данные сохранены")
+      toastsStore.success("Данные сохранены")
     } catch (message) {
-      toasts.alert(message)
+      toastsStore.alert(message)
     }
   }
 
@@ -130,9 +130,9 @@ export default defineStore("user", () => {
 
     try {
       await userService.resend()
-      toasts.success(`Сообщение отправлено повторно на <b>${user.email}</b>`)
+      toastsStore.success(`Сообщение отправлено повторно на <b>${user.email}</b>`)
     } catch (message) {
-      toasts.alert(message)
+      toastsStore.alert(message)
     }
   }
 

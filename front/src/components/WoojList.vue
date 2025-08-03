@@ -2,7 +2,8 @@
 import _ from "lodash"
 import { Sortable, Plugins } from "@shopify/draggable"
 import { ref, useTemplateRef, computed, onMounted, onUnmounted, watch, nextTick } from "vue"
-import { useMediaDetector } from "@hooks/mediaDetector"
+
+import { useMediaStore } from "@stores/media"
 
 import Tag from "@ui/Tag.vue"
 import IconLink from "@ui/IconLink.vue"
@@ -29,7 +30,7 @@ const props = defineProps({
   hasRestore: { type: Boolean, default: false },
 })
 
-const md = useMediaDetector()
+const mediaStore = useMediaStore()
 const items = useTemplateRef("items")
 const emit = defineEmits([
   "sort",
@@ -45,10 +46,11 @@ const getRandMargin = (i) => {
   const MIN_SIZE = 330
   const BODY_PADDING = 30
 
-  if (!md.isSm.value) {
+  if (!mediaStore.isSmall) {
     return null
   }
-  if (md.width.value <= MIN_SIZE) {
+
+  if (mediaStore.width <= MIN_SIZE) {
     return {
       "min-width": "100%",
       "max-width": "100%"
@@ -56,7 +58,7 @@ const getRandMargin = (i) => {
   }
 
   return {
-    "max-width": md.width.value / 2 - BODY_PADDING + "px"
+    "max-width": mediaStore.width / 2 - BODY_PADDING + "px"
   }
 
   // const FACTOR = 7;
@@ -220,7 +222,6 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
       display: flex;
       align-items: center;
       padding: 5px 0;
-      min-width: 100px;
       border: none;
       border-bottom: 3px solid transparent;
       font-size: 32px;
@@ -311,12 +312,14 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
 @include media.sm() {
   .wooj-list {
     &__header {
-      gap: 20px;
+      gap: 10px;
       margin-bottom: 20px;
+      flex-wrap: wrap;
 
       &-title {
         padding: 0;
-        font-size: 22px;
+        min-width: 50px;
+        font-size: 20px;
       }
 
       &-panel {
@@ -324,6 +327,7 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
         justify-content: flex-start;
         align-items: center;
         gap: 10px;
+        margin-left: auto;
 
         &-edit {
           display: flex;

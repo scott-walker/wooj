@@ -38,7 +38,7 @@ export default defineConfig({
       "@services": `${PATH_SRC}/services`,
       "@plugins": `${PATH_SRC}/plugins`,
       "@components": `${PATH_SRC}/components`,
-      "@hooks": `${PATH_SRC}/hooks`,
+      "@composables": `${PATH_SRC}/composables`,
       "@ui": `${PATH_SRC}/components/ui`,
       "@stores": `${PATH_SRC}/stores`,
       "@layouts": `${PATH_SRC}/layouts`,

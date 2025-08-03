@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, watch } from "vue"
+
 import IconLink from "@ui/IconLink.vue"
 
 const show = defineModel()
@@ -8,9 +9,10 @@ const props = defineProps({
   center: { type: Boolean, default: false },
   class: { type: String, default: "" },
 })
-const mousePosition = ref(null)
+
+const pointerPosition = ref(null)
 const contentPosition = computed(() => {
-  const { x, y } = mousePosition.value || {}
+  const { x, y } = pointerPosition.value || {}
   const OFFSET_FACTOR = 20
 
   if (props.center || !x || !y) {
@@ -23,18 +25,9 @@ const contentPosition = computed(() => {
   }
 })
 
-watch(show, (value) => {
-  if (!value) {
-    mousePosition.value = null
-  }
-})
+watch(show, (value) => value || (pointerPosition.value = null))
 
-const onCheckPosition = ({ x, y }) => {
-  if (mousePosition.value) return
-
-  mousePosition.value = { x, y }
-}
-
+const onCheckPosition = ({ x, y }) => pointerPosition.value && (pointerPosition.value = { x, y })
 const onClose = () => show.value = false
 </script>
 
@@ -97,7 +90,7 @@ const onClose = () => show.value = false
     &-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
       gap: 20px;
       padding: 20px 25px 20px 15px;
 

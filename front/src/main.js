@@ -12,7 +12,6 @@ import initServices from "@services"
 import InjectPlugin from "@plugins/InjectPlugin"
 import SwiperPlugin from "@plugins/SwiperPlugin"
 import DeferredTimerPlugin from "@plugins/DeferredTimerPlugin"
-import MediaDetectorPlugin from "@plugins/MediaDetectorPlugin"
 
 const utils = initUtils({
   httpClient: {
@@ -28,7 +27,6 @@ app.use(PerfectScrollbarPlugin, {
 app.use(InjectPlugin, { utils, services })
 app.use(SwiperPlugin)
 app.use(DeferredTimerPlugin)
-app.use(MediaDetectorPlugin)
 
 app.use(createPinia())
 app.use(router)

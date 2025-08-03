@@ -1,17 +1,17 @@
 <script setup>
 import { computed } from "vue"
+import { useMediaStore } from "@stores/media"
 import { useLayoutStore } from "@stores/layout"
-import { useMediaDetector } from "@hooks/mediaDetector"
 
 import Tag from "@ui/Tag.vue"
 import Logo from "@components/Header/Logo.vue"
 import Bars from "@components/Header/Bars.vue"
 import UserPanel from "@components/Header/UserPanel.vue"
 
+const mediaStore = useMediaStore()
 const layoutStore = useLayoutStore()
-const md = useMediaDetector()
 
-const isVisibleStatus = computed(() => !md.isSm.value && layoutStore.statusBar)
+const isVisibleStatus = computed(() => !mediaStore.isSmall && layoutStore.statusBar)
 </script>
 
 <template>

@@ -1,7 +1,9 @@
 <script setup>
 import { ref, reactive, watch, onBeforeMount, onUnmounted } from "vue"
+
 import { useLayoutStore } from "@stores/layout"
-import useWoojs from "@hooks/woojs"
+import { useWoojs } from "@composables/woojs"
+
 import Wooj from "@components/Wooj.vue"
 import Empty from "@components/Empty.vue"
 

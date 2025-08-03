@@ -1,14 +1,13 @@
 <script setup>
-import { computed } from "vue"
+import { useMediaStore } from "@stores/media"
 import { useLayoutStore } from "@stores/layout"
-import useWoojs from "@hooks/woojs"
-import { useMediaDetector } from "@hooks/mediaDetector"
+import { useWoojs } from "@composables/woojs"
+
 import IconLink from "@ui/IconLink.vue"
 
+const mediaStore = useMediaStore()
 const layoutStore = useLayoutStore()
 const { woojStore, createWooj } = useWoojs()
-const md = useMediaDetector()
-const isMobile = computed(() => md.isSm.value)
 
 const onOverBars = () => {
   layoutStore.onOverBars()
@@ -25,7 +24,7 @@ const onCreateWooj = async () => {
 <template>
   <div class="header-bars">
     <IconLink
-      v-if="isMobile"
+      v-if="mediaStore.isSmall"
       :icon="layoutStore.isHoveredSidebar ? 'chevron-left' : 'bars'"
       @click="layoutStore.onToggleMobileSidebar" />
     <IconLink

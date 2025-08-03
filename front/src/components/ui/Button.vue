@@ -4,6 +4,7 @@ import Loader from "@ui/Loader.vue"
 
 const props = defineProps({
   text: { type: String },
+  size: { type: String, default: "default" },
   type: { type: String, default: "primary" },
   icon: { type: String, default: null },
   loading: { type: Boolean, default: false },
@@ -13,6 +14,7 @@ const emit = defineEmits(["click"])
 const cssClass = computed(() => {
   const classes = [props.type]
 
+  props.size && classes.push(`size-${props.size}`)
   props.loading && classes.push("loading")
   props.disabled && classes.push("disabled")
 
@@ -62,6 +64,13 @@ const onClick = () => !isLocked.value && emit('click')
 
   &:active {
     box-shadow: 0px 0px 1px 5px colors.$grey-strong;
+  }
+
+  &.size {
+    &-small {
+      padding: 5px 7px;
+      font-size: 12px;
+    }
   }
 
   &.primary {

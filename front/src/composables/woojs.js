@@ -1,8 +1,9 @@
 import { computed, watch } from "vue"
 import { useRouter, onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router"
-import useWoojsStore from "@stores/woojs"
 
-export default () => {
+import { useWoojsStore } from "@stores/woojs"
+
+export const useWoojs = () => {
   const router = useRouter()
   const woojStore = useWoojsStore()
 

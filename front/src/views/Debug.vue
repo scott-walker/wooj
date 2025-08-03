@@ -1,20 +1,17 @@
 <script setup>
 import _ from "lodash"
 import { Sortable, Plugins } from "@shopify/draggable"
-import { ref, inject, onMounted, onUnmounted } from "vue"
+import { onMounted, onUnmounted } from "vue"
+
 import { useLayoutStore } from "@stores/layout"
-import { useMediaDetector } from "@hooks/mediaDetector"
-import useToast from '@hooks/toasts'
+import { useMediaStore } from "@stores/media"
+import { useToastsStore } from "@stores/toasts"
+
 import Button from "@ui/Button.vue"
-import BoublePanel from "@ui/Editor/BoublePanel.vue"
 
-// const { userService } = inject("services")
 const layoutStore = useLayoutStore()
-const md = useMediaDetector()
-const toasts = useToast()
-
-// const version = ref("0.0")
-// const target = ref(null)
+const mediaStore = useMediaStore()
+const toastsStore = useToastsStore()
 
 const initDnd = () => {
   const sortable = new Sortable(document.querySelector('.dnd-container'), {
@@ -54,7 +51,7 @@ const onAddToast = () => {
   const types = ['info', 'success', 'alert']
   const durations = [3, 4, 5]
 
-  toasts.add({
+  toastsStore.add({
     message: messages[j],
     type: types[i],
     duration: durations[k]
@@ -77,11 +74,11 @@ onUnmounted(() => layoutStore.unsetStatusBar())
     <div class="box">
       <Button text="Вызвать тост" @click="onAddToast" />
     </div>
-
+    <!-- 
     <div class="box">
       <p contenteditable="true">Выдели этот текст на мобильном, и появится панель!</p>
       <BoublePanel />
-    </div>
+    </div> -->
 
     <div class="dnd-container">
       <div class="dnd-target" v-for="i in 5"
@@ -89,18 +86,18 @@ onUnmounted(() => layoutStore.unsetStatusBar())
     </div>
 
     <div class="media-detector">
-      <div>Width: {{ md.width }}</div>
-      <div>Height: {{ md.height }}</div>
-      <div>isPortrait: {{ md.isPortrait }}</div>
-      <div>isLandscape: {{ md.isLandscape }}</div>
-      <div>isMobile: {{ md.isMobile }}</div>
-      <div>isTablet: {{ md.isTablet }}</div>
-      <div>isDesctop: {{ md.isDesctop }}</div>
-      <div>isXs: {{ md.isXs }}</div>
-      <div>isSm: {{ md.isSm }}</div>
-      <div>isMd: {{ md.isMd }}</div>
-      <div>isLg: {{ md.isLg }}</div>
-      <div>isXl: {{ md.isXl }}</div>
+      <div>Width: {{ mediaStore.width }}</div>
+      <div>Height: {{ mediaStore.height }}</div>
+      <div>isPortrait: {{ mediaStore.isPortrait }}</div>
+      <div>isLandscape: {{ mediaStore.isLandscape }}</div>
+      <div>isMobile: {{ mediaStore.isMobile }}</div>
+      <div>isTablet: {{ mediaStore.isTablet }}</div>
+      <div>isDesctop: {{ mediaStore.isDesctop }}</div>
+      <div>isXs: {{ mediaStore.isXs }}</div>
+      <div>isSmall: {{ mediaStore.isSmall }}</div>
+      <div>isMiddle: {{ mediaStore.isMiddle }}</div>
+      <div>isLarge: {{ mediaStore.isLarge }}</div>
+      <div>isXl: {{ mediaStore.isXl }}</div>
     </div>
   </div>
 </template>
