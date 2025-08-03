@@ -19,12 +19,15 @@ const isShowedRegister = computed(() => !isShowedLogin.value)
 const isDissqbledLoginButton = computed(() => !loginForm.email || !loginForm.password)
 const isDissqbledRegisterButton = computed(() => !registerForm.email || !registerForm.password)
 
+// Для Transition
+const tabKey = computed(() => isShowedLogin.value ? 'login' : 'register')
+
 const onLogin = () => userStore.login(loginForm)
 const onRegister = () => userStore.register(registerForm)
 </script>
 
 <template>
-  <div class="view-auth auth">
+  <div class="view-auth auth" :key="tabKey">
     <div class="auth-tabs">
       <a class="auth-tabs__item" :class="{ active: isShowedLogin }" @click="isShowedLogin = true">
         Войти
@@ -34,7 +37,7 @@ const onRegister = () => userStore.register(registerForm)
       </a>
     </div>
 
-    <form v-show="isShowedLogin" class="auth-form" novalidate @submit.prevent="onLogin">
+    <form v-if="isShowedLogin" class="auth-form" novalidate @submit.prevent="onLogin">
       <div class="auth-form__field">
         <Input type="email" placeholder="Email" v-model="loginForm.email" />
       </div>
@@ -42,11 +45,11 @@ const onRegister = () => userStore.register(registerForm)
         <PasswordInput placeholder="Пароль" :with-checker="false" v-model="loginForm.password" autocomplete />
       </div>
       <div class="auth-form__field">
-        <Button text="Войти" :disabled="isDissqbledLoginButton" />
+        <Button class="auth-form__button" text="Войти" :disabled="isDissqbledLoginButton" />
       </div>
     </form>
 
-    <form v-show="isShowedRegister" class="auth-form" novalidate @submit.prevent="onRegister">
+    <form v-else-if="isShowedRegister" class="auth-form" novalidate @submit.prevent="onRegister">
       <div class="auth-form__field">
         <Input type="email" placeholder="Email" v-model="registerForm.email" />
       </div>
@@ -54,7 +57,7 @@ const onRegister = () => userStore.register(registerForm)
         <PasswordInput placeholder="Пароль" :with-checker="true" v-model="registerForm.password" autocomplete />
       </div>
       <div class="auth-form__field">
-        <Button text="Зарегистрироваться" :disabled="isDissqbledRegisterButton" />
+        <Button class="auth-form__button" text="Зарегистрироваться" :disabled="isDissqbledRegisterButton" />
       </div>
     </form>
   </div>
@@ -63,6 +66,7 @@ const onRegister = () => userStore.register(registerForm)
 <style lang="scss" scoped>
 @use "sass:color";
 @use "@styles/colors";
+@use "@styles/media";
 @use "@styles/common";
 
 .auth {
@@ -104,7 +108,6 @@ const onRegister = () => userStore.register(registerForm)
     justify-content: flex-start;
     align-items: stretch;
     padding: 20px 40px;
-    min-height: 180px;
 
     &__field {
       display: flex;
@@ -115,10 +118,30 @@ const onRegister = () => userStore.register(registerForm)
 
       &:last-child {
         flex-grow: 1;
+        margin-bottom: 0px;
+        margin-top: 10px;
       }
+    }
 
-      &>button {
-        font-size: 16px;
+    &__button {
+      font-size: 16px;
+    }
+  }
+}
+
+@include media.sm() {
+  .auth {
+    &-tabs {
+      &__item {
+        padding: 15px;
+      }
+    }
+
+    &-form {
+      padding: 20px 25px;
+
+      &__button {
+        font-size: 14px;
       }
     }
   }

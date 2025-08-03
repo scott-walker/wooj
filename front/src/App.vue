@@ -3,12 +3,14 @@ import { ref, computed, onBeforeMount } from "vue"
 import { RouterView } from "vue-router"
 import useUserStore from "@stores/user"
 
-import Toasts from "@components/Toasts.vue"
 import GuardLayout from "@layouts/Guard.vue"
 import MainLayout from "@layouts/Main.vue"
+
 import Verify from "@views/Verify.vue"
 import Auth from "@views/Auth.vue"
 import Loading from "@views/Loading.vue"
+
+import Toasts from "@components/Toasts.vue"
 
 const userStore = useUserStore()
 const isReady = ref(false)

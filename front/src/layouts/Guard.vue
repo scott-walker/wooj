@@ -17,6 +17,7 @@
 
 <style lang="scss" scoped>
 @use "sass:math";
+@use "@styles/media";
 @use "@styles/colors";
 
 .layout-guard {
@@ -33,6 +34,7 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    text-align: center;
     padding: 20px;
 
     &__title {
@@ -50,6 +52,7 @@
   &__content {
     display: flex;
     justify-content: center;
+    margin: 0 20px;
   }
 }
 
@@ -57,13 +60,33 @@
 
   &-enter-active,
   &-leave-active {
-    transition: all .3s ease;
+    transition: all .1s ease;
   }
 
   &-enter-from,
   &-leave-to {
     opacity: 0.5;
-    transform: scale(.8);
+    transform: scale(.9);
   }
+}
+
+@include media.sm() {
+
+  .layout-guard {
+    &-brand {
+      padding: 20px 10px;
+
+      &__title {
+        margin: 0;
+        font-size: 42px;
+      }
+
+      &__subtitle {
+        margin: 5px 0;
+        font-size: 16px;
+      }
+    }
+  }
+
 }
 </style>
