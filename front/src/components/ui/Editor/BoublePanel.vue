@@ -19,10 +19,27 @@ const calcPosition = () => {
   const panelHeight = panel.value.getBoundingClientRect().height
 
   panelStyle.top = mediaStore.vpHeight - panelHeight + "px"
+
+  debuggerStore.push({
+    action: "calcPosition",
+    top: panelStyle.top,
+    vpHeight: mediaStore.vpHeight,
+    panelHeight
+  })
 }
 
-watch(() => mediaStore.vpHeight, calcPosition)
-watch(() => props.visible, calcPosition)
+watch(() => mediaStore.vpHeight, () => {
+  debuggerStore.push({
+    action: "change viewport",
+  })
+  calcPosition()
+})
+watch(() => props.visible, () => {
+  debuggerStore.push({
+    action: "change visible",
+  })
+  calcPosition()
+})
 </script>
 
 <template>

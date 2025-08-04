@@ -12,6 +12,7 @@ import Loading from "@views/Loading.vue"
 
 import Toasts from "@components/Toasts.vue"
 import Counter from "@components/Counter.vue"
+import Debugger from "@components/Debugger.vue"
 
 const userStore = useUserStore()
 const isReady = ref(false)
@@ -27,6 +28,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
+  <Debugger />
   <Counter v-if="!isDevMode" />
   <Toasts />
 
