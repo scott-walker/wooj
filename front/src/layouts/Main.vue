@@ -38,13 +38,18 @@ onMounted(() => {
         <Sidebar />
       </div>
 
-      <Scrollbar class="layout-main__body-content"
+      <div
+        class="layout-main__body-content"
         :class="{ aired: layoutStore.hasAiredSidebar }"
         @mouseover="layoutStore.onLeaveSidebar">
+        <!-- <Scrollbar class="layout-main__body-content"
+        :class="{ aired: layoutStore.hasAiredSidebar }"
+        @mouseover="layoutStore.onLeaveSidebar"> -->
         <Transition name="view-transition" mode="out-in">
           <slot />
         </Transition>
-      </Scrollbar>
+        <!-- </Scrollbar> -->
+      </div>
     </div>
   </div>
 </template>
@@ -87,7 +92,7 @@ onMounted(() => {
     justify-content: flex-end;
     align-items: stretch;
     height: calc(100vh - $header-height);
-    overflow-y: hidden;
+    overflow-y: auto;
     background-color: colors.$grey;
 
     &-sidebar {

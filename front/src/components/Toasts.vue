@@ -22,24 +22,22 @@ const { toasts } = useToastsStore()
 @use "@styles/colors";
 @use "@styles/media";
 
-$toast-width: 500px;
-
 .toasts {
   position: fixed;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: flex-end;
   align-items: flex-end;
   z-index: 10010;
   top: 60px;
-  right: 20px;
-  // width: $toast-width;
+  right: 0;
+  padding: 0 20px;
   gap: 10px;
   font-size: 18px;
 
   &__toast {
     padding: 10px 40px;
-    max-width: $toast-width;
+    max-width: 500px;
     border-radius: 5px;
     background: color.change(colors.$basic, $alpha: 90%);
     color: colors.$absorbing;
@@ -72,9 +70,7 @@ $toast-width: 500px;
 @include media.sm() {
   .toasts {
     top: 10px;
-    right: 10px;
-    left: 10px;
-    width: inherit;
+    padding: 0 10px;
 
     &__toast {
       max-width: 100%;

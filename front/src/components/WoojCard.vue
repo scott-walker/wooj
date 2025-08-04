@@ -1,6 +1,8 @@
 <script setup>
-import { computed } from "vue"
+import { ref, computed } from "vue"
+import { useMediaStore } from "@stores/media"
 
+const emit = defineEmits(["move", "edit", "pin", "remove", "restore"])
 const props = defineProps({
   data: Object,
   hasMove: { type: Boolean, default: true },
@@ -10,10 +12,15 @@ const props = defineProps({
   hasRestore: { type: Boolean, default: false },
 })
 
+const mediaStore = useMediaStore()
+
 const wooj = computed(() => props.data || {})
 const title = computed(() => wooj.value.title || "Новый WOOJ")
 const content = computed(() => wooj.value.content || "Пока еще пусто...")
-const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove || props.hasRestore)
+const hasPanel = computed(() => props.hasMove || props.hasPin || props.hasRemove || props.hasRestore)
+
+const onTouchEdit = () => mediaStore.isTouched && emit('edit', wooj.value)
+const onClickEdit = () => mediaStore.isTouched || emit('edit', wooj.value)
 </script>
 
 <template>
@@ -22,30 +29,30 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
       <span
         v-if="hasMove"
         class="wooj-card__panel-button icon wooj-card__mover"
-        @mousedown="$emit('move', wooj)">
+        @mousedown="emit('move', wooj)">
         <i class="fas fa-arrows-up-down-left-right"></i>
       </span>
       <span
         v-if="hasPin"
         class="wooj-card__panel-button icon"
-        @click.stop="$emit('pin', wooj)">
+        @click.stop="emit('pin', wooj)">
         <i class="fas" :class="wooj.is_pinned ? 'fa-thumbtack-slash' : 'fa-thumbtack'"></i>
       </span>
       <!-- <span
         v-if="hasEdit"
         class="wooj-card__panel-button icon"
-        @click="$emit('edit', wooj)">
+        @click="emit('edit', wooj)">
         <i class="fas fa-edit"></i></span> -->
       <span
         v-if="hasRemove"
         class="wooj-card__panel-button icon"
-        @click="$emit('remove', wooj)">
+        @click="emit('remove', wooj)">
         <i class="fas fa-trash"></i>
       </span>
       <span
         v-if="hasRestore"
         class="wooj-card__panel-button icon"
-        @click="$emit('restore', wooj)">
+        @click="emit('restore', wooj)">
         <i class="fa fa-undo"></i>
       </span>
     </div>
@@ -53,7 +60,8 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
     <div
       class="wooj-card__wrapper"
       :class="{ 'pinned': wooj.is_pinned, 'editable': hasEdit }"
-      @click="$emit('edit', wooj)">
+      v-touch:dbltap="onTouchEdit"
+      @mouseup="onClickEdit">
       <div class="wooj-card__title">{{ title }}</div>
       <div class="wooj-card__content wooj-content" v-html="content" />
     </div>
@@ -61,6 +69,7 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
 </template>
 
 <style lang="scss" scoped>
+@use "sass:color";
 @use "@styles/colors";
 @use "@styles/common";
 @use "@styles/media";
@@ -97,10 +106,15 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
     }
   }
 
-  &:hover {
+  &:hover,
+  &.active {
     .wooj-card__panel {
       opacity: 1;
     }
+
+    // .wooj-card__wrapper {
+    //   border-color: color.change(colors.$basic, $lightness: 95%, $saturation: 20%);
+    // }
   }
 
   &__mover {
@@ -108,8 +122,6 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
   }
 
   &__wrapper {
-    // min-width: 40px;
-    // max-width: 210px;
     max-width: 100%;
     padding: 17px;
     border: 3px solid colors.$absorbing;
@@ -121,8 +133,7 @@ const hasPanel = computed(() => props.hasPin || props.hasEdit || props.hasRemove
     }
 
     &.pinned {
-      background: linear-gradient(349deg, rgba(212, 255, 56, 1) 12%, rgba(255, 255, 255, 1) 12%);
-      // background: linear-gradient(352deg, colors.$primary 18%, rgba(255, 255, 255, 1) 18%);
+      background: linear-gradient(349deg, colors.$primary 12%, rgba(255, 255, 255, 1) 12%);
     }
   }
 

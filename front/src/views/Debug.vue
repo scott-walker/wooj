@@ -51,10 +51,16 @@ const onAddToast = () => {
   const types = ['info', 'success', 'alert']
   const durations = [3, 4, 5]
 
+  // toastsStore.add({
+  //   message: messages[j],
+  //   type: types[i],
+  //   duration: durations[k]
+  // })
+
   toastsStore.add({
-    message: messages[j],
+    message: "Новое уведомление",
     type: types[i],
-    duration: durations[k]
+    duration: 10
   })
 }
 
@@ -71,9 +77,9 @@ onUnmounted(() => layoutStore.unsetStatusBar())
     <!-- <p class="view-index__title">WOOJ v{{ version }}</p>
     <p class="view-index__subtitle">Создавай быстро простые заметки</p> -->
 
-    <!-- <div class="box">
+    <div class="box">
       <Button text="Вызвать тост" @click="onAddToast" />
-    </div> -->
+    </div>
     <!-- 
     <div class="box">
       <p contenteditable="true">Выдели этот текст на мобильном, и появится панель!</p>
@@ -94,6 +100,7 @@ onUnmounted(() => layoutStore.unsetStatusBar())
       <div>Height: {{ mediaStore.height }}</div>
       <div>Viewport Width: {{ mediaStore.vpWidth }}</div>
       <div>Viewport Height: {{ mediaStore.vpHeight }}</div>
+      <div>isTouched: {{ mediaStore.isTouched }}</div>
       <div>isPortrait: {{ mediaStore.isPortrait }}</div>
       <div>isLandscape: {{ mediaStore.isLandscape }}</div>
       <div>isMobile: {{ mediaStore.isMobile }}</div>

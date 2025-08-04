@@ -28,6 +28,8 @@ export const useMediaStore = defineStore("media", () => {
   const isTablet = ref(null)
   const isDesctop = ref(null)
 
+  const isTouched = ref(null)
+
   /**
    * Обновить данные о размерах
    */
@@ -49,6 +51,8 @@ export const useMediaStore = defineStore("media", () => {
     isMobile.value = md.isMobileScreen()
     isTablet.value = md.isTabletScreen()
     isDesctop.value = md.isDesctopScreen()
+
+    isTouched.value = md.isTouched()
   }
 
   /**
@@ -86,5 +90,7 @@ export const useMediaStore = defineStore("media", () => {
     isMobile,
     isTablet,
     isDesctop,
+
+    isTouched,
   }
 })
