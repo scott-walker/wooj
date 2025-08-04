@@ -1,5 +1,7 @@
 <script setup>
-import { ref, computed, onBeforeMount } from "vue"
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock"
+
+import { ref, computed, onBeforeMount, onMounted, onUnmounted } from "vue"
 import { RouterView } from "vue-router"
 import useUserStore from "@stores/user"
 
@@ -25,6 +27,9 @@ onBeforeMount(async () => {
 
   isReady.value = true
 })
+
+onMounted(() => disableBodyScroll(document.body))
+onUnmounted(() => enableBodyScroll(document.body))
 </script>
 
 <template>

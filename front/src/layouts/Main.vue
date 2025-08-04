@@ -67,9 +67,9 @@ onMounted(() => {
   $content-hor-gap: 40px;
   $content-ver-gap: math.div($content-hor-gap, 1.5);
 
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
+  // overflow: hidden;
+  // width: 100%;
+  // height: 100%;
 
   &__header {
     height: $header-height;
@@ -97,7 +97,7 @@ onMounted(() => {
     align-items: stretch;
     height: calc(100vh - $header-height);
     background-color: colors.$grey;
-    overflow: hidden;
+    // overflow: hidden;
 
     &-sidebar {
       position: fixed;
@@ -132,10 +132,14 @@ onMounted(() => {
     }
 
     &-content {
+      // position: fixed;
+      // height: 100%;
       width: calc(100% - $sidebar-width);
       padding: $content-ver-gap $content-hor-gap;
       transition: all 0.3s;
       overflow-y: auto;
+      /* важно для iOS */
+      -webkit-overflow-scrolling: touch;
 
       &.aired {
         width: 100%;
