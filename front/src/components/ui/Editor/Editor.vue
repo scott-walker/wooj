@@ -28,19 +28,15 @@ const { editor, isFocused, onMouseOver, onMouseLeave } = useEditor({
     :class="{ focused: isFocused }"
     @mouseover="onMouseOver"
     @mouseleave="onMouseLeave">
-    <!-- {{ editorPosition }}
-    {{ panelHeight }} -->
-    <!-- {{ panelStyle }} -->
 
-    <EditorContent v-if="mediaStore.isSmall" class="ui-editor__content wooj-content" :editor="editor" />
+    <EditorBoublePanel v-if="mediaStore.isSmall" :editor="editor" :visible="isFocused" @mouseover="onMouseOver" />
     <EditorPanel
-      :style="panelStyle"
+      v-else
       class="ui-editor__panel"
       :class="{ 'hidden': !isFocused }"
       :editor="editor" />
-    <EditorContent v-if="!mediaStore.isSmall" class="ui-editor__content wooj-content" :editor="editor" />
 
-    <!-- <EditorBoublePanel :editor="editor" @mouseover="onMouseOver" /> -->
+    <EditorContent class="ui-editor__content wooj-content" :editor="editor" />
   </div>
 </template>
 
