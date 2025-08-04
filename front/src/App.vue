@@ -7,6 +7,7 @@ import useUserStore from "@stores/user"
 
 import GuardLayout from "@layouts/Guard.vue"
 import MainLayout from "@layouts/Main.vue"
+import TestLayout from "@layouts/Test.vue"
 
 import Verify from "@views/Verify.vue"
 import Auth from "@views/Auth.vue"
@@ -66,15 +67,15 @@ onMounted(() => {
 </script>
 
 <template>
-  <Debugger />
+  <!-- <Debugger /> -->
   <Counter v-if="!isDevMode" />
   <Toasts />
 
   <template v-if="isReady">
     <RouterView v-if="isLogged && isVerified" v-slot="{ Component }">
-      <MainLayout>
+      <TestLayout>
         <component :is="Component" />
-      </MainLayout>
+      </TestLayout>
     </RouterView>
 
     <GuardLayout v-else>

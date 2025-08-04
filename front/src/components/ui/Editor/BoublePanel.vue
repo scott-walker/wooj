@@ -43,43 +43,6 @@ watch(() => props.visible, () => {
   // })
   calcPosition()
 })
-
-onMounted(() => {
-  debuggerStore.push({
-    action: "start scroll locker",
-  })
-
-  function preventScroll(e) {
-    e.preventDefault()
-
-    debuggerStore.push({
-      action: "lock scroll",
-      target: e.target,
-    })
-  }
-
-  function preventScrollKeys(e) {
-    const keys = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' ']
-    if (keys.includes(e.key)) {
-      preventScroll(e)
-    }
-  }
-
-  function hardLockScroll() {
-    document.addEventListener('wheel', preventScroll, { passive: false })
-    document.addEventListener('touchmove', preventScroll, { passive: false })
-    document.addEventListener('keydown', preventScrollKeys)
-  }
-
-  function hardUnlockScroll() {
-    document.removeEventListener('wheel', preventScroll)
-    document.removeEventListener('touchmove', preventScroll)
-    document.removeEventListener('keydown', preventScrollKeys)
-  }
-
-  hardLockScroll()
-  hardUnlockScroll()
-})
 </script>
 
 <template>
@@ -97,7 +60,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .ui-editor-bouble-pamel {
-  position: absolute;
+  position: fixed;
   z-index: 1000;
   width: fit-content;
   // opacity: 0;
