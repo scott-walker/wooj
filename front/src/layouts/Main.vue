@@ -67,9 +67,9 @@ onMounted(() => {
   $content-hor-gap: 40px;
   $content-ver-gap: math.div($content-hor-gap, 1.5);
 
-  // overflow: hidden;
-  // width: 100%;
-  // height: 100%;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
 
   &__header {
     height: $header-height;
@@ -95,7 +95,9 @@ onMounted(() => {
     display: flex;
     justify-content: flex-end;
     align-items: stretch;
-    height: calc(100vh - $header-height);
+    // height: calc(100vh - $header-height);
+    width: 100%;
+    height: 100%;
     background-color: colors.$grey;
     // overflow: hidden;
 
@@ -133,8 +135,8 @@ onMounted(() => {
 
     &-content {
       // position: fixed;
-      // height: 100%;
       width: calc(100% - $sidebar-width);
+      height: calc(100vh - 50px);
       padding: $content-ver-gap $content-hor-gap;
       transition: all 0.3s;
       overflow-y: auto;

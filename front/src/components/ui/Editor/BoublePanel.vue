@@ -21,6 +21,7 @@ const calcPosition = () => {
   const panelHeight = panel.value.getBoundingClientRect().height
 
   panelStyle.top = mediaStore.vpHeight - panelHeight + "px"
+  panelStyle.bottom = "inherit"
 
   debuggerStore.push({
     action: "calcPosition",
@@ -65,7 +66,7 @@ watch(() => props.visible, () => {
   // opacity: 0;
   transition: transform .3s;
   width: 100%;
-  top: calc(100vh + 100px);
+  bottom: -100px;
   left: 0;
   transform: translateY(100px);
   // visibility: hidden;
