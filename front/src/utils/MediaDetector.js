@@ -40,11 +40,27 @@ export default class MediaDetector {
   }
 
   /**
+   * Ширина видимости экрана
+   * @returns {Number}
+   */
+  get viewportWidth() {
+    return window.visualViewport.width
+  }
+
+  /**
    * Высота окна
    * @returns {Number}
    */
   get height() {
     return window.innerHeight
+  }
+
+  /**
+   * Высота видимости экрана
+   * @returns {Number}
+   */
+  get viewportHeight() {
+    return window.visualViewport.height
   }
 
   /**
@@ -60,6 +76,10 @@ export default class MediaDetector {
 
     this.resizeListenersMap[id] = cb
     window.addEventListener("resize", cb)
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", cb)
+    }
   }
 
   /**
@@ -73,6 +93,10 @@ export default class MediaDetector {
     if (cb) {
       delete this.resizeListenersMap[id]
       window.removeEventListener("resize", cb)
+
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener("resize", cb)
+      }
     } else {
       throw `ID "${id}" для слушателя изменений размеров окна не существует`
     }

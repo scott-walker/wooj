@@ -10,6 +10,8 @@ export const useMediaStore = defineStore("media", () => {
   // Размеры
   const width = ref(null)
   const height = ref(null)
+  const vpWidth = ref(null)
+  const vpHeight = ref(null)
 
   const isXs = ref(null)
   const isSmall = ref(null)
@@ -32,6 +34,8 @@ export const useMediaStore = defineStore("media", () => {
   const update = () => {
     width.value = md.width
     height.value = md.height
+    vpWidth.value = md.viewportWidth
+    vpHeight.value = md.viewportHeight
 
     isXs.value = md.isXs()
     isSmall.value = md.isSm()
@@ -65,6 +69,8 @@ export const useMediaStore = defineStore("media", () => {
     // Размеры
     width,
     height,
+    vpWidth,
+    vpHeight,
 
     isXs,
     isSmall,

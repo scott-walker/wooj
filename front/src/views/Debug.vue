@@ -88,6 +88,8 @@ onUnmounted(() => layoutStore.unsetStatusBar())
     <div class="media-detector">
       <div>Width: {{ mediaStore.width }}</div>
       <div>Height: {{ mediaStore.height }}</div>
+      <div>Viewport Width: {{ mediaStore.vpWidth }}</div>
+      <div>Viewport Height: {{ mediaStore.vpHeight }}</div>
       <div>isPortrait: {{ mediaStore.isPortrait }}</div>
       <div>isLandscape: {{ mediaStore.isLandscape }}</div>
       <div>isMobile: {{ mediaStore.isMobile }}</div>
