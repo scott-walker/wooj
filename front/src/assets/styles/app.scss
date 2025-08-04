@@ -6,9 +6,10 @@
 
 // Base
 html {
-  overflow-y: auto;
+  overflow: hidden;
 }
 body {
+  overflow: hidden;
   font-family: "Nunito", sans-serif;
   font-optical-sizing: auto;
   font-weight: 500;
@@ -17,6 +18,12 @@ body {
 }
 div {
   box-sizing: border-box;
+}
+
+#app {
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
 }
 
 .icon {
