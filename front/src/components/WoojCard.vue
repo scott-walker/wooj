@@ -14,17 +14,25 @@ const props = defineProps({
 
 const mediaStore = useMediaStore()
 
+const isActive = ref(false)
 const wooj = computed(() => props.data || {})
 const title = computed(() => wooj.value.title || "Новый WOOJ")
 const content = computed(() => wooj.value.content || "Пока еще пусто...")
 const hasPanel = computed(() => props.hasMove || props.hasPin || props.hasRemove || props.hasRestore)
+const isTouched = computed(() => mediaStore.isTouched)
+const isClicked = computed(() => !mediaStore.isTouched)
+const hasMove = computed(() => !mediaStore.isTouched && props.hasMove)
 
-const onTouchEdit = () => mediaStore.isTouched && emit('edit', wooj.value)
+const onActive = () => mediaStore.isTouched && (isActive.value = true)
+const onDeactive = () => mediaStore.isTouched && (isActive.value = false)
 const onClickEdit = () => mediaStore.isTouched || emit('edit', wooj.value)
 </script>
 
 <template>
-  <div class="wooj-card">
+  <div
+    class="wooj-card"
+    :class="{ touched: isTouched, clicked: isClicked, active: isActive }"
+    @mouseleave="onDeactive">
     <div v-if="hasPanel" class="wooj-card__panel">
       <span
         v-if="hasMove"
@@ -60,8 +68,8 @@ const onClickEdit = () => mediaStore.isTouched || emit('edit', wooj.value)
     <div
       class="wooj-card__wrapper"
       :class="{ 'pinned': wooj.is_pinned, 'editable': hasEdit }"
-      v-touch:dbltap="onTouchEdit"
-      @mouseup="onClickEdit">
+      v-touch:hold="onActive"
+      @click="onClickEdit">
       <div class="wooj-card__title">{{ title }}</div>
       <div class="wooj-card__content wooj-content" v-html="content" />
     </div>
@@ -106,15 +114,25 @@ const onClickEdit = () => mediaStore.isTouched || emit('edit', wooj.value)
     }
   }
 
-  &:hover,
-  &.active {
-    .wooj-card__panel {
-      opacity: 1;
-    }
 
-    // .wooj-card__wrapper {
-    //   border-color: color.change(colors.$basic, $lightness: 95%, $saturation: 20%);
-    // }
+  &.clicked {
+    &:hover {
+      .wooj-card__panel {
+        opacity: 1;
+      }
+    }
+  }
+
+  &.touched {
+    &.active {
+      .wooj-card__panel {
+        opacity: 1;
+      }
+
+      .wooj-card__wrapper {
+        border-color: color.change(colors.$grey, $lightness: 88%);
+      }
+    }
   }
 
   &__mover {

@@ -38,18 +38,18 @@ onMounted(() => {
         <Sidebar />
       </div>
 
-      <div
+      <!-- <div
         class="layout-main__body-content"
         :class="{ aired: layoutStore.hasAiredSidebar }"
-        @mouseover="layoutStore.onLeaveSidebar">
-        <!-- <Scrollbar class="layout-main__body-content"
-        :class="{ aired: layoutStore.hasAiredSidebar }"
         @mouseover="layoutStore.onLeaveSidebar"> -->
+      <Scrollbar class="layout-main__body-content"
+        :class="{ aired: layoutStore.hasAiredSidebar }"
+        @mouseover="layoutStore.onLeaveSidebar">
         <Transition name="view-transition" mode="out-in">
           <slot />
         </Transition>
-        <!-- </Scrollbar> -->
-      </div>
+      </Scrollbar>
+      <!-- </div> -->
     </div>
   </div>
 </template>
