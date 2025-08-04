@@ -67,13 +67,13 @@ onMounted(() => {
   $content-hor-gap: 40px;
   $content-ver-gap: math.div($content-hor-gap, 1.5);
 
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
+  // overflow: hidden;
+  // width: 100%;
+  // height: 100%;
 
   &__header {
     height: $header-height;
-    overflow: hidden;
+    // overflow: hidden;
 
     &-left {
       display: flex;

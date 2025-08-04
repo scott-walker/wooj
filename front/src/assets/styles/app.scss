@@ -5,11 +5,16 @@
 @import "vue3-perfect-scrollbar/style.css";
 
 // Base
-html {
-  overflow: hidden;
-}
+// html {
+//   overflow: hidden;
+// }
 body {
+  position: fixed;
   overflow: hidden;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   font-family: "Nunito", sans-serif;
   font-optical-sizing: auto;
   font-weight: 500;

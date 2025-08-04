@@ -179,7 +179,7 @@ const onRedo = () => {
   justify-content: flex-start;
   align-items: stretch;
   flex-wrap: wrap;
-  overflow: hidden;
+  // overflow: hidden;
   gap: 20px;
   border-radius: 5px;
   max-width: 100%;
