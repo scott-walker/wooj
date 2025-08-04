@@ -12,15 +12,15 @@ export const useTap = (el, { onTap, onLongTap, delay }) => {
   delay = delay || 600
 
   let timer = null
-  let timerCompleted = false
+  let tapCompleted = false
 
   /**
    * Обработчик начала удержания тапа
    */
   const onStart = () => {
-    const cb = () => (timerCompleted = true) && onLongTap()
+    const cb = () => (tapCompleted = true) && onLongTap()
 
-    timerCompleted = false
+    tapCompleted = false
 
     // Если таймер успеет сработать, значит это будет "долгий тап"
     timer = setTimeout(cb, delay)
@@ -36,16 +36,30 @@ export const useTap = (el, { onTap, onLongTap, delay }) => {
     }
 
     // Если таймер не успел сработать, значит это был "быстрый тап"
-    if (!timerCompleted) {
+    if (!tapCompleted) {
       onTap()
     }
   }
 
+  /**
+   * Обработчик движения (если есть движение, прерываем событие)
+   */
+  const onMove = () => {
+    if (timer) {
+      clearTimeout(timer)
+      timer = null
+    }
+
+    tapCompleted = true
+  }
+
   el.addEventListener("touchstart", onStart)
   el.addEventListener("touchend", onEnd)
+  el.addEventListener("touchmove", onMove)
 
   onUnmounted(() => {
     el.removeEventListener("touchstart", onStart)
     el.removeEventListener("touchend", onEnd)
+    el.removeEventListener("touchmove", onMove)
   })
 }

@@ -34,11 +34,12 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
   <div class="wooj">
     <div v-if="props.loaded" class="wooj__board">
       <div v-if="mediaStore.isSmall" class="wooj__actions">
+        <IconLink icon="arrow-left" label="Назад" @click="onBack" />
         <IconLink v-if="hasTopics" icon="tags" label="Топики" @click="onShowTopics" />
         <!-- <IconLink icon="link" @click="isShowedShare = !isShowedShare" /> -->
       </div>
       <div v-else class="wooj__actions">
-        <IconLink v-if="hasTopics" icon="arrow-left" @click="onBack" />
+        <IconLink icon="arrow-left" @click="onBack" />
         <IconLink v-if="hasTopics" icon="tags" @click="onShowTopics" />
         <!-- <IconLink icon="link" @click="isShowedShare = !isShowedShare" /> -->
       </div>
@@ -183,7 +184,7 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
   .wooj {
     &__board {
       display: flex;
-      flex-direction: column-reverse;
+      flex-direction: column;
       justify-content: flex-start;
       align-items: flex-start;
       padding: 0px;
@@ -192,8 +193,9 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
     }
 
     &__actions {
+      flex-direction: row;
       padding: 0px;
-      margin-top: 20px;
+      margin-bottom: 10px;
     }
 
     &__paper {

@@ -143,13 +143,13 @@ onMounted(() => {
 
   &-enter-active,
   &-leave-active {
-    transition: all .3s ease;
+    transition: all .1s ease;
   }
 
   &-enter-from,
   &-leave-to {
-    opacity: 0.5;
-    transform: translateY(-10px);
+    opacity: 0.7;
+    transform: translateY(-3px);
   }
 }
 

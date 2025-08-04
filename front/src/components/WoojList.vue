@@ -112,7 +112,7 @@ const initSortable = () => {
 
   sortableDriver = new Sortable(document.querySelectorAll('.wooj-list__items'), {
     draggable: '.wooj-list__item',
-    handle: mediaStore.isTouched ? '.wooj-list__item' : '.wooj-card__mover',
+    handle: mediaStore.isTouched ? '.wooj-card' : '.wooj-card__mover',
     sortAnimation: {
       duration: 200,
       easingFunction: 'ease-in-out',
@@ -121,7 +121,7 @@ const initSortable = () => {
       'source:dragging': ['dragging'],
       'mirror': ['dragging-mirror'],
     },
-    delay: 600,
+    delay: mediaStore.isTouched ? 600 : 0,
     plugins: [Plugins.SortAnimation]
   });
 

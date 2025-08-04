@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, useTemplateRef, onMounted } from "vue"
+import { ref, computed, useTemplateRef, onMounted, onUnmounted } from "vue"
 import { useMediaStore } from "@stores/media"
 import { useTap } from "@composables/tap"
 
@@ -27,28 +27,18 @@ const isTouched = computed(() => mediaStore.isTouched)
 const isClicked = computed(() => !mediaStore.isTouched)
 const hasMove = computed(() => !mediaStore.isTouched && props.hasMove)
 
-const onActive = () => {
-  if (!mediaStore.isTouched) return
-
-  isActive.value = true
-  emit('active', wooj.value)
+const onActive = () => (isActive.value = true) && emit('active', wooj.value)
+const onDeactive = () => (isActive.value = false) && emit('deactive', wooj.value)
+const onLeave = ({ target }) => {
+  if (target != card.value || !card.value.contains(target)) {
+    onDeactive()
+  }
 }
-const onDeactive = () => {
-  if (!mediaStore.isTouched) return
 
-  isActive.value = false
-  emit('deactive', wooj.value)
-}
 const onTouchEdit = () => mediaStore.isTouched && emit('edit', wooj.value)
 const onClickEdit = () => mediaStore.isTouched || emit('edit', wooj.value)
 
 onMounted(() => {
-  const onLeave = ({ target }) => {
-    if (target != card.value || !card.value.contains(target)) {
-      onDeactive()
-    }
-  }
-
   document.addEventListener("mousedown", onLeave)
   document.addEventListener("touchstart", onLeave)
 
@@ -56,6 +46,11 @@ onMounted(() => {
     onTap: () => onTouchEdit(),
     onLongTap: () => onActive()
   })
+})
+
+onUnmounted(() => {
+  document.addEventListener("mousedown", onLeave)
+  document.addEventListener("touchstart", onLeave)
 })
 </script>
 
