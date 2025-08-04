@@ -33,7 +33,7 @@ $toast-width: 500px;
   z-index: 10010;
   top: 60px;
   right: 20px;
-  width: $toast-width;
+  // width: $toast-width;
   gap: 10px;
   font-size: 18px;
 
