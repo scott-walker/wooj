@@ -1,6 +1,7 @@
 <script setup>
 import { reactive, useTemplateRef, watch } from 'vue'
 import { useMediaStore } from "@stores/media"
+import { useDebuggerStore } from "@stores/debugger"
 import Panel from "@ui/Editor/Panel.vue"
 
 const props = defineProps({
@@ -10,6 +11,7 @@ const props = defineProps({
 const emit = defineEmits(["mouseover"])
 const panel = useTemplateRef("panel")
 const mediaStore = useMediaStore()
+const debuggerStore = useDebuggerStore()
 
 const panelStyle = reactive({
   top: null
@@ -19,10 +21,27 @@ const calcPosition = () => {
   const panelHeight = panel.value.getBoundingClientRect().height
 
   panelStyle.top = mediaStore.vpHeight - panelHeight + "px"
+
+  debuggerStore.push({
+    action: "calcPosition",
+    top: panelStyle.top,
+    vpHeight: mediaStore.vpHeight,
+    panelHeight
+  })
 }
 
-watch(() => mediaStore.vpHeight, calcPosition)
-watch(() => props.visible, calcPosition)
+watch(() => mediaStore.vpHeight, () => {
+  debuggerStore.push({
+    action: "change viewport",
+  })
+  calcPosition()
+})
+watch(() => props.visible, () => {
+  debuggerStore.push({
+    action: "change visible",
+  })
+  calcPosition()
+})
 </script>
 
 <template>
