@@ -67,16 +67,16 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <!-- <Teleport to="body"> -->
-  <div
-    ref="panel"
-    class="ui-editor-bouble-pamel"
-    :class="{ visible }"
-    :style="panelStyle"
-    @mouseover="emit('mouseover', $event)">
-    <Panel :editor="editor" />
-  </div>
-  <!-- </Teleport> -->
+  <Teleport to="body">
+    <div
+      ref="panel"
+      class="ui-editor-bouble-pamel"
+      :class="{ visible }"
+      :style="panelStyle"
+      @mouseover="emit('mouseover', $event)">
+      <Panel :editor="editor" />
+    </div>
+  </Teleport>
 </template>
 
 <style lang="scss" scoped>
