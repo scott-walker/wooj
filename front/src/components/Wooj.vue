@@ -187,6 +187,7 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
       justify-content: flex-start;
       align-items: flex-start;
       padding: 0px;
+      padding-bottom: 40px;
       height: 100%;
     }
 
