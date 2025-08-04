@@ -36,6 +36,7 @@ export default defineConfig({
       "@": PATH_SRC,
       "@utils": `${PATH_SRC}/utils`,
       "@services": `${PATH_SRC}/services`,
+      "@directives": `${PATH_SRC}/directives`,
       "@plugins": `${PATH_SRC}/plugins`,
       "@components": `${PATH_SRC}/components`,
       "@composables": `${PATH_SRC}/composables`,

@@ -1,6 +1,6 @@
 <script setup>
 import _ from "lodash"
-import { Sortable, Plugins } from "@shopify/draggable"
+import { Sortable, Plugins, Draggable } from "@shopify/draggable"
 import { ref, useTemplateRef, computed, onMounted, onUnmounted, watch, nextTick } from "vue"
 
 import { useMediaStore } from "@stores/media"
@@ -57,8 +57,11 @@ const getRandMargin = (i) => {
     }
   }
 
+  const width = mediaStore.width / 2 - BODY_PADDING + "px"
+
   return {
-    "max-width": mediaStore.width / 2 - BODY_PADDING + "px"
+    width,
+    "max-width": width
   }
 
   // const FACTOR = 7;
@@ -82,7 +85,7 @@ const title = computed(() => props.title)
 const woojs = computed(() => props.woojs)
 const nums = computed(() => woojs.value.length)
 const isEmpty = computed(() => props.loaded && !nums.value)
-const woojPositions = computed(() => woojs.value.reduce((map, wooj) => {
+const woojStyles = computed(() => woojs.value.reduce((map, wooj) => {
   map[wooj.id] = getRandMargin(wooj.id)
 
   return map
@@ -109,15 +112,16 @@ const initSortable = () => {
 
   sortableDriver = new Sortable(document.querySelectorAll('.wooj-list__items'), {
     draggable: '.wooj-list__item',
-    handle: mediaStore.isTouched ? '.wooj-card' : '.wooj-card__mover',
+    handle: mediaStore.isTouched ? '.wooj-list__item' : '.wooj-card__mover',
     sortAnimation: {
-      duration: 300,
+      duration: 200,
       easingFunction: 'ease-in-out',
     },
     classes: {
       'source:dragging': ['dragging'],
       'mirror': ['dragging-mirror'],
     },
+    delay: 600,
     plugins: [Plugins.SortAnimation]
   });
 
@@ -179,7 +183,7 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
             v-for="wooj of woojs"
             :key="wooj.id"
             :data-id="wooj.id"
-            :style="woojPositions[wooj.id]">
+            :style="woojStyles[wooj.id]">
             <WoojCard
               :data="wooj"
               :hasMove="props.hasMove"

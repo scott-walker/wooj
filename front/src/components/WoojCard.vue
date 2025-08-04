@@ -1,8 +1,9 @@
 <script setup>
-import { ref, computed } from "vue"
+import { ref, computed, useTemplateRef, onMounted } from "vue"
 import { useMediaStore } from "@stores/media"
+import { useTap } from "@composables/tap"
 
-const emit = defineEmits(["move", "edit", "pin", "remove", "restore"])
+const emit = defineEmits(["move", "edit", "pin", "remove", "restore", "active", "deactive"])
 const props = defineProps({
   data: Object,
   hasMove: { type: Boolean, default: true },
@@ -14,6 +15,9 @@ const props = defineProps({
 
 const mediaStore = useMediaStore()
 
+const card = useTemplateRef("card")
+const wrapper = useTemplateRef("wrapper")
+
 const isActive = ref(false)
 const wooj = computed(() => props.data || {})
 const title = computed(() => wooj.value.title || "Новый WOOJ")
@@ -23,16 +27,43 @@ const isTouched = computed(() => mediaStore.isTouched)
 const isClicked = computed(() => !mediaStore.isTouched)
 const hasMove = computed(() => !mediaStore.isTouched && props.hasMove)
 
-const onActive = () => mediaStore.isTouched && (isActive.value = true)
-const onDeactive = () => mediaStore.isTouched && (isActive.value = false)
+const onActive = () => {
+  if (!mediaStore.isTouched) return
+
+  isActive.value = true
+  emit('active', wooj.value)
+}
+const onDeactive = () => {
+  if (!mediaStore.isTouched) return
+
+  isActive.value = false
+  emit('deactive', wooj.value)
+}
+const onTouchEdit = () => mediaStore.isTouched && emit('edit', wooj.value)
 const onClickEdit = () => mediaStore.isTouched || emit('edit', wooj.value)
+
+onMounted(() => {
+  const onLeave = ({ target }) => {
+    if (target != card.value || !card.value.contains(target)) {
+      onDeactive()
+    }
+  }
+
+  document.addEventListener("mousedown", onLeave)
+  document.addEventListener("touchstart", onLeave)
+
+  useTap(wrapper.value, {
+    onTap: () => onTouchEdit(),
+    onLongTap: () => onActive()
+  })
+})
 </script>
 
 <template>
   <div
+    ref="card"
     class="wooj-card"
-    :class="{ touched: isTouched, clicked: isClicked, active: isActive }"
-    @mouseleave="onDeactive">
+    :class="{ touched: isTouched, clicked: isClicked, active: isActive }">
     <div v-if="hasPanel" class="wooj-card__panel">
       <span
         v-if="hasMove"
@@ -66,9 +97,9 @@ const onClickEdit = () => mediaStore.isTouched || emit('edit', wooj.value)
     </div>
 
     <div
+      ref="wrapper"
       class="wooj-card__wrapper"
       :class="{ 'pinned': wooj.is_pinned, 'editable': hasEdit }"
-      v-touch:hold="onActive"
       @click="onClickEdit">
       <div class="wooj-card__title">{{ title }}</div>
       <div class="wooj-card__content wooj-content" v-html="content" />

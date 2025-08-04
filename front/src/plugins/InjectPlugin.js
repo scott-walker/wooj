@@ -12,5 +12,9 @@ export default {
 
     app.provide("utils", options.utils || {})
     app.provide("services", options.services || {})
+
+    for (const [name, directive] of Object.entries(options.directives || {})) {
+      app.directive(name, directive)
+    }
   },
 }
