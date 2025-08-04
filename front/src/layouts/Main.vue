@@ -92,7 +92,6 @@ onMounted(() => {
     justify-content: flex-end;
     align-items: stretch;
     height: calc(100vh - $header-height);
-    overflow-y: auto;
     background-color: colors.$grey;
 
     &-sidebar {
@@ -131,6 +130,7 @@ onMounted(() => {
       width: calc(100% - $sidebar-width);
       padding: $content-ver-gap $content-hor-gap;
       transition: all 0.3s;
+      overflow-y: auto;
 
       &.aired {
         width: 100%;
