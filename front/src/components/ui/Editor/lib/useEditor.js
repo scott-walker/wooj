@@ -1,4 +1,4 @@
-import { ref, computed, onBeforeUnmount, inject, watch, onMounted } from "vue"
+import { ref, computed, onBeforeUnmount, inject } from "vue"
 
 // tiptap
 import { Color } from "@tiptap/extension-color"
@@ -49,15 +49,11 @@ export const useEditor = ({ content, emit, props }) => {
       deferredTimer.start(1000, () => emit("save", content.value))
     },
     onFocus({ editor, event }) {
-      console.log("onFocus")
-
       isContentFocused.value = true
 
       editor.setExtensionOptions("placeholder", { placeholder: placeholder.value })
     },
     onBlur({ editor, event }) {
-      console.log("onBlur")
-
       isContentFocused.value = false
 
       editor.setExtensionOptions("placeholder", { placeholder: placeholder.value })

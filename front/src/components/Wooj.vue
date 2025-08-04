@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from "vue"
+import { ref, computed } from "vue"
 import { useRouter } from "vue-router"
 
 import { useMediaStore } from "@stores/media"
@@ -28,17 +28,6 @@ const hasTopics = computed(() => !!props.topics.length)
 const onBack = () => router.back()
 const onShowTopics = () => (isShowedTopics.value = !isShowedTopics.value)
 const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
-
-// onMounted(() => {
-//   const content = document.querySelector(".layout-main__body-content")
-
-//   content.addEventListener("scroll", () => {
-//     console.log("scroll", document.activeElement)
-
-//     document.activeElement.blur()
-//     // isFocusedEditor.value = false
-//   })
-// })
 </script>
 
 <template>

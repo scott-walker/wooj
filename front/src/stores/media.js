@@ -54,7 +54,7 @@ export const useMediaStore = defineStore("media", () => {
 
     isTouched.value = md.isTouched()
 
-    document.body.style.height = `${vpHeight.value}px`
+    // document.body.style.height = `${vpHeight.value}px`
   }
 
   /**

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue"
+import { ref, onMounted, reactive } from "vue"
 import { useMediaStore } from "@stores/media"
 import { useDebuggerStore } from "@stores/debugger"
 import Button from "@ui/Button.vue"
@@ -10,37 +10,50 @@ const isShowed = ref(false)
 
 const onToggle = () => (isShowed.value = !isShowed.value)
 
+const data = reactive({
+  actions: null,
+  scrollY: null,
+  pageYOffset: null,
+  offsetTop: null,
+})
+
 onMounted(() => {
+  let actions = null
+
   // debuggerStore.push({ test: 1, name: "43234" })
-  // debuggerStore.push({ test: 1, name: "43234" })
-  // debuggerStore.push({ test: 1, name: "43234" })
-  // debuggerStore.push({ test: 1, name: "43234" })
-  // debuggerStore.push({ test: 1, name: "43234" })
-  // debuggerStore.push({ test: 1, name: "43234" })
-  // debuggerStore.push({ test: 1, name: "43234" })
-  // debuggerStore.push({ test: 1, name: "43234" })
-  // debuggerStore.push({ test: 1, name: "43234" })
+
+  setTimeout(() => {
+    actions = document.querySelector(".wooj__actions")
+  }, 1000)
+
+  window.addEventListener("scroll", () => {
+    data.actions = actions ? actions.getBoundingClientRect().top : null
+    data.scrollY = window.scrollY
+    data.pageYOffset = window.pageYOffset
+    data.offsetTop = window.visualViewport.offsetTop
+  }, { passive: true })
 })
 </script>
 
 <template>
-  <Teleport to="body">
-    <div class="debugger" :class="{ showed: isShowed }">
-      <div class="debugger__panel">
-        <Button
-          class="debugger__panel-button"
-          type="default"
-          text="debug"
-          @click="onToggle" />
-      </div>
+  <!-- <Teleport to="body"> -->
+  <div class="debugger" :class="{ showed: isShowed }">
+    <div class="debugger__panel">
+      <Button
+        class="debugger__panel-button"
+        type="default"
+        text="debug"
+        @click="onToggle" />
+    </div>
 
-      <div v-show="isShowed" class="debugger__container">
-        <div class="debugger__media">
-          <div>Width: {{ mediaStore.width }}</div>
-          <div>Height: {{ mediaStore.height }}</div>
-          <div>Viewport Width: {{ mediaStore.vpWidth }}</div>
-          <div>Viewport Height: {{ mediaStore.vpHeight }}</div>
-          <!-- <div>isTouched: {{ mediaStore.isTouched }}</div>
+    <div v-show="isShowed" class="debugger__container">
+      <div class="debugger__media">
+        <div>{{ data }}</div>
+        <!-- <div>Width: {{ mediaStore.width }}</div>
+        <div>Height: {{ mediaStore.height }}</div>
+        <div>Viewport Width: {{ mediaStore.vpWidth }}</div>
+        <div>Viewport Height: {{ mediaStore.vpHeight }}</div> -->
+        <!-- <div>isTouched: {{ mediaStore.isTouched }}</div>
           <div>isPortrait: {{ mediaStore.isPortrait }}</div>
           <div>isLandscape: {{ mediaStore.isLandscape }}</div>
           <div>isMobile: {{ mediaStore.isMobile }}</div>
@@ -51,14 +64,14 @@ onMounted(() => {
           <div>isMiddle: {{ mediaStore.isMiddle }}</div>
           <div>isLarge: {{ mediaStore.isLarge }}</div>
           <div>isXl: {{ mediaStore.isXl }}</div> -->
-        </div>
-
-        <div class="debugger__console" v-if="debuggerStore.records.length">
-          <pre class="debugger__console-record" v-for="record of debuggerStore.records">{{ record }}</pre>
-        </div>
       </div>
+
+      <!-- <div class="debugger__console" v-if="debuggerStore.records.length">
+        <pre class="debugger__console-record" v-for="record of debuggerStore.records">{{ record }}</pre>
+      </div> -->
     </div>
-  </Teleport>
+  </div>
+  <!-- </Teleport> -->
 </template>
 
 <style lang="scss" scoped>

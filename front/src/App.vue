@@ -1,5 +1,5 @@
 <script setup>
-import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock"
+// import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock"
 
 import { ref, computed, onBeforeMount, onMounted, onUnmounted } from "vue"
 import { RouterView } from "vue-router"
@@ -29,45 +29,11 @@ onBeforeMount(async () => {
   isReady.value = true
 })
 
-onMounted(() => {
-  // console.log("asdasdsadsad")
-
-  // function preventScroll(e) {
-  //   e.preventDefault()
-
-  //   debuggerStore.push({
-  //     action: "lock scroll",
-  //     target: e.target,
-  //   })
-  // }
-
-  // function preventScrollKeys(e) {
-  //   const keys = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' ']
-  //   if (keys.includes(e.key)) {
-  //     preventScroll(e)
-  //   }
-  // }
-
-  // function hardLockScroll() {
-  //   document.addEventListener('wheel', preventScroll, { passive: false })
-  //   document.addEventListener('touchmove', preventScroll, { passive: false })
-  //   document.addEventListener('keydown', preventScrollKeys)
-  // }
-
-  // function hardUnlockScroll() {
-  //   document.removeEventListener('wheel', preventScroll)
-  //   document.removeEventListener('touchmove', preventScroll)
-  //   document.removeEventListener('keydown', preventScrollKeys)
-  // }
-
-  // hardLockScroll()
-  // hardUnlockScroll()
-})
+// onMounted(() => disableBodyScroll(document.body))
 // onUnmounted(() => enableBodyScroll(document.body))
 </script>
 
 <template>
-  <!-- <Debugger /> -->
   <Counter v-if="!isDevMode" />
   <Toasts />
 
@@ -76,6 +42,9 @@ onMounted(() => {
       <TestLayout>
         <component :is="Component" />
       </TestLayout>
+      <!-- <MainLayout>
+        <component :is="Component" />
+      </MainLayout> -->
     </RouterView>
 
     <GuardLayout v-else>
@@ -85,4 +54,6 @@ onMounted(() => {
   </template>
 
   <Loading v-else />
+
+  <Debugger />
 </template>

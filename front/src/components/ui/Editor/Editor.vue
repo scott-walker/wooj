@@ -1,6 +1,4 @@
 <script setup>
-// import { ref, computed, useTemplateRef, watch, nextTick } from 'vue'
-
 import { useMediaStore } from "@stores/media"
 import { useEditor } from "./lib/useEditor"
 
