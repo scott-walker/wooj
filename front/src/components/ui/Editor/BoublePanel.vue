@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, useTemplateRef, watch } from 'vue'
+import { onMounted, reactive, useTemplateRef, watch } from 'vue'
 import { useMediaStore } from "@stores/media"
 import { useDebuggerStore } from "@stores/debugger"
 import Panel from "@ui/Editor/Panel.vue"
@@ -23,25 +23,62 @@ const calcPosition = () => {
   panelStyle.top = mediaStore.vpHeight - panelHeight + "px"
   panelStyle.bottom = "inherit"
 
-  debuggerStore.push({
-    action: "calcPosition",
-    top: panelStyle.top,
-    vpHeight: mediaStore.vpHeight,
-    panelHeight
-  })
+  // debuggerStore.push({
+  //   action: "calcPosition",
+  //   top: panelStyle.top,
+  //   vpHeight: mediaStore.vpHeight,
+  //   panelHeight
+  // })
 }
 
 watch(() => mediaStore.vpHeight, () => {
-  debuggerStore.push({
-    action: "change viewport",
-  })
+  // debuggerStore.push({
+  //   action: "change viewport",
+  // })
   calcPosition()
 })
 watch(() => props.visible, () => {
-  debuggerStore.push({
-    action: "change visible",
-  })
+  // debuggerStore.push({
+  //   action: "change visible",
+  // })
   calcPosition()
+})
+
+onMounted(() => {
+  debuggerStore.push({
+    action: "start scroll locker",
+  })
+
+  function preventScroll(e) {
+    e.preventDefault()
+
+    debuggerStore.push({
+      action: "lock scroll",
+      target: e.target,
+    })
+  }
+
+  function preventScrollKeys(e) {
+    const keys = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' ']
+    if (keys.includes(e.key)) {
+      preventScroll(e)
+    }
+  }
+
+  function hardLockScroll() {
+    document.addEventListener('wheel', preventScroll, { passive: false })
+    document.addEventListener('touchmove', preventScroll, { passive: false })
+    document.addEventListener('keydown', preventScrollKeys)
+  }
+
+  function hardUnlockScroll() {
+    document.removeEventListener('wheel', preventScroll)
+    document.removeEventListener('touchmove', preventScroll)
+    document.removeEventListener('keydown', preventScrollKeys)
+  }
+
+  hardLockScroll()
+  hardUnlockScroll()
 })
 </script>
 

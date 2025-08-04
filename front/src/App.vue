@@ -28,8 +28,41 @@ onBeforeMount(async () => {
   isReady.value = true
 })
 
-onMounted(() => disableBodyScroll(document.body))
-onUnmounted(() => enableBodyScroll(document.body))
+onMounted(() => {
+  // console.log("asdasdsadsad")
+
+  // function preventScroll(e) {
+  //   e.preventDefault()
+
+  //   debuggerStore.push({
+  //     action: "lock scroll",
+  //     target: e.target,
+  //   })
+  // }
+
+  // function preventScrollKeys(e) {
+  //   const keys = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' ']
+  //   if (keys.includes(e.key)) {
+  //     preventScroll(e)
+  //   }
+  // }
+
+  // function hardLockScroll() {
+  //   document.addEventListener('wheel', preventScroll, { passive: false })
+  //   document.addEventListener('touchmove', preventScroll, { passive: false })
+  //   document.addEventListener('keydown', preventScrollKeys)
+  // }
+
+  // function hardUnlockScroll() {
+  //   document.removeEventListener('wheel', preventScroll)
+  //   document.removeEventListener('touchmove', preventScroll)
+  //   document.removeEventListener('keydown', preventScrollKeys)
+  // }
+
+  // hardLockScroll()
+  // hardUnlockScroll()
+})
+// onUnmounted(() => enableBodyScroll(document.body))
 </script>
 
 <template>
