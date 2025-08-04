@@ -18,17 +18,17 @@ const panelStyle = reactive({
 })
 
 const calcPosition = () => {
-  const panelHeight = panel.value.getBoundingClientRect().height
+  // const panelHeight = panel.value.getBoundingClientRect().height
 
-  panelStyle.top = mediaStore.vpHeight - panelHeight + "px"
-  panelStyle.bottom = "inherit"
+  // panelStyle.top = mediaStore.vpHeight - panelHeight + "px"
+  // panelStyle.bottom = "inherit"
 
-  // debuggerStore.push({
-  //   action: "calcPosition",
-  //   top: panelStyle.top,
-  //   vpHeight: mediaStore.vpHeight,
-  //   panelHeight
-  // })
+  // // debuggerStore.push({
+  // //   action: "calcPosition",
+  // //   top: panelStyle.top,
+  // //   vpHeight: mediaStore.vpHeight,
+  // //   panelHeight
+  // // })
 }
 
 watch(() => mediaStore.vpHeight, () => {
@@ -68,6 +68,7 @@ watch(() => props.visible, () => {
   width: 100%;
   // bottom: 46px;
   left: 0;
+  bottom: 0;
   transform: translateY(100px);
   // visibility: hidden;
 
