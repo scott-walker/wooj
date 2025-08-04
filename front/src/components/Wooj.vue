@@ -34,8 +34,8 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
   <div class="wooj">
     <div v-if="props.loaded" class="wooj__board">
       <div v-if="mediaStore.isSmall" class="wooj__actions">
-        <IconLink icon="arrow-left" label="Назад" @click="onBack" />
-        <IconLink v-if="hasTopics" icon="tags" label="Топики" @click="onShowTopics" />
+        <IconLink icon="arrow-left" label="Назад" :scalable="false" @click="onBack" />
+        <IconLink v-if="hasTopics" icon="tags" label="Топики" :scalable="false" @click="onShowTopics" />
         <!-- <IconLink icon="link" @click="isShowedShare = !isShowedShare" /> -->
       </div>
       <div v-else class="wooj__actions">

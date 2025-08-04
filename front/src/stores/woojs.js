@@ -284,7 +284,7 @@ export const useWoojsStore = defineStore("woojs", () => {
 
     try {
       wooj = await woojService.update(woojId, fields)
-      toastsStore.info("Вудж сохранен")
+      // toastsStore.info("Вудж сохранен")
 
       // await fetchAll()
       isNeedUpdate.value = true

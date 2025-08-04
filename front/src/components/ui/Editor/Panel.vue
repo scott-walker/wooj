@@ -123,7 +123,7 @@ const onRedo = () => {
       <Button @click="onBold" icon="bold" :disabled="isBoldDisabled" :active="isBoldActive" />
       <!-- <Button @click="onItalic" icon="italic" :disabled="isItalicDisabled" :active="isItalicActive" /> -->
       <Button @click="onUnderline" icon="underline" :disabled="isUnderlineDisabled" :active="isUnderlineActive" />
-      <!-- <Button @click="onStrike" icon="strikethrough" :disabled="isStrikeDisabled" :active="isStrikeActive" /> -->
+      <Button @click="onStrike" icon="strikethrough" :disabled="isStrikeDisabled" :active="isStrikeActive" />
       <Button @click="onHeading(1)" icon="heading" :disabled="isH1Disabled" :active="isH1Active" />
       <!-- <Button @click="onHeading(2)" icon="heading" :disabled="isH2Disabled" :active="isH2Active" />
       <Button @click="onHeading(3)" icon="heading" :disabled="isH3Disabled" :active="isH3Active" />
