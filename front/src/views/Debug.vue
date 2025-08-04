@@ -71,18 +71,22 @@ onUnmounted(() => layoutStore.unsetStatusBar())
     <!-- <p class="view-index__title">WOOJ v{{ version }}</p>
     <p class="view-index__subtitle">Создавай быстро простые заметки</p> -->
 
-    <div class="box">
+    <!-- <div class="box">
       <Button text="Вызвать тост" @click="onAddToast" />
-    </div>
+    </div> -->
     <!-- 
     <div class="box">
       <p contenteditable="true">Выдели этот текст на мобильном, и появится панель!</p>
       <BoublePanel />
     </div> -->
-
+    <!-- 
     <div class="dnd-container">
       <div class="dnd-target" v-for="i in 5"
         :style="{ height: `${(i + 10) * i}px` }"></div>
+    </div> -->
+
+    <div class="box">
+      <input type="text" />
     </div>
 
     <div class="media-detector">
