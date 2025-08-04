@@ -14,7 +14,7 @@ const mediaStore = useMediaStore()
 const debuggerStore = useDebuggerStore()
 
 const panelStyle = reactive({
-  top: null
+  bottom: null
 })
 
 const calcPosition = () => {
@@ -22,6 +22,7 @@ const calcPosition = () => {
 
   // panelStyle.top = mediaStore.vpHeight - panelHeight + "px"
   // panelStyle.bottom = "inherit"
+  panelStyle.bottom = `calc(100vh - ${mediaStore.vpHeight}px)`
 
   // // debuggerStore.push({
   // //   action: "calcPosition",
