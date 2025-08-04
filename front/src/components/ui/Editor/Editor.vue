@@ -11,6 +11,7 @@ import { EditorContent } from "@tiptap/vue-3"
 const content = defineModel()
 const emit = defineEmits(["update", "save"])
 const props = defineProps({
+  focused: { type: Boolean, default: false },
   placeholder: { type: String, default: null },
 })
 
