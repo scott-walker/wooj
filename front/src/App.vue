@@ -1,13 +1,10 @@
 <script setup>
-// import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock"
-
-import { ref, computed, onBeforeMount, onMounted, onUnmounted } from "vue"
+import { ref, computed, onBeforeMount } from "vue"
 import { RouterView } from "vue-router"
 import useUserStore from "@stores/user"
 
 import GuardLayout from "@layouts/Guard.vue"
 import MainLayout from "@layouts/Main.vue"
-import TestLayout from "@layouts/Test.vue"
 
 import Verify from "@views/Verify.vue"
 import Auth from "@views/Auth.vue"
@@ -15,7 +12,7 @@ import Loading from "@views/Loading.vue"
 
 import Toasts from "@components/Toasts.vue"
 import Counter from "@components/Counter.vue"
-import Debugger from "@components/Debugger.vue"
+// import Debugger from "@components/Debugger.vue"
 
 const userStore = useUserStore()
 const isReady = ref(false)
@@ -28,9 +25,6 @@ onBeforeMount(async () => {
 
   isReady.value = true
 })
-
-// onMounted(() => disableBodyScroll(document.body))
-// onUnmounted(() => enableBodyScroll(document.body))
 </script>
 
 <template>
@@ -39,12 +33,9 @@ onBeforeMount(async () => {
 
   <template v-if="isReady">
     <RouterView v-if="isLogged && isVerified" v-slot="{ Component }">
-      <TestLayout>
+      <MainLayout>
         <component :is="Component" />
-      </TestLayout>
-      <!-- <MainLayout>
-        <component :is="Component" />
-      </MainLayout> -->
+      </MainLayout>
     </RouterView>
 
     <GuardLayout v-else>
@@ -55,5 +46,5 @@ onBeforeMount(async () => {
 
   <Loading v-else />
 
-  <Debugger />
+  <!-- <Debugger /> -->
 </template>

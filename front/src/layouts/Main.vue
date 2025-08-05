@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount, onMounted } from "vue"
+import { onBeforeMount } from "vue"
 
 import { useLayoutStore } from "@stores/layout"
 import { useWoojsStore } from "@stores/woojs"
@@ -11,16 +11,6 @@ const layoutStore = useLayoutStore()
 const woojsStore = useWoojsStore()
 
 onBeforeMount(() => woojsStore.fetchAll())
-onMounted(() => {
-  // document.querySelector(".layout-main__body-content").addEventListener("scroll", (event) => {
-  //   console.log({
-  //     target: event.target.getBoundingClientRect(),
-  //     // window: [window.pageXOffset, window.pageYOffset],
-  //     // document: document.clie,
-  //     body: document.body.getBoundingClientRect(),
-  //   })
-  // })
-})
 </script>
 
 <template>
@@ -38,18 +28,18 @@ onMounted(() => {
         <Sidebar />
       </div>
 
-      <div
+      <!-- <div
         class="layout-main__body-content"
         :class="{ aired: layoutStore.hasAiredSidebar }"
-        @mouseover="layoutStore.onLeaveSidebar">
-        <!-- <Scrollbar class="layout-main__body-content"
-        :class="{ aired: layoutStore.hasAiredSidebar }"
         @mouseover="layoutStore.onLeaveSidebar"> -->
+      <Scrollbar class="layout-main__body-content"
+        :class="{ aired: layoutStore.hasAiredSidebar }"
+        @mouseover="layoutStore.onLeaveSidebar">
         <Transition name="view-transition" mode="out-in">
           <slot />
         </Transition>
-        <!-- </Scrollbar> -->
-      </div>
+      </Scrollbar>
+      <!-- </div> -->
     </div>
   </div>
 </template>

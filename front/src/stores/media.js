@@ -53,8 +53,6 @@ export const useMediaStore = defineStore("media", () => {
     isDesctop.value = md.isDesctopScreen()
 
     isTouched.value = md.isTouched()
-
-    // document.body.style.height = `${vpHeight.value}px`
   }
 
   /**

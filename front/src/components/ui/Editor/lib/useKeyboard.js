@@ -43,21 +43,13 @@ export const useKeyboard = (options) => {
    */
   const onResize = () => {
     const handler = () => {
-      console.log("onResize handler")
-
       currentHeight.value = window.visualViewport.height
       isOpened.value = isDifferendHeight() //&& isEdition()
 
-      console.log("isOpened", isOpened.value)
-
       if (!keyboardHeight.value && isOpened.value) {
         keyboardHeight.value = intialHeight.value - currentHeight.value
-
-        console.log("keyboardHeight", keyboardHeight.value)
       }
     }
-
-    console.log("onResize")
 
     setTimeout(handler, KEYBOARD_OPENING_DELAY)
   }
