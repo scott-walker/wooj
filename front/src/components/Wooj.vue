@@ -11,8 +11,6 @@ import Editor from "@ui/Editor/Editor.vue"
 import Skeleton from "@ui/Skeleton.vue"
 import TopicTags from "@components/TopicTags.vue"
 
-const router = useRouter()
-const mediaStore = useMediaStore()
 const wooj = defineModel()
 const emit = defineEmits(["change-content", "change-topics"])
 const props = defineProps({
@@ -20,6 +18,9 @@ const props = defineProps({
   loaded: { type: Boolean, default: true },
   saving: { type: Boolean, default: false },
 })
+
+const router = useRouter()
+const mediaStore = useMediaStore()
 
 const isShowedTopics = ref(false)
 const isShowedShare = ref(false)
@@ -182,6 +183,8 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
 
 @include media.sm() {
   .wooj {
+    padding-bottom: 200px;
+
     &__board {
       display: flex;
       flex-direction: column;
@@ -189,6 +192,7 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
       align-items: flex-start;
       padding: 0px;
       padding-bottom: 60px;
+      // padding-bottom: 0;
       height: 100%;
     }
 

@@ -1,121 +1,76 @@
 <script setup>
-import { computed, onMounted, onUnmounted, useTemplateRef, watch } from 'vue'
+import { computed, useTemplateRef } from 'vue'
 
-// import { useMediaStore } from "@stores/media"
-import { useDebuggerStore } from "@stores/debugger"
-import { useMoveDirection } from "./lib/useMoveDirection"
-import { useKeyboard } from "./lib/useKeyboard"
+import { useMediaStore } from "@stores/media"
+import { useSelection } from "@composables/selection"
 
 import Panel from "@ui/Editor/Panel.vue"
 
 const props = defineProps({
-  editor: Object,
-  visible: Boolean,
+  editor: { type: Object },
+  visible: { type: Boolean, default: false },
 })
 const emit = defineEmits(["mouseover"])
-const panel = useTemplateRef("panel")
-// const mediaStore = useMediaStore()
-const debuggerStore = useDebuggerStore()
+const wrapper = useTemplateRef("wrapper")
 
-const { isScrollingUp, scrollDirection, toucheMoveDirection,
-  prevPosition,
-  currentPosition,
-  isTouchMovingDown,
-  isTouchMovingUp, } = useMoveDirection()
-const {
-  isOpened: isOpenedKeyboard,
-  currentHeight,
-  keyboardHeight,
-  setListeners,
-  unsetListeners,
+const { vpWidth } = useMediaStore()
+const { isSelectionActive, selectionTop, selectionLeft } = useSelection({
+  excludedElements: [wrapper.value]
+})
 
+const wrapperStyle = computed(() => {
+  if (!wrapper.value) return {}
 
-} = useKeyboard()
-
-const panelStyle = computed(() => {
-  if (!panel.value) return {}
-
-  const panelHeight = panel.value.getBoundingClientRect().height
-
-  if (isOpenedKeyboard.value) {
-    const bottom = isScrollingUp.value ? keyboardHeight.value : 0
-
-    return {
-      top: "inherit",
-      bottom: Math.round(bottom) + "px"
-    }
-  }
+  const OFFSET = 20
+  const top = selectionTop.value + OFFSET
+  // const rect = wrapper.value.getBoundingClientRect()
+  // const left = Math.max(OFFSET, Math.min(selectionLeft.value - OFFSET, vpWidth - rect.width))
 
   return {
-    top: Math.round(currentHeight.value - panelHeight) + "px",
-    bottom: "inherit"
+    opacity: isSelectionActive.value ? 1 : 0,
+    top: `${top}px`,
+    // left: `${left}px`
   }
-})
-
-onMounted(() => {
-  setTimeout(() => {
-    const tiptap = document.querySelector(".tiptap")
-
-    setListeners(tiptap)
-  }, 1000)
-})
-onUnmounted(() => unsetListeners())
-
-watch(() => scrollDirection.value, () => {
-  debuggerStore.push({
-    panelStyle: panelStyle.value,
-    scrollDirection: scrollDirection.value,
-    toucheMoveDirection: toucheMoveDirection.value
-  })
 })
 </script>
 
 <template>
   <Teleport to="body">
     <div
-      ref="panel"
+      ref="wrapper"
       class="ui-editor-bouble-pamel"
       :class="{ visible }"
-      :style="panelStyle"
+      :style="wrapperStyle"
       @mouseover="emit('mouseover', $event)">
-      <Panel :editor="editor" />
-
-      <div class="deb">
-        <!-- <div>{{ prevPosition }} -> {{ currentPosition }}</div>
-        <div>{{ { scrollDirection } }}</div> -->
-        <!-- <div>{{ { toucheMoveDirection } }}</div> -->
-        <!-- <div>{{ { panelStyle } }}</div> -->
+      <div class="ui-editor-bouble-pamel__wrapper">
+        <Panel :editor="editor" />
       </div>
     </div>
   </Teleport>
 </template>
 
 <style lang="scss" scoped>
+@use "sass:color";
+@use "@styles/colors";
+
 .ui-editor-bouble-pamel {
+  display: flex;
+  justify-content: center;
   position: fixed;
   z-index: 1000;
-  // width: fit-content;
-  // opacity: 0;
-  transition: transform .3s;
-  width: 100%;
-  // bottom: 46px;
-  // top: -1000px;
+  top: 0;
   left: 0;
-  right: 0;
-  // bottom: 0;
-  // transform: translateY(100px);
-  // visibility: hidden;
-  background: white;
-
-  .deb {
-    padding: 5px 0;
-    text-align: center;
-  }
+  width: 100%;
+  transition: all .3s;
+  opacity: 0;
 
   &.visible {
-    // opacity: 1;
-    // transform: translateY(0px);
-    // visibility: visible;
+    opacity: 1;
+  }
+
+  &__wrapper {
+    width: fit-content;
+    box-shadow: color.change(colors.$basic, $alpha: 3%) 0px 0px 2px 7px;
   }
 }
 </style>

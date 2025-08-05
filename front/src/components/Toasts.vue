@@ -1,7 +1,9 @@
 <script setup>
 import { useToastsStore } from "@stores/toasts"
 
-const { toasts } = useToastsStore()
+const { toasts, remove } = useToastsStore()
+
+const onHide = (toastId) => remove(toastId)
 </script>
 
 <template>
@@ -12,7 +14,9 @@ const { toasts } = useToastsStore()
         :key="toast.id"
         class="toasts__toast"
         :class="toast.type"
-        v-html="toast.message" />
+        v-html="toast.message"
+        @mousedown="onHide(toast.id)"
+        @touchstart="onHide(toast.id)" />
     </TransitionGroup>
   </div>
 </template>
@@ -57,7 +61,7 @@ const { toasts } = useToastsStore()
 
   &-enter-active,
   &-leave-active {
-    transition: all .3s ease;
+    transition: all .15s ease;
   }
 
   &-enter-from,

@@ -1,7 +1,9 @@
 <script setup>
-import { ref, computed, onBeforeMount } from "vue"
+import { ref, computed, onBeforeMount, watchEffect } from "vue"
 import { RouterView } from "vue-router"
+
 import useUserStore from "@stores/user"
+import { useWoojsStore } from "@stores/woojs"
 
 import GuardLayout from "@layouts/Guard.vue"
 import MainLayout from "@layouts/Main.vue"
@@ -15,6 +17,7 @@ import Counter from "@components/Counter.vue"
 // import Debugger from "@components/Debugger.vue"
 
 const userStore = useUserStore()
+const woojsStore = useWoojsStore()
 const isReady = ref(false)
 const isDevMode = import.meta.env.VITE_APP_MODE === "dev"
 const isLogged = computed(() => userStore.isLogged)
@@ -24,6 +27,10 @@ onBeforeMount(async () => {
   await userStore.check()
 
   isReady.value = true
+})
+
+watchEffect(() => {
+  if (userStore.isLogged && userStore.isVerified) woojsStore.fetchAll()
 })
 </script>
 

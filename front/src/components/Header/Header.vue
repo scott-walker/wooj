@@ -40,8 +40,6 @@ const isVisibleStatus = computed(() => !mediaStore.isSmall && layoutStore.status
 @use "@styles/media";
 
 .header {
-  position: fixed;
-  z-index: 100;
   width: 100%;
   display: flex;
   justify-content: space-between;

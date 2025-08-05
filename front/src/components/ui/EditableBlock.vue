@@ -56,13 +56,21 @@ const onEnter = ({ target }) => {
 
   emit("change", text.value)
 }
-const onFocus = () => (isError.value = false)
+
+const onFocus = () => {
+  focused.value = true
+  isError.value = false
+}
 
 watch(() => focused.value, (focused) => {
   if (focused) {
+    console.log("focus")
     block.value.focus()
 
     setEndOfContent(block.value)
+  } else {
+    console.log("blur")
+    block.value.blur()
   }
 })
 </script>

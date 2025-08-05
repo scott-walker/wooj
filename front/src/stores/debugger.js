@@ -1,23 +1,32 @@
-import { reactive } from "vue"
+import { ref } from "vue"
 import { defineStore } from "pinia"
 
 /**
  * Стор для отладки
  */
 export const useDebuggerStore = defineStore("debugger", () => {
-  const records = reactive([])
+  const records = ref([])
 
   /**
-   * Добавить
+   * Добавить запись
    * @param {Object}
    * @returns {void}
    */
   const push = (data) => {
-    records.push(data)
+    records.value.push(data)
+  }
+
+  /**
+   * Очистить записи
+   * @returns {void}
+   */
+  const clear = () => {
+    records.value = []
   }
 
   return {
     records,
     push,
+    clear,
   }
 })

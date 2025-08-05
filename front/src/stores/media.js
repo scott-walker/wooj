@@ -59,8 +59,6 @@ export const useMediaStore = defineStore("media", () => {
    * Инициализация
    */
   const init = () => {
-    console.log("useMediaStore: init")
-
     md.onResize("global", update)
     md.onOrientation("global", update)
 

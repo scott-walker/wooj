@@ -3,7 +3,7 @@ import { ref, computed } from "vue"
 import Button from "./Button.vue"
 
 const props = defineProps({
-  editor: Object,
+  editor: { type: Object },
 })
 
 // Bold
@@ -121,9 +121,14 @@ const onRedo = () => {
   <div class="ui-editor-pamel">
     <section class="ui-editor-pamel__group">
       <Button @click="onBold" icon="bold" :disabled="isBoldDisabled" :active="isBoldActive" />
-      <!-- <Button @click="onItalic" icon="italic" :disabled="isItalicDisabled" :active="isItalicActive" /> -->
+      <Button @click="onItalic" icon="italic" :disabled="isItalicDisabled" :active="isItalicActive" />
       <Button @click="onUnderline" icon="underline" :disabled="isUnderlineDisabled" :active="isUnderlineActive" />
       <Button @click="onStrike" icon="strikethrough" :disabled="isStrikeDisabled" :active="isStrikeActive" />
+    </section>
+
+    <div class="ui-editor-pamel__delimiter"></div>
+
+    <section class="ui-editor-pamel__group">
       <Button @click="onHeading(1)" icon="heading" :disabled="isH1Disabled" :active="isH1Active" />
       <!-- <Button @click="onHeading(2)" icon="heading" :disabled="isH2Disabled" :active="isH2Active" />
       <Button @click="onHeading(3)" icon="heading" :disabled="isH3Disabled" :active="isH3Active" />
@@ -163,7 +168,7 @@ const onRedo = () => {
 
     <section class="ui-editor-pamel__group">
       <Button @click="onUndo" icon="undo" :disabled="isUndoDisabled" />
-      <Button @click="onRedo" icon="redo" :disabled="isRedoDisabled" />
+      <!-- <Button @click="onRedo" icon="redo" :disabled="isRedoDisabled" /> -->
     </section>
   </div>
 </template>
@@ -175,11 +180,9 @@ const onRedo = () => {
 
 .ui-editor-pamel {
   display: flex;
-  // justify-content: space-evenly;
   justify-content: flex-start;
   align-items: stretch;
   flex-wrap: wrap;
-  // overflow: hidden;
   gap: 20px;
   border-radius: 5px;
   max-width: 100%;
@@ -197,17 +200,6 @@ const onRedo = () => {
     justify-content: flex-start;
     align-items: stretch;
     gap: 5px;
-    // padding: 0 15px;
-    // border-right: 1px solid rgba(16, 0, 75, 0.2);
-
-    &:first-child {
-      // padding-left: 0;
-    }
-
-    &:last-child {
-      // padding-right: 0;
-      // border-right: none;
-    }
   }
 }
 
@@ -215,7 +207,6 @@ const onRedo = () => {
 
   .ui-editor-pamel {
     justify-content: space-evenly;
-    // flex-wrap: nowrap;
     padding: 10px 5px;
     gap: 10px;
     box-shadow: color.change(colors.$basic, $alpha: 10%) 0px -15px 100px 5px;

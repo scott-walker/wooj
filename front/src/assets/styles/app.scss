@@ -4,33 +4,36 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
 @import "vue3-perfect-scrollbar/style.css";
 
-// Base
+:root {
+  --header-height: 50px;
+  --keyboard-height: 0px;
+}
+
+// Base containers
+html {
+  width: 100vw;
+  height: 100vh;
+}
 body {
-  // position: fixed;
-  // overflow: hidden;
-  // top: 0;
-  // left: 0;
-  // width: 100vw;
-  // height: 100vh;
-  overflow-y: auto;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   font-family: "Nunito", sans-serif;
   font-optical-sizing: auto;
   font-weight: 500;
   font-style: normal;
   color: colors.$basic;
 }
+#app {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+// Global
 div {
   box-sizing: border-box;
 }
-
-// #app {
-//   overflow: hidden;
-//   // width: 100vw;
-//   // height: 100vh;
-//   // width: 100%;
-//   // height: 100%;
-// }
-
 .icon {
   display: flex;
   justify-content: center;

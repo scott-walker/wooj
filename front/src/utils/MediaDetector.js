@@ -40,19 +40,35 @@ export default class MediaDetector {
   }
 
   /**
-   * Ширина видимости экрана
-   * @returns {Number}
-   */
-  get viewportWidth() {
-    return window.visualViewport.width
-  }
-
-  /**
    * Высота окна
    * @returns {Number}
    */
   get height() {
     return window.innerHeight
+  }
+
+  /**
+   * Ширина экрана
+   * @returns {Number}
+   */
+  get screenWidth() {
+    return screen.width
+  }
+
+  /**
+   * Высота экрана
+   * @returns {Number}
+   */
+  get screenHeight() {
+    return screen.height
+  }
+
+  /**
+   * Ширина видимости экрана
+   * @returns {Number}
+   */
+  get viewportWidth() {
+    return window.visualViewport.width
   }
 
   /**
@@ -209,7 +225,7 @@ export default class MediaDetector {
    * @returns {Boolean}
    */
   isTabletScreen() {
-    return screen.width >= this.WIDTH_MD && screen.width <= this.WIDTH_LG
+    return this.screenWidth >= this.WIDTH_MD && this.screenWidth <= this.WIDTH_LG
   }
 
   /**
@@ -217,7 +233,7 @@ export default class MediaDetector {
    * @returns {Boolean}
    */
   isMobileScreen() {
-    return screen.width < this.WIDTH_MD
+    return this.screenWidth < this.WIDTH_MD
   }
 
   /**
@@ -225,7 +241,7 @@ export default class MediaDetector {
    * @returns {Boolean}
    */
   isDesctopScreen() {
-    return screen.width > this.WIDTH_LG
+    return this.screenWidth > this.WIDTH_LG
   }
 
   /**

@@ -30,7 +30,7 @@ const onCreateWooj = async () => {
     <IconLink
       v-else
       :icon="layoutStore.isHoveredBars ? 'chevron-left' : 'bars'"
-      :mirror="layoutStore.hasAiredSidebar"
+      :mirror="layoutStore.isAired"
       @mouseover="onOverBars"
       @mouseleave="layoutStore.onLeaveBars"
       @click="layoutStore.onToggleSidebar" />

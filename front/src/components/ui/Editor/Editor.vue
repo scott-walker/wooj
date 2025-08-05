@@ -1,5 +1,8 @@
 <script setup>
+import { onMounted, onUnmounted, watchEffect } from "vue"
+
 import { useMediaStore } from "@stores/media"
+// import { useLayoutStore } from "@stores/layout"
 import { useEditor } from "./lib/useEditor"
 
 import EditorPanel from "./Panel.vue"
@@ -13,12 +16,30 @@ const props = defineProps({
   placeholder: { type: String, default: null },
 })
 
+// const layoutStore = useLayoutStore()
 const mediaStore = useMediaStore()
 const { editor, isFocused, onMouseOver, onMouseLeave } = useEditor({
   content,
   emit,
   props,
 })
+
+// const onScroll = () => {
+//   layoutStore.contentElement.scrollTo({
+//     top: content.value.scrollTop + mediaStore.vpWidth / 2,
+//     behavior: "smooth"
+//   })
+
+//   console.log("scrollTo", content.value.scrollTop)
+// }
+
+onMounted(() => {
+  // layoutStore.contentElement.addEventListener("scroll", onScroll)
+})
+onUnmounted(() => {
+  // layoutStore.contentElement.removeEventListener("scroll", onScroll)
+})
+// watchEffect(() => isFocused.value && onScroll())
 </script>
 
 <template>
@@ -28,7 +49,7 @@ const { editor, isFocused, onMouseOver, onMouseLeave } = useEditor({
     @mouseover="onMouseOver"
     @mouseleave="onMouseLeave">
 
-    <EditorBoublePanel v-if="mediaStore.isSmall" :editor="editor" :visible="isFocused" @mouseover="onMouseOver" />
+    <EditorBoublePanel v-if="mediaStore.isSmall" :visible="isFocused" :editor="editor" @mouseover="onMouseOver" />
     <EditorPanel
       v-else
       class="ui-editor__panel"
@@ -51,16 +72,8 @@ const { editor, isFocused, onMouseOver, onMouseLeave } = useEditor({
   border-radius: 5px;
   transition: all .2s;
 
-  &:hover {
-    // border-color: colors.$grey;
-  }
-
   &.focused {
     border-color: colors.$grey;
-
-    .tiptap {
-      // padding-top: 76px;
-    }
   }
 
   &__panel {

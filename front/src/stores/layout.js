@@ -11,13 +11,16 @@ export const useLayoutStore = defineStore("layout", () => {
   const router = useRouter()
   const mediaStore = useMediaStore()
 
+  const contentElement = ref(null)
+
+  const hasFooter = ref(false)
   const isAiredSidebarMode = ref(false)
   const isHoveredSidebar = ref(false)
   const isHoveredBars = ref(false)
   const isCreateWoojActive = ref(false)
   const statusBar = ref(null)
 
-  const hasAiredSidebar = computed(() => mediaStore.isSmall || isAiredSidebarMode.value)
+  const isAired = computed(() => mediaStore.isSmall || isAiredSidebarMode.value)
 
   /**
    * Инициализация
@@ -57,11 +60,19 @@ export const useLayoutStore = defineStore("layout", () => {
   const onActivateCreateWooj = () => (isCreateWoojActive.value = true)
   const onDeactivateCreateWooj = () => (isCreateWoojActive.value = false)
 
+  const showFooter = () => (hasFooter.value = true)
+  const hideFooter = () => (hasFooter.value = false)
+
+  const setContentElement = (element) => (contentElement.value = element)
+
   // Инициализировать
   init()
 
   return {
-    hasAiredSidebar,
+    contentElement,
+
+    hasFooter,
+    isAired,
     isHoveredSidebar,
     isHoveredBars,
     isCreateWoojActive,
@@ -78,5 +89,10 @@ export const useLayoutStore = defineStore("layout", () => {
     onToggleMobileSidebar,
     onActivateCreateWooj,
     onDeactivateCreateWooj,
+
+    showFooter,
+    hideFooter,
+
+    setContentElement,
   }
 })

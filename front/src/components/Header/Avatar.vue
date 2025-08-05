@@ -2,14 +2,17 @@
 import { ref, useTemplateRef } from "vue"
 import { Cropper, CircleStencil } from "vue-advanced-cropper"
 import useUserStore from "@stores/user"
+import Loader from "@ui/Loader.vue"
 import IconLink from "@ui/IconLink.vue"
 import "vue-advanced-cropper/dist/style.css"
 
 const userStore = useUserStore()
 const file = useTemplateRef("file")
-const isCropping = ref("")
-const avatar = ref(userStore.avatar)
-const avatarBlob = ref(null)
+const isCropping = ref(false)
+const isCroppingReady = ref(false)
+const currentAvatar = ref(userStore.avatar)
+const uploadedAvatar = ref(null)
+const uploadedAvatarBlob = ref(null)
 
 const onSelectPhoto = () => file.value.click()
 const onUploadPhoto = (event) => {
@@ -18,41 +21,57 @@ const onUploadPhoto = (event) => {
 
   reader.readAsDataURL(image)
   reader.onload = () => {
-    avatar.value = URL.createObjectURL(image)
+    uploadedAvatar.value = URL.createObjectURL(image)
     isCropping.value = true
+
+    setTimeout(() => (isCroppingReady.value = true), 1000)
   };
 }
 const onCroppPhoto = ({ canvas }) => {
   canvas.toBlob(blob => {
-    avatarBlob.value = blob
+    uploadedAvatarBlob.value = blob
   })
 }
-const onSavePhoto = async () => {
-  await userStore.changeAvatar(avatarBlob.value)
-
-  avatar.value = userStore.avatar
+const onCloseCropper = () => {
   isCropping.value = false
+  isCroppingReady.value = false
+}
+const onSavePhoto = async () => {
+  await userStore.changeAvatar(uploadedAvatarBlob.value)
+
+  currentAvatar.value = userStore.avatar
+  onCloseCropper()
 }
 </script>
 
 <template>
   <div class="avatar">
-    <div v-if="isCropping" class="avatar__cropper">
-      <IconLink class="avatar__cropper-approve" icon="check" @click="onSavePhoto" />
-      <cropper
-        class="avatar__cropper-element"
-        :stencil-component="CircleStencil"
-        :src="avatar"
-        @change="onCroppPhoto" />
-    </div>
+    <Transition name="avatar-transition" mode="out-in">
+      <div v-if="isCropping" class="avatar__cropper">
+        <div v-if="!isCroppingReady" class="avatar__cropper-loader">
+          <Loader :size="50" />
+        </div>
 
-    <div v-else class="avatar__preview">
-      <img v-if="avatar" class="avatar__preview-avatar" :src="avatar" />
-      <div v-else class="avatar__preview-avatar default"></div>
+        <div class="avatar__cropper-actions">
+          <IconLink class="avatar__cropper-reject" icon="xmark" type="danger" @click="onCloseCropper" />
+          <IconLink class="avatar__cropper-approve" icon="check" @click="onSavePhoto" />
+        </div>
 
-      <IconLink class="avatar__preview-uploader" icon="arrow-up-from-bracket" @click="onSelectPhoto" />
-      <input class="avatar__preview-uploader-file" ref="file" type="file" @change="onUploadPhoto">
-    </div>
+        <cropper
+          class="avatar__cropper-element"
+          :stencil-component="CircleStencil"
+          :src="uploadedAvatar"
+          @change="onCroppPhoto" />
+      </div>
+
+      <div v-else class="avatar__preview">
+        <img v-if="currentAvatar" class="avatar__preview-avatar" :src="currentAvatar" />
+        <div v-else class="avatar__preview-avatar default"></div>
+
+        <IconLink class="avatar__preview-uploader" icon="arrow-up-from-bracket" @click="onSelectPhoto" />
+        <input class="avatar__preview-uploader-file" ref="file" type="file" @change="onUploadPhoto">
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -97,21 +116,64 @@ const onSavePhoto = async () => {
   }
 
   &__cropper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
+    min-width: 200px;
+    min-height: 200px;
+    transition: all .3s;
+    background: color.adjust(colors.$grey, $lightness: -10%);
+    border-radius: 10px;
+    overflow: hidden;
 
-    &-approve {
+    &-loader {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       position: absolute;
-      top: 10px;
-      right: 10px;
+      z-index: 50;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: white;
+    }
+
+    &-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: absolute;
       z-index: 10;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      gap: 10px;
+    }
+
+    &-approve,
+    &-reject {
       background: colors.$absorbing;
     }
 
     &-element {
       width: 200px;
-      // height: 300px;
       background: colors.$absorbing;
     }
+  }
+}
+
+.avatar-transition {
+
+  &-enter-active,
+  &-leave-active {
+    transition: all .15s ease;
+  }
+
+  &-enter-from,
+  &-leave-to {
+    opacity: .2;
   }
 }
 </style>

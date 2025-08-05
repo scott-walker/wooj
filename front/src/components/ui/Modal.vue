@@ -1,40 +1,53 @@
 <script setup>
-import { ref, computed, watch } from "vue"
+import { reactive, computed, watch, useTemplateRef, nextTick, watchEffect } from "vue"
+import { useLockers } from "@composables/lockers"
+import { usePosition } from "@composables/position"
 
 import IconLink from "@ui/IconLink.vue"
 
-const show = defineModel()
+const isShowed = defineModel()
 const props = defineProps({
   title: { type: String, default: "" },
   center: { type: Boolean, default: false },
   class: { type: String, default: "" },
 })
 
-const pointerPosition = ref(null)
-const contentPosition = computed(() => {
-  const { x, y } = pointerPosition.value || {}
-  const OFFSET_FACTOR = 20
+const { lockTouchMove } = useLockers()
+const { pX, pY } = usePosition()
 
-  if (props.center || !x || !y) {
+const modal = useTemplateRef("modal")
+
+const pointerPosition = reactive({ x: 0, y: 0 })
+const contentPosition = computed(() => {
+  const OFFSET_FACTOR = 30
+
+  if (props.center) {
     return null
   }
 
   return {
-    top: `${y + OFFSET_FACTOR}px`,
-    left: `${x + OFFSET_FACTOR}px`
+    top: `${pointerPosition.y + OFFSET_FACTOR}px`,
+    left: `${pointerPosition.x + OFFSET_FACTOR}px`
   }
 })
 
-watch(show, (value) => value || (pointerPosition.value = null))
+watchEffect(() => {
+  if (isShowed.value) return
 
-const onCheckPosition = ({ x, y }) => pointerPosition.value && (pointerPosition.value = { x, y })
-const onClose = () => show.value = false
+  pointerPosition.x = pX.value
+  pointerPosition.y = pY.value
+})
+
+watch(isShowed, (isShowed) => isShowed && nextTick(() => lockTouchMove(modal.value)))
+
+const onClose = () => isShowed.value = false
 </script>
 
 <template>
-  <Teleport v-if="show" to="body">
-    <div class="ui-modal" :class="props.class" @mouseover="onCheckPosition">
+  <Teleport v-if="isShowed" to="body">
+    <div ref="modal" class="ui-modal" :class="props.class">
       <div class=" ui-modal__background" @click="onClose"></div>
+
       <div class="ui-modal__content" :style="contentPosition">
         <div class="ui-modal__content-header">
           <div v-if="props.title" class="ui-modal__content-header-title">
@@ -42,6 +55,7 @@ const onClose = () => show.value = false
           </div>
           <IconLink icon="xmark" type="default" @click="onClose" />
         </div>
+
         <div class="ui-modal__content-body">
           <slot />
         </div>
@@ -65,6 +79,7 @@ const onClose = () => show.value = false
   left: 0;
   width: 100vw;
   height: 100vh;
+  user-select: none;
 
   &__background {
     position: absolute;
@@ -83,9 +98,8 @@ const onClose = () => show.value = false
   &__content {
     position: absolute;
     z-index: 10;
-    // min-width: 50%;
     @include common.card();
-    animation: scale .3s ease forwards;
+    animation: scale .15s ease forwards;
 
     &-header {
       display: flex;
@@ -124,7 +138,7 @@ const onClose = () => show.value = false
 
 @keyframes scale {
   0% {
-    transform: scale(.3);
+    transform: scale(.8);
   }
 
   100% {

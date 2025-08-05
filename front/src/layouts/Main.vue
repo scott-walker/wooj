@@ -1,8 +1,9 @@
 <script setup>
-import { onBeforeMount } from "vue"
+import { onBeforeMount, onMounted, useTemplateRef } from "vue"
 
 import { useLayoutStore } from "@stores/layout"
 import { useWoojsStore } from "@stores/woojs"
+import { useLockers } from "@composables/lockers"
 
 import Header from "@components/Header/Header.vue"
 import Sidebar from "@components/Sidebar.vue"
@@ -10,36 +11,62 @@ import Sidebar from "@components/Sidebar.vue"
 const layoutStore = useLayoutStore()
 const woojsStore = useWoojsStore()
 
+const header = useTemplateRef("header")
+const sidebar = useTemplateRef("sidebar")
+const content = useTemplateRef("content")
+
+const { lockTouchMove } = useLockers()
+
 onBeforeMount(() => woojsStore.fetchAll())
+onMounted(() => {
+  layoutStore.setContentElement(content.value)
+
+  lockTouchMove(header.value)
+  lockTouchMove(sidebar.value)
+})
 </script>
 
 <template>
   <div class="layout-main">
-    <div class="layout-main__header">
-      <Header />
+    <div ref="header" class="layout-main__header">
+      <div class="layout-main__header-content">
+        <Header />
+      </div>
     </div>
 
     <!-- Body -->
-    <div class="layout-main__body">
-      <div class="layout-main__body-sidebar"
-        :class="{ aired: layoutStore.hasAiredSidebar, hovered: layoutStore.isHoveredSidebar }"
+    <div
+      class="layout-main__body"
+      :class="{ 'with-footer': layoutStore.hasFooter }">
+      <div
+        ref="sidebar"
+        class="layout-main__body-sidebar"
+        :class="{
+          'aired': layoutStore.isAired,
+          'hovered': layoutStore.isHoveredSidebar
+        }"
         @mouseover="layoutStore.onOverSidebar">
         <div class="layout-main__body-sidebar-separator"></div>
         <Sidebar />
       </div>
 
-      <!-- <div
+      <div
+        ref="content"
         class="layout-main__body-content"
-        :class="{ aired: layoutStore.hasAiredSidebar }"
-        @mouseover="layoutStore.onLeaveSidebar"> -->
-      <Scrollbar class="layout-main__body-content"
-        :class="{ aired: layoutStore.hasAiredSidebar }"
+        :class="{ 'aired': layoutStore.isAired }"
         @mouseover="layoutStore.onLeaveSidebar">
+        <!-- <Scrollbar class="layout-main__body-content"
+        :class="{ aired: layoutStore.isAired }"
+        @mouseover="layoutStore.onLeaveSidebar"> -->
         <Transition name="view-transition" mode="out-in">
           <slot />
         </Transition>
-      </Scrollbar>
-      <!-- </div> -->
+        <!-- </Scrollbar> -->
+      </div>
+    </div>
+
+    <div v-show="layoutStore.hasFooter" class="layout-main__footer">
+      <div class="layout-main__footer-content"></div>
     </div>
   </div>
 </template>
@@ -52,32 +79,34 @@ onBeforeMount(() => woojsStore.fetchAll())
 .layout-main {
   $header-gap: 10px;
   $header-height: 50px;
+  $footer-height: 50px;
   $sidebar-width: 200px;
   $sidebar-active-area-width: math.div($sidebar-width, 2);
   $content-hor-gap: 40px;
   $content-ver-gap: math.div($content-hor-gap, 1.5);
 
-  // overflow: hidden;
-  // width: 100%;
-  // height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 
   &__header {
+    position: relative;
+    width: 100%;
     height: $header-height;
-    // overflow: hidden;
+    overflow: hidden;
 
-    &-left {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      gap: $header-gap;
-    }
-
-    &-center {
-      display: flex;
-    }
-
-    &-right {
-      padding-right: $header-gap;
+    &-content {
+      // position: fixed;
+      // z-index: 10;
+      // top: 0;
+      // left: 0;
+      // right: 0;
+      // height: $header-height;
+      // overflow: hidden;
     }
   }
 
@@ -85,11 +114,13 @@ onBeforeMount(() => woojsStore.fetchAll())
     display: flex;
     justify-content: flex-end;
     align-items: stretch;
-    // height: calc(100vh - $header-height);
     width: 100%;
-    height: 100%;
-    background-color: colors.$grey;
-    // overflow: hidden;
+    height: calc(100vh - $header-height);
+    background: colors.$grey;
+
+    &.with-footer {
+      height: calc(100% - $header-height - $footer-height);
+    }
 
     &-sidebar {
       position: fixed;
@@ -124,18 +155,37 @@ onBeforeMount(() => woojsStore.fetchAll())
     }
 
     &-content {
-      // position: fixed;
+      position: relative;
       width: calc(100% - $sidebar-width);
-      height: calc(100vh - 50px);
+      height: calc(100vh - $header-height);
+      // height: 100%;
       padding: $content-ver-gap $content-hor-gap;
       transition: all 0.3s;
+      overflow-x: hidden;
       overflow-y: auto;
-      /* важно для iOS */
       -webkit-overflow-scrolling: touch;
 
       &.aired {
         width: 100%;
       }
+    }
+  }
+
+  &__footer {
+    position: relative;
+    width: 100%;
+    height: $footer-height;
+    overflow: hidden;
+    background: red;
+
+    &-content {
+      position: fixed;
+      z-index: 10;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: $footer-height;
+      overflow: hidden;
     }
   }
 }
@@ -149,8 +199,8 @@ onBeforeMount(() => woojsStore.fetchAll())
 
   &-enter-from,
   &-leave-to {
-    opacity: 0.7;
-    transform: translateY(-3px);
+    opacity: .3;
+    transform: translateY(5px)
   }
 }
 
@@ -158,6 +208,11 @@ onBeforeMount(() => woojsStore.fetchAll())
 @include media.lg() {
   .layout-main {
     &__body {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: stretch;
+
       &-content {
         padding: 20px;
       }
