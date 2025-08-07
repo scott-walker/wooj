@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue"
 
+import { useMediaStore } from "@stores/media"
 import { useWoojsStore } from "@stores/woojs"
 
 import Button from "@ui/Button.vue"
@@ -10,6 +11,7 @@ import SidebarLink from "@components/SidebarLink.vue"
 import CreateTopic from "@components/CreateTopic.vue"
 
 const isShowedCreateTopic = ref(false)
+const mediaStore = useMediaStore()
 const store = useWoojsStore()
 
 const onShowCreateTopic = () => isShowedCreateTopic.value = true
@@ -45,7 +47,7 @@ const onHideCreateTopic = () => isShowedCreateTopic.value = false
     <div class="sidebar__item plus-topic-item">
       <Button text="Топик" icon="plus" @click="onShowCreateTopic" />
     </div>
-    <Modal v-model="isShowedCreateTopic" title="Новый топик">
+    <Modal v-model="isShowedCreateTopic" title="Новый топик" :center="mediaStore.isSmall">
       <CreateTopic @created="onHideCreateTopic" />
     </Modal>
   </aside>

@@ -1,15 +1,13 @@
 <script setup>
-import { onBeforeMount, onMounted, useTemplateRef } from "vue"
+import { onMounted, useTemplateRef } from "vue"
 
 import { useLayoutStore } from "@stores/layout"
-import { useWoojsStore } from "@stores/woojs"
 import { useLockers } from "@composables/lockers"
 
 import Header from "@components/Header/Header.vue"
 import Sidebar from "@components/Sidebar.vue"
 
 const layoutStore = useLayoutStore()
-const woojsStore = useWoojsStore()
 
 const header = useTemplateRef("header")
 const sidebar = useTemplateRef("sidebar")
@@ -17,7 +15,6 @@ const content = useTemplateRef("content")
 
 const { lockTouchMove } = useLockers()
 
-onBeforeMount(() => woojsStore.fetchAll())
 onMounted(() => {
   layoutStore.setContentElement(content.value)
 
@@ -208,10 +205,10 @@ onMounted(() => {
 @include media.lg() {
   .layout-main {
     &__body {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: stretch;
+      // display: flex;
+      // flex-direction: column;
+      // justify-content: flex-start;
+      // align-items: stretch;
 
       &-content {
         padding: 20px;

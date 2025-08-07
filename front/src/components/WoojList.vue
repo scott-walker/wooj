@@ -1,6 +1,6 @@
 <script setup>
 import _ from "lodash"
-import { Sortable, Plugins, Draggable } from "@shopify/draggable"
+import { Sortable, Plugins } from "@shopify/draggable"
 import { ref, useTemplateRef, computed, onMounted, onUnmounted, watch, nextTick } from "vue"
 
 import { useMediaStore } from "@stores/media"
@@ -44,7 +44,7 @@ const emit = defineEmits([
 
 const getRandMargin = (i) => {
   const MIN_SIZE = 330
-  const BODY_PADDING = 30
+  const BODY_PADDING = 40
 
   if (!mediaStore.isSmall) {
     return null
@@ -63,17 +63,6 @@ const getRandMargin = (i) => {
     width,
     "max-width": width
   }
-
-  // const FACTOR = 7;
-
-  // const vector = i % 2 === 0 ? -1 : 1;
-  // const top = _.random(0, FACTOR) * vector
-  // const left = _.random(0, FACTOR) * vector
-
-  // return {
-  //   top: `${top}px`,
-  //   left: `${left}px`,
-  // }
 }
 
 const changedTitle = ref(props.title)
@@ -201,7 +190,8 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
 
     <Skeleton v-else type="blocks" :itemsNum="8" />
 
-    <Dialog v-model="isShowedDeleteDialog" title="Удалить топик" type="danger" @approve="onDeleteTopic">
+    <Dialog v-model="isShowedDeleteDialog" title="Удалить топик" type="danger" :center="mediaStore.isSmall"
+      @approve="onDeleteTopic">
       Ты действительно хочешь сделать это?
     </Dialog>
   </div>

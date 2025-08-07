@@ -49,6 +49,7 @@ onBeforeMount(() => setRouteListeners())
           v-model="isShowedDeleteDialog"
           title="Очистить корзину"
           type="danger"
+          :center="mediaStore.isSmall"
           @approve="topic.clearTrash">
           Ты действительно хочешь очистить корзину?
         </Dialog>

@@ -23,7 +23,7 @@ const router = useRouter()
 const mediaStore = useMediaStore()
 
 const isShowedTopics = ref(false)
-const isShowedShare = ref(false)
+// const isShowedShare = ref(false)
 const hasTopics = computed(() => !!props.topics.length)
 
 const onBack = () => router.back()
@@ -65,12 +65,12 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
 
     <Skeleton v-else type="block-list" :itemsNum="1" class="wooj__skeleton" />
 
-    <Modal v-model="isShowedTopics" title="Топики">
+    <Modal v-model="isShowedTopics" title="Топики" :center="mediaStore.isSmall">
       <TopicTags :topics="topics" v-model="wooj.topicIds" @save="onSaveTopics" />
     </Modal>
-    <Modal v-model="isShowedShare" title="Публиковать вуддж">
+    <!-- <Modal v-model="isShowedShare" title="Публиковать вуддж">
       Публиковать!!!
-    </Modal>
+    </Modal> -->
   </div>
 </template>
 
