@@ -1,7 +1,6 @@
 <script setup>
 import { computed, useTemplateRef } from 'vue'
 
-import { useMediaStore } from "@stores/media"
 import { useSelection } from "@composables/selection"
 
 import Panel from "@ui/Editor/Panel.vue"
@@ -10,11 +9,10 @@ const props = defineProps({
   editor: { type: Object },
   visible: { type: Boolean, default: false },
 })
-const emit = defineEmits(["mouseover"])
+const emit = defineEmits(["mouseover", "close"])
 const wrapper = useTemplateRef("wrapper")
 
-const { vpWidth } = useMediaStore()
-const { isSelectionActive, selectionTop, selectionLeft } = useSelection({
+const { selectionTop } = useSelection({
   excludedElements: [wrapper.value]
 })
 
@@ -22,14 +20,11 @@ const wrapperStyle = computed(() => {
   if (!wrapper.value) return {}
 
   const OFFSET = 20
-  const top = selectionTop.value + OFFSET
-  // const rect = wrapper.value.getBoundingClientRect()
-  // const left = Math.max(OFFSET, Math.min(selectionLeft.value - OFFSET, vpWidth - rect.width))
+  const top = props.visible ? `${selectionTop.value + OFFSET}px` : "1000px"
 
   return {
-    opacity: isSelectionActive.value ? 1 : 0,
-    top: `${top}px`,
-    // left: `${left}px`
+    opacity: props.visible ? 1 : 0,
+    top,
   }
 })
 </script>
@@ -43,7 +38,7 @@ const wrapperStyle = computed(() => {
       :style="wrapperStyle"
       @mouseover="emit('mouseover', $event)">
       <div class="ui-editor-bouble-pamel__wrapper">
-        <Panel :editor="editor" />
+        <Panel :editor="editor" @close="emit('close')" />
       </div>
     </div>
   </Teleport>
@@ -56,12 +51,12 @@ const wrapperStyle = computed(() => {
 .ui-editor-bouble-pamel {
   display: flex;
   justify-content: center;
-  position: fixed;
+  position: absolute;
   z-index: 1000;
   top: 0;
   left: 0;
   width: 100%;
-  transition: all .3s;
+  transition: all .15s;
   opacity: 0;
 
   &.visible {

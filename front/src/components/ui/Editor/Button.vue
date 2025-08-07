@@ -58,4 +58,12 @@ const colorStyle = computed(() => ({
     }
   }
 }
+
+@media (hover: none) and (pointer: coarse) {
+  .ui-editor-button {
+    &:hover {
+      background: colors.$absorbing;
+    }
+  }
+}
 </style>

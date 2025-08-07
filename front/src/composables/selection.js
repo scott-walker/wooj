@@ -30,12 +30,6 @@ export const useSelection = (options) => {
     }
 
     const range = selection.getRangeAt(0)
-
-    // if (range.collapsed) {
-    //   isSelectionActive.value = false
-    //   return
-    // }
-
     const rect = range.getBoundingClientRect()
 
     // Иногда ничего не возвращает
@@ -49,9 +43,8 @@ export const useSelection = (options) => {
     isSelectionActive.value = true
   }
 
-  // const hide = () => (isSelectionActive.value = false)
   const hide = ({ target }) => {
-    if (excludedElements.some((element) => element.contains(target))) return
+    if (excludedElements.some((element) => element && element.contains(target))) return
 
     isSelectionActive.value = false
   }

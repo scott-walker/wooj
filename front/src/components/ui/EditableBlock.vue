@@ -64,12 +64,10 @@ const onFocus = () => {
 
 watch(() => focused.value, (focused) => {
   if (focused) {
-    console.log("focus")
     block.value.focus()
 
     setEndOfContent(block.value)
   } else {
-    console.log("blur")
     block.value.blur()
   }
 })

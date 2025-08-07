@@ -2,6 +2,7 @@
 import { ref, computed } from "vue"
 import Button from "./Button.vue"
 
+const emit = defineEmits(["close"])
 const props = defineProps({
   editor: { type: Object },
 })
@@ -115,6 +116,11 @@ const isRedoDisabled = computed(() => !props.editor.can().chain().focus().redo()
 const onRedo = () => {
   props.editor.chain().focus().redo().run()
 }
+
+const onClose = () => {
+  props.editor.chain().blur()
+  emit("close")
+}
 </script>
 
 <template>
@@ -168,6 +174,7 @@ const onRedo = () => {
 
     <section class="ui-editor-pamel__group">
       <Button @click="onUndo" icon="undo" :disabled="isUndoDisabled" />
+      <Button @click="onClose" icon="caret-down" />
       <!-- <Button @click="onRedo" icon="redo" :disabled="isRedoDisabled" /> -->
     </section>
   </div>

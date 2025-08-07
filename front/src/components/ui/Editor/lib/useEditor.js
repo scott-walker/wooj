@@ -13,10 +13,10 @@ import Editor from "./CustomEditor"
 export const useEditor = ({ content, emit, props }) => {
   const deferredTimer = inject("createDeferredTimer")()
 
-  const isMouseOver = ref(false)
+  const isPanelFocused = ref(false)
   const isContentFocused = ref(false)
 
-  const isFocused = computed(() => isMouseOver.value || isContentFocused.value)
+  const isFocused = computed(() => isPanelFocused.value || isContentFocused.value)
   const placeholder = computed(() => {
     if (props.placeholder !== null) {
       return props.placeholder
@@ -50,18 +50,16 @@ export const useEditor = ({ content, emit, props }) => {
     },
     onFocus({ editor, event }) {
       isContentFocused.value = true
-
       editor.setExtensionOptions("placeholder", { placeholder: placeholder.value })
     },
     onBlur({ editor, event }) {
       isContentFocused.value = false
-
       editor.setExtensionOptions("placeholder", { placeholder: placeholder.value })
     },
   })
 
-  const onMouseOver = () => isContentFocused.value && (isMouseOver.value = true)
-  const onMouseLeave = () => isContentFocused.value && (isMouseOver.value = false)
+  const onPanelOver = () => isContentFocused.value && (isPanelFocused.value = true)
+  const onPanelLeave = () => (isPanelFocused.value = false)
 
   onBeforeUnmount(() => editor.destroy())
 
@@ -69,8 +67,9 @@ export const useEditor = ({ content, emit, props }) => {
     editor,
 
     isFocused,
+    isContentFocused,
 
-    onMouseOver,
-    onMouseLeave,
+    onPanelOver,
+    onPanelLeave,
   }
 }

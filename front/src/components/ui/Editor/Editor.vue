@@ -1,8 +1,5 @@
 <script setup>
-import { onMounted, onUnmounted, watchEffect } from "vue"
-
 import { useMediaStore } from "@stores/media"
-// import { useLayoutStore } from "@stores/layout"
 import { useEditor } from "./lib/useEditor"
 
 import EditorPanel from "./Panel.vue"
@@ -12,44 +9,31 @@ import { EditorContent } from "@tiptap/vue-3"
 const content = defineModel()
 const emit = defineEmits(["update", "save"])
 const props = defineProps({
-  focused: { type: Boolean, default: false },
   placeholder: { type: String, default: null },
 })
 
 // const layoutStore = useLayoutStore()
 const mediaStore = useMediaStore()
-const { editor, isFocused, onMouseOver, onMouseLeave } = useEditor({
+const { editor, isFocused, onPanelOver, onPanelLeave } = useEditor({
   content,
   emit,
   props,
 })
-
-// const onScroll = () => {
-//   layoutStore.contentElement.scrollTo({
-//     top: content.value.scrollTop + mediaStore.vpWidth / 2,
-//     behavior: "smooth"
-//   })
-
-//   console.log("scrollTo", content.value.scrollTop)
-// }
-
-onMounted(() => {
-  // layoutStore.contentElement.addEventListener("scroll", onScroll)
-})
-onUnmounted(() => {
-  // layoutStore.contentElement.removeEventListener("scroll", onScroll)
-})
-// watchEffect(() => isFocused.value && onScroll())
 </script>
 
 <template>
   <div
     class="ui-editor"
     :class="{ focused: isFocused }"
-    @mouseover="onMouseOver"
-    @mouseleave="onMouseLeave">
+    @mouseover="onPanelOver"
+    @mouseleave="onPanelLeave">
 
-    <EditorBoublePanel v-if="mediaStore.isSmall" :visible="isFocused" :editor="editor" @mouseover="onMouseOver" />
+    <EditorBoublePanel
+      v-if="mediaStore.isSmall"
+      :visible="isFocused"
+      :editor="editor"
+      @mouseover="onPanelOver"
+      @close="onPanelLeave" />
     <EditorPanel
       v-else
       class="ui-editor__panel"
