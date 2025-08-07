@@ -43,7 +43,7 @@ const emit = defineEmits([
 ])
 
 const getRandMargin = (i) => {
-  const MIN_SIZE = 330
+  const MIN_SIZE = 300
   const BODY_PADDING = 25
 
   if (!mediaStore.isSmall) {
@@ -341,11 +341,34 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
     }
 
     &__items {
+      justify-content: space-between;
       gap: 10px;
     }
 
     &__item {
+      // width: calc(100vw / 3 - 10px);
+      // max-width: 100%;
       flex-grow: 1;
+    }
+  }
+}
+
+@include media.xs() {
+  .wooj-list {
+    &__items {
+      gap: 5px;
+    }
+
+    &__item {
+      // width: calc(100vw / 2.7 - 10px);
+
+      &:nth-child(3n) {
+        align-self: anchor-center;
+      }
+
+      &:nth-child(5n) {
+        min-width: 100%;
+      }
     }
   }
 }

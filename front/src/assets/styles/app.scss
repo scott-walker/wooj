@@ -2,7 +2,6 @@
 @use "@styles/media";
 @use "@styles/colors";
 @import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
-@import "vue3-perfect-scrollbar/style.css";
 
 :root {
   --header-height: 50px;
@@ -52,14 +51,23 @@ div {
 
   p {
     margin: 0;
-    margin-bottom: 20px;
+    margin-bottom: 1em;
   }
 
   /* List styles */
   ul,
   ol {
-    padding: 0 1rem;
-    margin: 1.25rem 1rem 1.25rem 0.4rem;
+    padding: 0 0 0 1.2em;
+    margin: 0 1em 1em 0;
+
+    li {
+      padding: 0;
+      margin-bottom: 0.7em;
+
+      p {
+        margin: 0;
+      }
+    }
   }
 
   /* Heading styles */
@@ -69,26 +77,23 @@ div {
   h4,
   h5,
   h6 {
-    line-height: 2em;
-    margin-top: 0.4em;
-    margin-bottom: 0.4em;
+    margin-top: 0em;
+    margin-bottom: 0.7em;
+    font-size: 1.2em;
+    line-height: 1.6em;
     font-weight: bold;
+
+    & + hr {
+      margin-top: 0;
+    }
   }
 
-  h1 {
-    font-size: 1.4em;
-  }
-
-  /* Code and preformatted text styles */
   code {
     padding: 0.2em;
     line-height: 2em;
     border-radius: 0.4rem;
     background-color: colors.$grey;
     color: colors.$basic;
-    // font-size: 1.2rem;
-    // overflow-wrap: break-word;
-    // word-break: break-word;
   }
 
   pre {
@@ -119,13 +124,19 @@ div {
 
   hr {
     border: none;
-    border-top: 1px solid color.change(colors.$grey, $lightness: 90%);
-    margin: 15px 0;
+    border-top: 1px solid color.change(colors.$grey, $lightness: 87%);
+    margin: 1.2em 0;
   }
 
+  b,
   strong {
     color: inherit;
     font-weight: 800;
+  }
+  i,
+  em {
+    color: color.change(colors.$grey, $lightness: 50%);
+    font-style: italic;
   }
 }
 
@@ -134,8 +145,8 @@ div {
     /* List styles */
     ul,
     ol {
-      padding: 0 0.5em;
-      margin: 1.25em 1em 1.25em 0.4em;
+      // padding: 0 0.5em;
+      // margin: 1.25em 1em 1.25em 0.4em;
     }
 
     pre {

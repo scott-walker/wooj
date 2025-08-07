@@ -217,7 +217,7 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
     &__title {
       &-field {
         padding: 10px !important;
-        font-size: 18px;
+        font-size: 20px;
       }
     }
   }
