@@ -152,7 +152,6 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
   <div class="wooj-list">
     <div class="wooj-list__header">
       <EditableBlock
-        ref="topicTitle"
         class="wooj-list__header-title"
         :key="changedTitle"
         v-model="changedTitle"

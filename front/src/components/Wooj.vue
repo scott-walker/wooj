@@ -51,7 +51,7 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
         <div class="wooj__title">
           <EditableBlock
             class="wooj__title-field"
-            placeholder="Кликни сюда и напиши заголовок"
+            placeholder="Заголовок вуджа"
             v-model="wooj.title"
             :key="wooj.title"
             :max="120"
