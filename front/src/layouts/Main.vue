@@ -212,6 +212,7 @@ onMounted(() => {
 
       &-content {
         padding: 20px;
+        padding-bottom: 100px;
       }
     }
   }
@@ -224,6 +225,10 @@ onMounted(() => {
         &.aired {
           margin-left: -200px;
         }
+      }
+
+      &-content {
+        padding-bottom: 200px;
       }
     }
   }

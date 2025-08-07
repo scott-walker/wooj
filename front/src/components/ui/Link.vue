@@ -41,6 +41,7 @@ const onClick = () => !props.loading && emit('click')
   user-select: none;
 
   &:hover,
+  &:active,
   &.active,
   &.loading {
     background-color: colors.$grey-strong;
@@ -67,6 +68,14 @@ const onClick = () => !props.loading && emit('click')
 
   &.loading>&__loader {
     animation: rotating 1.5s linear infinite;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .ui-link {
+    &:hover {
+      background: none;
+    }
   }
 }
 

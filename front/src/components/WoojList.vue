@@ -44,7 +44,7 @@ const emit = defineEmits([
 
 const getRandMargin = (i) => {
   const MIN_SIZE = 330
-  const BODY_PADDING = 40
+  const BODY_PADDING = 25
 
   if (!mediaStore.isSmall) {
     return null

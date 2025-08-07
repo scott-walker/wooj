@@ -37,6 +37,7 @@ const onCreate = async () => {
 
 <style lang="scss">
 @use "@styles/colors";
+@use "@styles/media";
 
 .create-topic {
   display: flex;
@@ -46,15 +47,29 @@ const onCreate = async () => {
 
   &__field {
     font-size: 22px;
-    // border-color: colors.$primary !important;
-
-    // &:focus {
-    //   border-color: colors.$primary !important;
-    // }
   }
 
   &__button {
     font-size: 12px !important;
+  }
+}
+
+@include media.sm() {
+  .create-topic {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    gap: 10px;
+
+    &__field {
+      padding: 7px !important;
+      font-size: 16px;
+    }
+
+    &__button {
+      padding: 7px 10px !important;
+      font-size: 12px !important;
+    }
   }
 }
 </style>

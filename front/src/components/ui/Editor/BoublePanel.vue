@@ -17,13 +17,13 @@ const { selectionTop } = useSelection({
 })
 
 const wrapperStyle = computed(() => {
-  if (!wrapper.value) return {}
+  if (!wrapper.value || !props.visible) return {}
 
   const OFFSET = 20
-  const top = props.visible ? `${selectionTop.value + OFFSET}px` : "1000px"
+  const DEFAULT = 250
+  const top = Math.max(selectionTop.value + OFFSET, DEFAULT) + "px"
 
   return {
-    opacity: props.visible ? 1 : 0,
     top,
   }
 })
@@ -51,16 +51,18 @@ const wrapperStyle = computed(() => {
 .ui-editor-bouble-pamel {
   display: flex;
   justify-content: center;
-  position: absolute;
+  position: fixed;
   z-index: 1000;
   top: 0;
   left: 0;
   width: 100%;
   transition: all .15s;
   opacity: 0;
+  transform: translateX(100vw);
 
   &.visible {
     opacity: 1;
+    transform: translateX(0);
   }
 
   &__wrapper {

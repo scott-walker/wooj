@@ -45,7 +45,7 @@ const onClick = () => !isLocked.value && emit('click')
   align-items: center;
   position: relative;
   width: fit-content;
-  padding: 10px 17px;
+  padding: 7px 17px;
   border-radius: 20px;
   transition: all 0.3s;
   border: 4px solid colors.$absorbing;
@@ -55,6 +55,7 @@ const onClick = () => !isLocked.value && emit('click')
   font-weight: bold;
   text-align: center;
   text-transform: uppercase;
+  text-wrap: nowrap;
   cursor: pointer;
   user-select: none;
 

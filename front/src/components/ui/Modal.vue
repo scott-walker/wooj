@@ -68,6 +68,7 @@ const onClose = () => isShowed.value = false
 @use "sass:color";
 @use "@styles/colors";
 @use "@styles/common";
+@use "@styles/media";
 
 .ui-modal {
   display: flex;
@@ -122,6 +123,29 @@ const onClose = () => isShowed.value = false
       align-items: stretch;
       padding: 20px 30px;
       padding-top: 0;
+    }
+  }
+}
+
+@include media.sm() {
+  .ui-modal {
+    &__content {
+      &-header {
+        gap: 20px;
+        padding: 20px 15px;
+
+        &-title {
+          padding-left: 0px;
+          padding-right: 0px;
+          font-size: 22px;
+          font-weight: bold;
+        }
+      }
+
+      &-body {
+        padding: 20px 15px;
+        padding-top: 0;
+      }
     }
   }
 }

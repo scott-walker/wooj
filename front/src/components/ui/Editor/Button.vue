@@ -34,12 +34,17 @@ const colorStyle = computed(() => ({
   cursor: pointer;
   outline: none;
 
-  &.active {
+  &:active,
+  &:hover {
     background: colors.$primary;
   }
 
-  &:hover {
+  &.active {
     background: colors.$primary;
+
+    &:hover {
+      background: colors.$primary;
+    }
   }
 
   &__icon {
@@ -62,7 +67,7 @@ const colorStyle = computed(() => ({
 @media (hover: none) and (pointer: coarse) {
   .ui-editor-button {
     &:hover {
-      background: colors.$absorbing;
+      background: inherit;
     }
   }
 }

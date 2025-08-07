@@ -45,7 +45,7 @@ $grey: color.change(colors.$grey, $lightness: 80%);
 
 .ui-light-input {
   &__field {
-    padding: 10px 20px;
+    padding: 7px 20px;
     box-shadow: none !important;
     outline: none;
     border: none;
@@ -54,11 +54,11 @@ $grey: color.change(colors.$grey, $lightness: 80%);
     transition: all .3s;
     width: 100%;
     color: colors.$basic;
+    border-color: colors.$grey;
 
     &::placeholder {
       color: $grey;
       font-style: italic;
-      // font-weight: bold;
     }
 
     &:hover,

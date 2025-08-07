@@ -90,7 +90,7 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding: 20px 20px 100px 20px;
+    padding: 20px;
     width: 100%;
     height: 100%;
   }
@@ -165,7 +165,7 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
 @include media.lg() {
   .wooj {
     &__board {
-      padding: 10px 20px 80px 20px;
+      padding: 10px 20px;
     }
 
     &__paper {
@@ -183,7 +183,7 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
 
 @include media.sm() {
   .wooj {
-    padding-bottom: 200px;
+    // padding-bottom: 200px;
 
     &__board {
       display: flex;
