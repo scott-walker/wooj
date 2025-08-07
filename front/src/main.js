@@ -3,7 +3,6 @@ import "@styles/app.scss"
 
 import { createApp } from "vue"
 import { createPinia } from "pinia"
-import { PerfectScrollbarPlugin } from "vue3-perfect-scrollbar"
 
 import App from "./App.vue"
 import router from "./router"
@@ -22,9 +21,6 @@ const utils = initUtils({
 const services = initServices(utils)
 const app = createApp(App)
 
-app.use(PerfectScrollbarPlugin, {
-  componentName: "Scrollbar",
-})
 app.use(InjectPlugin, { utils, services, directives })
 app.use(SwiperPlugin)
 app.use(DeferredTimerPlugin)

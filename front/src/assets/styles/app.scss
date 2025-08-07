@@ -45,28 +45,6 @@ div {
   text-align: center;
 }
 
-// Scrollbar
-.ps {
-  &__rail-y,
-  &__rail-y:hover {
-    background: transparent !important;
-    z-index: 10;
-  }
-  &__thumb-y {
-    background-color: color.change(colors.$basic, $alpha: 40%) !important;
-    width: 7px !important;
-  }
-}
-
-@include media.sm() {
-  .ps {
-    &__thumb-y {
-      background-color: color.change(colors.$basic, $alpha: 20%) !important;
-      width: 3px !important;
-    }
-  }
-}
-
 // WOOJ
 .wooj-content {
   font-size: 1rem;
@@ -92,9 +70,8 @@ div {
   h5,
   h6 {
     line-height: 2em;
-    margin-top: 10px;
-    margin-bottom: 20px;
-    // text-wrap: pretty;
+    margin-top: 0.4em;
+    margin-bottom: 0.4em;
     font-weight: bold;
   }
 

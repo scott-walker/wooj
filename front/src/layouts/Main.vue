@@ -52,13 +52,9 @@ onMounted(() => {
         class="layout-main__body-content"
         :class="{ 'aired': layoutStore.isAired }"
         @mouseover="layoutStore.onLeaveSidebar">
-        <!-- <Scrollbar class="layout-main__body-content"
-        :class="{ aired: layoutStore.isAired }"
-        @mouseover="layoutStore.onLeaveSidebar"> -->
         <Transition name="view-transition" mode="out-in">
           <slot />
         </Transition>
-        <!-- </Scrollbar> -->
       </div>
     </div>
 
