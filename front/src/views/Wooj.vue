@@ -99,6 +99,7 @@ onUnmounted(() => {
     <Wooj
       v-else
       v-model="wooj"
+      :key="wooj.id"
       :loaded="woojStore.isLoaded"
       :saving="woojStore.isUpdatingWooj"
       :topics="woojStore.customTopics"

@@ -130,7 +130,6 @@ onMounted(() => {
       position: relative;
       width: calc(100% - $sidebar-width);
       height: calc(100vh - $header-height);
-      // height: 100%;
       padding: $content-ver-gap $content-hor-gap;
       transition: all 0.3s;
       overflow-x: hidden;
@@ -167,6 +166,8 @@ onMounted(() => {
         padding-top: 10px;
 
         &.aired {
+          margin-left: -200px;
+
           & .layout-main__body-sidebar-separator {
             height: 0;
           }
@@ -184,12 +185,6 @@ onMounted(() => {
 @include media.sm() {
   .layout-main {
     &__body {
-      &-sidebar {
-        &.aired {
-          margin-left: -200px;
-        }
-      }
-
       &-content {
         padding-bottom: 200px;
       }

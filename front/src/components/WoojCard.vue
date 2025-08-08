@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, useTemplateRef, onMounted, onUnmounted } from "vue"
+import { ref, computed, useTemplateRef, onMounted } from "vue"
 import { useMediaStore } from "@stores/media"
 import { useTap } from "@composables/tap"
 
@@ -29,28 +29,16 @@ const hasMove = computed(() => !mediaStore.isTouched && props.hasMove)
 
 const onActive = () => (isActive.value = true) && emit('active', wooj.value)
 const onDeactive = () => (isActive.value = false) && emit('deactive', wooj.value)
-const onLeave = ({ target }) => {
-  if (target != card.value || !card.value.contains(target)) {
-    onDeactive()
-  }
-}
 
 const onTouchEdit = () => mediaStore.isTouched && emit('edit', wooj.value)
 const onClickEdit = () => mediaStore.isTouched || emit('edit', wooj.value)
+const onHover = () => mediaStore.isTouched || onActive()
 
 onMounted(() => {
-  document.addEventListener("mousedown", onLeave)
-  document.addEventListener("touchstart", onLeave)
-
   useTap(wrapper.value, {
     onTap: () => onTouchEdit(),
     onLongTap: () => onActive()
   })
-})
-
-onUnmounted(() => {
-  document.addEventListener("mousedown", onLeave)
-  document.addEventListener("touchstart", onLeave)
 })
 </script>
 
@@ -58,8 +46,16 @@ onUnmounted(() => {
   <div
     ref="card"
     class="wooj-card"
-    :class="{ touched: isTouched, clicked: isClicked, active: isActive }">
+    :class="{
+      'touched': isTouched,
+      'clicked': isClicked,
+      'active': isActive
+    }"
+    @mouseover="onHover"
+    @mouseleave="onDeactive">
     <div v-if="hasPanel" class="wooj-card__panel">
+      <div v-if="!isActive" class="wooj-card__panel-locker"></div>
+
       <span
         v-if="hasMove"
         class="wooj-card__panel-button icon wooj-card__mover"
@@ -131,6 +127,15 @@ onUnmounted(() => {
     opacity: 0;
     transition: all .3s;
 
+    &-locker {
+      position: absolute;
+      z-index: 10;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
     &-button {
       cursor: pointer;
 
@@ -142,7 +147,7 @@ onUnmounted(() => {
 
 
   &.clicked {
-    &:hover {
+    &.active {
       .wooj-card__panel {
         opacity: 1;
       }
@@ -197,7 +202,6 @@ onUnmounted(() => {
 @include media.sm() {
   .wooj-card {
     &__panel {
-      display: flex;
       top: -15px;
       right: -15px;
 

@@ -1,5 +1,5 @@
 import { computed, watch } from "vue"
-import { useRouter, onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router"
+import { useRouter, onBeforeRouteLeave } from "vue-router"
 
 import { useWoojsStore } from "@stores/woojs"
 
@@ -65,10 +65,6 @@ export const useWoojs = () => {
    * @returns {void}
    */
   const setRouteListeners = () => {
-    onBeforeRouteUpdate(() => {
-      woojStore.isNeedUpdate && woojStore.fetchAll()
-    })
-
     onBeforeRouteLeave(() => {
       woojStore.isNeedUpdate && woojStore.fetchAll()
     })

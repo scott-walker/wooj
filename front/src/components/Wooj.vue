@@ -118,13 +118,13 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
     max-width: 800px;
   }
 
-  &__save-status {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 10;
-    transition: all .5s;
-  }
+  // &__save-status {
+  //   position: absolute;
+  //   top: 20px;
+  //   right: 20px;
+  //   z-index: 10;
+  //   transition: all .5s;
+  // }
 
   &__title {
     position: relative;
@@ -134,7 +134,7 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
 
     &-field {
       width: 100%;
-      padding: 20px !important;
+      padding: 15px !important;
       font-size: 28px;
       font-weight: bold;
       border: none !important;
@@ -207,9 +207,6 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
     }
 
     &__title {
-      padding-bottom: 5px;
-      margin-bottom: 5px;
-
       &-field {
         padding: 10px !important;
         font-size: 22px;
