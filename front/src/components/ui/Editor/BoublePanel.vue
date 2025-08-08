@@ -1,20 +1,16 @@
 <script setup>
 import { computed, useTemplateRef } from 'vue'
-
 import { useSelection } from "@composables/selection"
-
 import Panel from "@ui/Editor/Panel.vue"
 
 const props = defineProps({
   editor: { type: Object },
   visible: { type: Boolean, default: false },
 })
+
 const emit = defineEmits(["mouseover", "close"])
 const wrapper = useTemplateRef("wrapper")
-
-const { selectionTop } = useSelection({
-  excludedElements: [wrapper.value]
-})
+const { selectionTop } = useSelection({ excludedElements: [wrapper.value] })
 
 const wrapperStyle = computed(() => {
   if (!wrapper.value || !props.visible) return {}
@@ -38,7 +34,7 @@ const wrapperStyle = computed(() => {
       :style="wrapperStyle"
       @mouseover="emit('mouseover', $event)">
       <div class="ui-editor-bouble-pamel__wrapper">
-        <Panel :editor="editor" @close="emit('close')" />
+        <Panel :editor="editor" :hasClose="true" @close="emit('close')" />
       </div>
     </div>
   </Teleport>
@@ -67,7 +63,6 @@ const wrapperStyle = computed(() => {
 
   &__wrapper {
     width: fit-content;
-    box-shadow: color.change(colors.$basic, $alpha: 3%) 0px 0px 2px 7px;
   }
 }
 </style>

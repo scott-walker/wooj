@@ -5,6 +5,7 @@ import Button from "./Button.vue"
 const emit = defineEmits(["close"])
 const props = defineProps({
   editor: { type: Object },
+  hasClose: { type: Boolean, default: false }
 })
 
 // Bold
@@ -117,50 +118,50 @@ const onRedo = () => {
   props.editor.chain().focus().redo().run()
 }
 
-const onClose = () => {
-  props.editor.chain().blur()
-  emit("close")
-}
+// Close
+const onClose = () => props.editor.chain().blur() && emit("close")
 </script>
 
 <template>
-  <div class="ui-editor-pamel">
-    <section class="ui-editor-pamel__group">
-      <Button @click="onBold" icon="bold" :disabled="isBoldDisabled" :active="isBoldActive" />
-      <Button @click="onItalic" icon="italic" :disabled="isItalicDisabled" :active="isItalicActive" />
-      <Button @click="onUnderline" icon="underline" :disabled="isUnderlineDisabled" :active="isUnderlineActive" />
-      <Button @click="onStrike" icon="strikethrough" :disabled="isStrikeDisabled" :active="isStrikeActive" />
-    </section>
+  <div class="ui-editor-panel">
+    <div class="ui-editor-panel__offset"></div>
+    <div class="ui-editor-panel__content">
+      <section class="ui-editor-panel__group">
+        <Button @click="onBold" icon="bold" :disabled="isBoldDisabled" :active="isBoldActive" />
+        <Button @click="onItalic" icon="italic" :disabled="isItalicDisabled" :active="isItalicActive" />
+        <Button @click="onUnderline" icon="underline" :disabled="isUnderlineDisabled" :active="isUnderlineActive" />
+        <Button @click="onStrike" icon="strikethrough" :disabled="isStrikeDisabled" :active="isStrikeActive" />
+      </section>
 
-    <div class="ui-editor-pamel__delimiter"></div>
+      <div class="ui-editor-panel__delimiter"></div>
 
-    <section class="ui-editor-pamel__group">
-      <Button @click="onHeading(1)" icon="heading" :disabled="isH1Disabled" :active="isH1Active" />
-      <!-- <Button @click="onHeading(2)" icon="heading" :disabled="isH2Disabled" :active="isH2Active" />
+      <section class="ui-editor-panel__group">
+        <Button @click="onHeading(1)" icon="heading" :disabled="isH1Disabled" :active="isH1Active" />
+        <!-- <Button @click="onHeading(2)" icon="heading" :disabled="isH2Disabled" :active="isH2Active" />
       <Button @click="onHeading(3)" icon="heading" :disabled="isH3Disabled" :active="isH3Active" />
       <Button @click="onHeading(4)" icon="heading" :disabled="isH4Disabled" :active="isH4Active" />
       <Button @click="onHeading(5)" icon="heading" :disabled="isH5Disabled" :active="isH5Active" />
       <Button @click="onHeading(6)" icon="heading" :disabled="isH6Disabled" :active="isH6Active" /> -->
-    </section>
+      </section>
 
-    <div class="ui-editor-pamel__delimiter"></div>
+      <div class="ui-editor-panel__delimiter"></div>
 
-    <section class="ui-editor-pamel__group">
-      <Button @click="onBulletList" icon="list-ul" :disabled="isBulletListDisabled" :active="isBulletListActive" />
-      <Button @click="onOrderedList" icon="list-ol" :disabled="isOrderedListDisabled" :active="isOrderedListActive" />
-    </section>
+      <section class="ui-editor-panel__group">
+        <Button @click="onBulletList" icon="list-ul" :disabled="isBulletListDisabled" :active="isBulletListActive" />
+        <Button @click="onOrderedList" icon="list-ol" :disabled="isOrderedListDisabled" :active="isOrderedListActive" />
+      </section>
 
-    <div class="ui-editor-pamel__delimiter"></div>
+      <div class="ui-editor-panel__delimiter"></div>
 
-    <section class="ui-editor-pamel__group">
-      <!-- <Button @click="onCode" icon="code" :disabled="isCodeDisabled" :active="isCodeActive" /> -->
-      <!-- <Button @click="onBlockquote" icon="quote-right" :disabled="isBlockquoteDisabled" :active="isBlockquoteActive" /> -->
-      <Button @click="onHorizontalRule" icon="window-minimize" />
-    </section>
+      <section class="ui-editor-panel__group">
+        <!-- <Button @click="onCode" icon="code" :disabled="isCodeDisabled" :active="isCodeActive" /> -->
+        <!-- <Button @click="onBlockquote" icon="quote-right" :disabled="isBlockquoteDisabled" :active="isBlockquoteActive" /> -->
+        <Button @click="onHorizontalRule" icon="window-minimize" />
+      </section>
 
-    <!-- <div class="ui-editor-pamel__delimiter"></div> -->
+      <!-- <div class="ui-editor-panel__delimiter"></div> -->
 
-    <!-- <section class="ui-editor-pamel__group">
+      <!-- <section class="ui-editor-panel__group">
       <Button @click="onColor(null, true)" icon="circle" />
       <Button @click="onColor(colorsMap.purple, isColorPurpleActive)" icon="circle" :color="colorsMap.purple"
         :disabled="isColorPurpleDisabled" :active="isColorPurpleActive" />
@@ -170,13 +171,14 @@ const onClose = () => {
         :disabled="isColorGreenDisabled" :active="isColorGreenActive" />
     </section> -->
 
-    <div class="ui-editor-pamel__delimiter"></div>
+      <div class="ui-editor-panel__delimiter"></div>
 
-    <section class="ui-editor-pamel__group">
-      <Button @click="onUndo" icon="undo" :disabled="isUndoDisabled" />
-      <Button @click="onClose" icon="caret-down" />
-      <!-- <Button @click="onRedo" icon="redo" :disabled="isRedoDisabled" /> -->
-    </section>
+      <section class="ui-editor-panel__group">
+        <Button @click="onUndo" icon="undo" :disabled="isUndoDisabled" />
+        <Button v-if="hasClose" @click="onClose" icon="caret-down" />
+        <!-- <Button @click="onRedo" icon="redo" :disabled="isRedoDisabled" /> -->
+      </section>
+    </div>
   </div>
 </template>
 
@@ -185,17 +187,27 @@ const onClose = () => {
 @use "@styles/media";
 @use "@styles/colors";
 
-.ui-editor-pamel {
-  display: flex;
-  justify-content: flex-start;
-  align-items: stretch;
-  flex-wrap: wrap;
-  gap: 20px;
+.ui-editor-panel {
   border-radius: 5px;
   max-width: 100%;
-  padding: 10px;
-  box-shadow: color.change(colors.$basic, $alpha: 5%) 0px 15px 60px 5px;
+  box-shadow: 0px 5px 20px 1px colors.$shadow;
   background: colors.$absorbing;
+  overflow: hidden;
+
+  &__offset {
+    background: colors.$shadow;
+    height: 2px;
+  }
+
+  &__content {
+    display: flex;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 10px;
+  }
+
 
   &__delimiter {
     width: 1px;
@@ -210,13 +222,26 @@ const onClose = () => {
   }
 }
 
-@include media.sm() {
+@include media.lg() {
+  .ui-editor-panel {
+    &__content {
+      gap: 10px;
+    }
+  }
+}
 
-  .ui-editor-pamel {
-    justify-content: space-evenly;
-    padding: 10px 5px;
-    gap: 10px;
-    box-shadow: color.change(colors.$basic, $alpha: 10%) 0px -15px 100px 5px;
+@include media.sm() {
+  .ui-editor-panel {
+    &__offset {
+      display: none;
+    }
+
+    &__content {
+      justify-content: space-evenly;
+      padding: 10px 5px;
+      gap: 10px;
+      box-shadow: 0px -15px 100px 5px colors.$shadow;
+    }
 
     &__delimiter {
       display: none;

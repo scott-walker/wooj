@@ -5,13 +5,17 @@
   $shadow-color: color.change(colors.$basic, $alpha: 8%);
 
   background: colors.$absorbing;
-  box-shadow: $shadow-color 0px 10px 20px 5px;
+  box-shadow: colors.$shadow 0px 10px 20px 5px;
   transition: all 0.3s;
 
   @if ($isHoverable) {
     &:hover,
     &.active {
-      box-shadow: $shadow-color 0px 15px 50px 20px;
+      box-shadow: colors.$shadow 0px 15px 50px 20px;
     }
   }
 }
+
+// @mixin shadow() {
+//   box-shadow: 0px 30px 60px 5px color.change(colors.$basic, $alpha: 5%);
+// }

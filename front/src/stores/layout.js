@@ -13,14 +13,12 @@ export const useLayoutStore = defineStore("layout", () => {
 
   const contentElement = ref(null)
 
-  const hasFooter = ref(false)
   const isAiredSidebarMode = ref(false)
   const isHoveredSidebar = ref(false)
   const isHoveredBars = ref(false)
-  const isCreateWoojActive = ref(false)
   const statusBar = ref(null)
 
-  const isAired = computed(() => mediaStore.isSmall || isAiredSidebarMode.value)
+  const isAired = computed(() => mediaStore.isSmall || mediaStore.isTouched || isAiredSidebarMode.value)
 
   /**
    * Инициализация
@@ -28,6 +26,7 @@ export const useLayoutStore = defineStore("layout", () => {
   function init() {
     isAiredSidebarMode.value = storage.get("isAiredSidebarMode", false)
 
+    // При каждом изменении маршрута скрывать сайдбар для мобильных устройств
     router.afterEach(() => {
       if (mediaStore.isSmall) {
         isHoveredSidebar.value = false
@@ -35,34 +34,64 @@ export const useLayoutStore = defineStore("layout", () => {
     })
   }
 
-  const setStatusBar = ({ title, icon }) => {
-    statusBar.value = {
-      title,
-      icon: icon || "",
-    }
+  /**
+   * Установить статус в шапке лейаута
+   * @param {Object} options
+   */
+  const setStatusBar = (options) => {
+    const { title, icon } = options || {}
+
+    statusBar.value = { title, icon }
   }
+
+  /**
+   * Снять статус в шапке лейаута
+   * @param {Object} params
+   */
   const unsetStatusBar = () => {
     statusBar.value = null
   }
 
+  /**
+   * Наведение курсора на сайдбар
+   */
   const onOverSidebar = () => (isHoveredSidebar.value = true)
+
+  /**
+   * Снятие курсора с сайдбара
+   */
   const onLeaveSidebar = () => (isHoveredSidebar.value = false)
+
+  /**
+   * Наведение курсора на бургер
+   */
   const onOverBars = () => (isHoveredBars.value = true)
+
+  /**
+   * Снятие курсора с бургера
+   */
   const onLeaveBars = () => (isHoveredBars.value = false)
+
+  /**
+   * Установить/снять режим скрывающегося сайдбара
+   */
   const onToggleSidebar = () => {
     isAiredSidebarMode.value = !isAiredSidebarMode.value
 
     storage.set("isAiredSidebarMode", isAiredSidebarMode.value)
   }
+
+  /**
+   * Установить/снять режим скрывающегося сайдбара (поведение для мобильных устройств)
+   */
   const onToggleMobileSidebar = () => {
     isHoveredSidebar.value = !isHoveredSidebar.value
   }
-  const onActivateCreateWooj = () => (isCreateWoojActive.value = true)
-  const onDeactivateCreateWooj = () => (isCreateWoojActive.value = false)
 
-  const showFooter = () => (hasFooter.value = true)
-  const hideFooter = () => (hasFooter.value = false)
-
+  /**
+   * Установить элемент в котором содержиться контент лейаута
+   * @param {HTMLElement} element
+   */
   const setContentElement = (element) => (contentElement.value = element)
 
   // Инициализировать
@@ -71,11 +100,9 @@ export const useLayoutStore = defineStore("layout", () => {
   return {
     contentElement,
 
-    hasFooter,
     isAired,
     isHoveredSidebar,
     isHoveredBars,
-    isCreateWoojActive,
 
     statusBar,
     setStatusBar,
@@ -83,15 +110,12 @@ export const useLayoutStore = defineStore("layout", () => {
 
     onOverSidebar,
     onLeaveSidebar,
+
     onOverBars,
     onLeaveBars,
+
     onToggleSidebar,
     onToggleMobileSidebar,
-    onActivateCreateWooj,
-    onDeactivateCreateWooj,
-
-    showFooter,
-    hideFooter,
 
     setContentElement,
   }

@@ -65,11 +65,10 @@ const { editor, isFocused, onPanelOver, onPanelLeave } = useEditor({
     top: -27px;
     left: 0;
     background: colors.$absorbing;
-    z-index: 10;
+    z-index: 1020;
     width: 100%;
     height: fit-content;
     margin-top: -2px;
-    overflow: hidden;
     transform: translateY(0px);
     opacity: 1;
     transition: all .3s;
@@ -107,6 +106,14 @@ const { editor, isFocused, onPanelOver, onPanelLeave } = useEditor({
   }
 }
 
+@include media.lg() {
+  .ui-editor {
+    &__panel {
+      top: -20px;
+    }
+  }
+}
+
 @include media.sm() {
 
   .ui-editor {
@@ -114,7 +121,6 @@ const { editor, isFocused, onPanelOver, onPanelLeave } = useEditor({
       position: sticky;
       z-index: 100;
       top: inherit;
-      bottom: -20px;
       height: inherit;
       width: 100%;
 

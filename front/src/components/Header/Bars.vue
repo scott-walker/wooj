@@ -14,17 +14,13 @@ const onOverBars = () => {
   layoutStore.onOverSidebar()
 }
 
-const onCreateWooj = async () => {
-  await createWooj()
-
-  layoutStore.onActivateCreateWooj()
-}
+const onCreateWooj = () => createWooj()
 </script>
 
 <template>
   <div class="header-bars">
     <IconLink
-      v-if="mediaStore.isSmall"
+      v-if="mediaStore.isSmall || mediaStore.isTouched"
       :icon="layoutStore.isHoveredSidebar ? 'chevron-left' : 'bars'"
       @click="layoutStore.onToggleMobileSidebar" />
     <IconLink
@@ -37,7 +33,6 @@ const onCreateWooj = async () => {
 
     <IconLink
       icon="plus"
-      :active="layoutStore.isCreateWoojActive"
       :loading="woojStore.isCreatingWooj"
       @click="onCreateWooj" />
   </div>

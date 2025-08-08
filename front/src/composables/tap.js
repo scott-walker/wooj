@@ -53,9 +53,9 @@ export const useTap = (el, { onTap, onLongTap, delay }) => {
     tapCompleted = true
   }
 
-  el.addEventListener("touchstart", onStart)
+  el.addEventListener("touchstart", onStart, { passive: true })
   el.addEventListener("touchend", onEnd)
-  el.addEventListener("touchmove", onMove)
+  el.addEventListener("touchmove", onMove, { passive: true })
 
   onUnmounted(() => {
     el.removeEventListener("touchstart", onStart)

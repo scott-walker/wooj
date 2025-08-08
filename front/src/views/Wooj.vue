@@ -36,6 +36,9 @@ const onChangeTopics = async (topicsMap) => {
   wooj.topicIds = topic_ids
 }
 
+/**
+ * Установить состояние "вудж не найден"
+ */
 const setNotFound = () => {
   isNotFound.value = true
   layoutStore.setStatusBar({
@@ -44,6 +47,9 @@ const setNotFound = () => {
   })
 }
 
+/**
+ * Инициализация
+ */
 const init = () => {
   woojStore.activateWooj(props.woojId)
 
@@ -75,13 +81,14 @@ onLoaded(() => {
     setNotFound()
   }
 })
+
 onBeforeMount(() => {
   init()
   setRouteListeners()
 })
+
 onUnmounted(() => {
   woojStore.deactivateWooj()
-  layoutStore.onDeactivateCreateWooj()
   layoutStore.unsetStatusBar()
 })
 </script>

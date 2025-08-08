@@ -31,10 +31,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- Body -->
-    <div
-      class="layout-main__body"
-      :class="{ 'with-footer': layoutStore.hasFooter }">
+    <div class="layout-main__body">
       <div
         ref="sidebar"
         class="layout-main__body-sidebar"
@@ -57,10 +54,6 @@ onMounted(() => {
         </Transition>
       </div>
     </div>
-
-    <div v-show="layoutStore.hasFooter" class="layout-main__footer">
-      <div class="layout-main__footer-content"></div>
-    </div>
   </div>
 </template>
 
@@ -72,7 +65,6 @@ onMounted(() => {
 .layout-main {
   $header-gap: 10px;
   $header-height: 50px;
-  $footer-height: 50px;
   $sidebar-width: 200px;
   $sidebar-active-area-width: math.div($sidebar-width, 2);
   $content-hor-gap: 40px;
@@ -84,23 +76,14 @@ onMounted(() => {
   align-items: stretch;
   width: 100%;
   height: 100%;
-  overflow: hidden;
 
   &__header {
     position: relative;
+    z-index: 1010;
     width: 100%;
     height: $header-height;
-    overflow: hidden;
 
-    &-content {
-      // position: fixed;
-      // z-index: 10;
-      // top: 0;
-      // left: 0;
-      // right: 0;
-      // height: $header-height;
-      // overflow: hidden;
-    }
+    &-content {}
   }
 
   &__body {
@@ -111,14 +94,10 @@ onMounted(() => {
     height: calc(100vh - $header-height);
     background: colors.$grey;
 
-    &.with-footer {
-      height: calc(100% - $header-height - $footer-height);
-    }
-
     &-sidebar {
       position: fixed;
       left: 0;
-      z-index: 10000;
+      z-index: 1000;
       min-width: $sidebar-width;
       max-width: $sidebar-width;
       height: 100%;
@@ -163,24 +142,6 @@ onMounted(() => {
       }
     }
   }
-
-  &__footer {
-    position: relative;
-    width: 100%;
-    height: $footer-height;
-    overflow: hidden;
-    background: red;
-
-    &-content {
-      position: fixed;
-      z-index: 10;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: $footer-height;
-      overflow: hidden;
-    }
-  }
 }
 
 .view-transition {
@@ -201,10 +162,16 @@ onMounted(() => {
 @include media.lg() {
   .layout-main {
     &__body {
-      // display: flex;
-      // flex-direction: column;
-      // justify-content: flex-start;
-      // align-items: stretch;
+
+      &-sidebar {
+        padding-top: 10px;
+
+        &.aired {
+          & .layout-main__body-sidebar-separator {
+            height: 0;
+          }
+        }
+      }
 
       &-content {
         padding: 20px;

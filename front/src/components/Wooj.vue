@@ -46,7 +46,7 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
       </div>
 
       <div class="wooj__paper">
-        <span v-show="props.saving" class="wooj__save-status tag">Сохранено</span>
+        <!-- <span v-show="props.saving" class="wooj__save-status tag">Сохранено</span> -->
 
         <div class="wooj__title">
           <EditableBlock
@@ -90,7 +90,7 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding: 20px;
+    padding: 40px 20px 80px 20px;
     width: 100%;
     height: 100%;
   }
@@ -164,10 +164,6 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
 
 @include media.lg() {
   .wooj {
-    &__board {
-      padding: 10px 20px;
-    }
-
     &__paper {
       padding: 10px;
     }
@@ -183,16 +179,12 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
 
 @include media.sm() {
   .wooj {
-    // padding-bottom: 200px;
-
     &__board {
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
       align-items: flex-start;
-      padding: 0px;
-      padding-bottom: 60px;
-      // padding-bottom: 0;
+      padding: 10px 0px 80px 0px;
       height: 100%;
     }
 
@@ -215,9 +207,12 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
     }
 
     &__title {
+      padding-bottom: 5px;
+      margin-bottom: 5px;
+
       &-field {
         padding: 10px !important;
-        font-size: 20px;
+        font-size: 22px;
       }
     }
   }

@@ -38,6 +38,7 @@ const isVisibleStatus = computed(() => !mediaStore.isSmall && layoutStore.status
 <style lang="scss" scoped>
 @use "@styles/colors";
 @use "@styles/media";
+@use "@styles/common";
 
 .header {
   width: 100%;
@@ -47,6 +48,8 @@ const isVisibleStatus = computed(() => !mediaStore.isSmall && layoutStore.status
   height: 50px;
   background: colors.$absorbing;
   gap: 10px;
+  overflow: hidden;
+  box-shadow: 80px 10px 40px 1px colors.$shadow;
 
   &-left {
     display: flex;
