@@ -359,17 +359,17 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
       gap: 5px;
     }
 
-    &__item {
-      // width: calc(100vw / 2.7 - 10px);
+    // &__item {
+    //   // width: calc(100vw / 2.7 - 10px);
 
-      &:nth-child(3n) {
-        align-self: anchor-center;
-      }
+    //   &:nth-child(3n) {
+    //     align-self: anchor-center;
+    //   }
 
-      &:nth-child(5n) {
-        min-width: 100%;
-      }
-    }
+    //   &:nth-child(5n) {
+    //     min-width: 100%;
+    //   }
+    // }
   }
 }
 </style>
