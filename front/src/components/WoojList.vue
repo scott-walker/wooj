@@ -302,6 +302,18 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
   }
 }
 
+@include media.lg() {
+  .wooj-list {
+    &__items {
+      gap: 10px;
+    }
+
+    // &__item {
+    //   width: calc(100% / 3.5);
+    // }
+  }
+}
+
 @include media.sm() {
   .wooj-list {
     &__header {
@@ -341,13 +353,10 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
     }
 
     &__items {
-      justify-content: space-between;
       gap: 10px;
     }
 
     &__item {
-      // width: calc(100vw / 3 - 10px);
-      // max-width: 100%;
       flex-grow: 1;
     }
   }
@@ -358,18 +367,6 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
     &__items {
       gap: 5px;
     }
-
-    // &__item {
-    //   // width: calc(100vw / 2.7 - 10px);
-
-    //   &:nth-child(3n) {
-    //     align-self: anchor-center;
-    //   }
-
-    //   &:nth-child(5n) {
-    //     min-width: 100%;
-    //   }
-    // }
   }
 }
 </style>
