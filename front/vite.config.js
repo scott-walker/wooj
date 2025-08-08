@@ -24,6 +24,8 @@ export default defineConfig({
             return "axios"
           } else if (id.includes("lodash")) {
             return "lodash"
+          } else if (id.includes("prosemirror")) {
+            return "prosemirror"
           } else if (id.includes("vue")) {
             return "vue"
           }

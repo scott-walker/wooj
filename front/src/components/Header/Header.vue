@@ -49,7 +49,7 @@ const isVisibleStatus = computed(() => !mediaStore.isSmall && layoutStore.status
   background: colors.$absorbing;
   gap: 10px;
   overflow: hidden;
-  box-shadow: 80px 10px 40px 1px colors.$shadow;
+  box-shadow: 10px 10px 40px 1px colors.$shadow;
 
   &-left {
     display: flex;

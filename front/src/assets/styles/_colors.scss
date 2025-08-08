@@ -19,4 +19,4 @@ $basic-light: color.change($basic, $alpha: 80%);
 $grey: toLight($basic, 100%);
 $grey-strong: toLight($basic, 92%);
 
-$shadow: color.change($basic, $lightness: 60%, $saturation: 30%, $alpha: 15%);
+$shadow: color.change($basic, $lightness: 60%, $saturation: 30%, $alpha: 7%);
