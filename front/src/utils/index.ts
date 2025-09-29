@@ -1,4 +1,4 @@
-import HttpClient from "./httpClient"
+import HttpClient from "./HttpClient"
 import Storage from "./Storage"
 import MediaDetector from "./MediaDetector"
 

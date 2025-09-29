@@ -1,9 +1,13 @@
+import type { DeferredTimer as IDeferredTimer } from "@/types/utils"
+
 /**
  * Отложенный таймер
  */
-export default class DeferredTimer {
+export default class DeferredTimer implements IDeferredTimer {
+  timer: NodeJS.Timeout | null
+
   /**
-   * Init
+   * Инициализировать
    */
   constructor() {
     this.timer = null
@@ -14,15 +18,22 @@ export default class DeferredTimer {
    * @param {Number} timeout
    * @param {Function} cb
    */
-  start(timeout, cb) {
+  start(timeout: number, cb: () => void): void {
     if (!timeout) {
-      throw "DeferredTimer: Set timeout"
+      throw new Error("DeferredTimer: Set timeout")
     }
     if (!cb) {
-      throw "DeferredTimer: Set callback funciton"
+      throw new Error("DeferredTimer: Set callback function")
     }
 
-    this.timer && clearTimeout(this.timer)
+    this.stop()
     this.timer = setTimeout(cb, timeout)
+  }
+
+  /**
+   * Остановить таймер
+   */
+  stop(): void {
+    this.timer && clearTimeout(this.timer)
   }
 }
