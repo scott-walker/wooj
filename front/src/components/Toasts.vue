@@ -1,22 +1,23 @@
-<script setup>
+<script setup lang="ts">
 import { useToastsStore } from "@stores/toasts"
 
 const { toasts, remove } = useToastsStore()
 
-const onHide = (toastId) => remove(toastId)
+const onHide = (toastId: number) => remove(toastId)
 </script>
 
 <template>
   <div class="toasts">
     <TransitionGroup name="toast-transition">
       <div
-        v-for="toast in toasts"
+        v-for="toast of toasts"
         :key="toast.id"
         class="toasts__toast"
         :class="toast.type"
         v-html="toast.message"
         @mousedown="onHide(toast.id)"
-        @touchstart="onHide(toast.id)" />
+        @touchstart="onHide(toast.id)"
+      />
     </TransitionGroup>
   </div>
 </template>
@@ -58,10 +59,9 @@ const onHide = (toastId) => remove(toastId)
 }
 
 .toast-transition {
-
   &-enter-active,
   &-leave-active {
-    transition: all .15s ease;
+    transition: all 0.15s ease;
   }
 
   &-enter-from,

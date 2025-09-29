@@ -15,17 +15,18 @@ const wooj = reactive({
   id: null,
   title: "",
   content: "",
-  topicIds: []
+  topicIds: [],
 })
 const isNotFound = ref(false)
 
 /**
  * Изменение содержимого вуджа
  */
-const onChangeContent = () => woojStore.updateWooj(wooj.id, {
-  title: wooj.title,
-  content: wooj.content,
-})
+const onChangeContent = () =>
+  woojStore.updateWooj(wooj.id, {
+    title: wooj.title,
+    content: wooj.content,
+  })
 
 /**
  * Изменение привязанных топиков
@@ -43,7 +44,7 @@ const setNotFound = () => {
   isNotFound.value = true
   layoutStore.setStatusBar({
     title: "Нет вуджа",
-    icon: "magnifying-glass"
+    icon: "magnifying-glass",
   })
 }
 
@@ -61,18 +62,21 @@ const init = () => {
 
     layoutStore.setStatusBar({
       title: wooj.title || "Новый вудж",
-      icon: "file-pen"
+      icon: "file-pen",
     })
   }
 }
 
 watch(() => props.woojId, init)
-watch(() => wooj.title, () => {
-  layoutStore.setStatusBar({
-    title: wooj.title || "Новый вудж",
-    icon: "file-pen"
-  })
-})
+watch(
+  () => wooj.title,
+  () => {
+    layoutStore.setStatusBar({
+      title: wooj.title || "Новый вудж",
+      icon: "file-pen",
+    })
+  },
+)
 
 onLoaded(() => {
   init()
@@ -104,7 +108,8 @@ onUnmounted(() => {
       :saving="woojStore.isUpdatingWooj"
       :topics="woojStore.customTopics"
       @changeContent="onChangeContent"
-      @changeTopics="onChangeTopics" />
+      @changeTopics="onChangeTopics"
+    />
   </div>
 </template>
 

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue"
 
 import { useMediaStore } from "@stores/media"
@@ -10,12 +10,12 @@ import Skeleton from "@ui/Skeleton.vue"
 import SidebarLink from "@components/SidebarLink.vue"
 import CreateTopic from "@components/CreateTopic.vue"
 
-const isShowedCreateTopic = ref(false)
+const isShowedCreateTopic = ref<boolean>(false)
 const mediaStore = useMediaStore()
 const store = useWoojsStore()
 
-const onShowCreateTopic = () => isShowedCreateTopic.value = true
-const onHideCreateTopic = () => isShowedCreateTopic.value = false
+const onShowCreateTopic = () => (isShowedCreateTopic.value = true)
+const onHideCreateTopic = () => (isShowedCreateTopic.value = false)
 </script>
 
 <template>

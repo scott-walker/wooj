@@ -1,6 +1,6 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue"
-import { useWoojs } from "@composables/woojs"
+import { useWoojs } from "@composables/woojs.ts"
 import Button from "@ui/Button.vue"
 import LightInput from "@ui/LightInput.vue"
 
@@ -9,11 +9,14 @@ const emit = defineEmits(["created"])
 const name = ref("")
 const isDisabledButton = computed(() => !name.value.length)
 
+/**
+ * Создать топик
+ */
 const onCreate = async () => {
   await createTopic({ name: name.value })
 
   emit("created")
-} 
+}
 </script>
 
 <template>
@@ -24,14 +27,16 @@ const onCreate = async () => {
       fieldClass="create-topic__field"
       :max="20"
       :focused="true"
-      v-model="name" />
+      v-model="name"
+    />
     <Button
       class="create-topic__button"
       text="Создать"
       icon="plus"
       :disabled="isDisabledButton"
       :loading="woojStore.isCreatingTopic"
-      @click="onCreate" />
+      @click="onCreate"
+    />
   </div>
 </template>
 

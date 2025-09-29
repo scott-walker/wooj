@@ -1,12 +1,12 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, reactive } from "vue"
 // import { useMediaStore } from "@stores/media"
-import { useDebuggerStore } from "@stores/debugger"
+import { useDebuggerStore } from "@stores/debugger.ts"
 import Button from "@ui/Button.vue"
 
 // const mediaStore = useMediaStore()
 const debuggerStore = useDebuggerStore()
-const isShowed = ref(false)
+const isShowed = ref<boolean>(false)
 
 const onToggle = () => (isShowed.value = !isShowed.value)
 const onClear = () => debuggerStore.clear()
@@ -25,15 +25,17 @@ onMounted(() => {
       const height = entry.contentRect.height
 
       debuggerStore.push({
-        tag: entry.target.tagName,
-        id: entry.target.getAttribute("id"),
-        class: entry.target.className,
-        height,
+        data: {
+          tag: entry.target.tagName || "",
+          id: entry.target.getAttribute("id") || "",
+          class: entry.target.className,
+          height,
+        },
       })
     }
   })
 
-  elements.forEach(el => !el.className.includes("debugger") && observer.observe(el))
+  elements.forEach((el) => !el.className.includes("debugger") && observer.observe(el))
   observer.observe(document.body)
 
   // let actions = null
@@ -57,11 +59,7 @@ onMounted(() => {
   <!-- <Teleport to="body"> -->
   <div class="debugger" :class="{ showed: isShowed }">
     <div class="debugger__panel">
-      <Button
-        class="debugger__panel-button"
-        type="default"
-        text="debug"
-        @click="onToggle" />
+      <Button class="debugger__panel-button" type="default" text="debug" @click="onToggle" />
     </div>
 
     <div v-show="isShowed" class="debugger__container">
@@ -89,11 +87,7 @@ onMounted(() => {
       </div>
 
       <div class="debugger__actions">
-        <Button
-          class="debugger__actions-button"
-          type="default"
-          text="clear"
-          @click="onClear" />
+        <Button class="debugger__actions-button" type="default" text="clear" @click="onClear" />
       </div>
     </div>
   </div>

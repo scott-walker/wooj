@@ -1,17 +1,18 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed, useTemplateRef, onMounted } from "vue"
 import { useMediaStore } from "@stores/media"
-import { useTap } from "@composables/tap"
+import { useTap } from "@composables/tap.ts"
+import type { Wooj } from "@types"
 
 const emit = defineEmits(["move", "edit", "pin", "remove", "restore", "active", "deactive"])
-const props = defineProps({
-  data: Object,
-  hasMove: { type: Boolean, default: true },
-  hasPin: { type: Boolean, default: true },
-  hasEdit: { type: Boolean, default: true },
-  hasRemove: { type: Boolean, default: true },
-  hasRestore: { type: Boolean, default: false },
-})
+const props = defineProps<{
+  data: Wooj
+  hasMove: boolean
+  hasPin: boolean
+  hasEdit: boolean
+  hasRemove: boolean
+  hasRestore: boolean
+}>()
 
 const mediaStore = useMediaStore()
 
@@ -27,17 +28,17 @@ const isTouched = computed(() => mediaStore.isTouched)
 const isClicked = computed(() => !mediaStore.isTouched)
 const hasMove = computed(() => !mediaStore.isTouched && props.hasMove)
 
-const onActive = () => (isActive.value = true) && emit('active', wooj.value)
-const onDeactive = () => (isActive.value = false) && emit('deactive', wooj.value)
+const onActive = () => (isActive.value = true) && emit("active", wooj.value)
+const onDeactive = () => (isActive.value = false) && emit("deactive", wooj.value)
 
-const onTouchEdit = () => mediaStore.isTouched && emit('edit', wooj.value)
-const onClickEdit = () => mediaStore.isTouched || emit('edit', wooj.value)
+const onTouchEdit = () => mediaStore.isTouched && emit("edit", wooj.value)
+const onClickEdit = () => mediaStore.isTouched || emit("edit", wooj.value)
 const onHover = () => mediaStore.isTouched || onActive()
 
 onMounted(() => {
-  useTap(wrapper.value, {
+  useTap(wrapper.value!, {
     onTap: () => onTouchEdit(),
-    onLongTap: () => onActive()
+    onLongTap: () => onActive(),
   })
 })
 </script>
@@ -47,25 +48,20 @@ onMounted(() => {
     ref="card"
     class="wooj-card"
     :class="{
-      'touched': isTouched,
-      'clicked': isClicked,
-      'active': isActive
+      touched: isTouched,
+      clicked: isClicked,
+      active: isActive,
     }"
     @mouseover="onHover"
-    @mouseleave="onDeactive">
+    @mouseleave="onDeactive"
+  >
     <div v-if="hasPanel" class="wooj-card__panel">
       <div v-if="!isActive" class="wooj-card__panel-locker"></div>
 
-      <span
-        v-if="hasMove"
-        class="wooj-card__panel-button icon wooj-card__mover"
-        @mousedown="emit('move', wooj)">
+      <span v-if="hasMove" class="wooj-card__panel-button icon wooj-card__mover" @mousedown="emit('move', wooj)">
         <i class="fas fa-arrows-up-down-left-right"></i>
       </span>
-      <span
-        v-if="hasPin"
-        class="wooj-card__panel-button icon"
-        @click.stop="emit('pin', wooj)">
+      <span v-if="hasPin" class="wooj-card__panel-button icon" @click.stop="emit('pin', wooj)">
         <i class="fas" :class="wooj.is_pinned ? 'fa-thumbtack-slash' : 'fa-thumbtack'"></i>
       </span>
       <!-- <span
@@ -73,16 +69,10 @@ onMounted(() => {
         class="wooj-card__panel-button icon"
         @click="emit('edit', wooj)">
         <i class="fas fa-edit"></i></span> -->
-      <span
-        v-if="hasRemove"
-        class="wooj-card__panel-button icon"
-        @click="emit('remove', wooj)">
+      <span v-if="hasRemove" class="wooj-card__panel-button icon" @click="emit('remove', wooj)">
         <i class="fas fa-trash"></i>
       </span>
-      <span
-        v-if="hasRestore"
-        class="wooj-card__panel-button icon"
-        @click="emit('restore', wooj)">
+      <span v-if="hasRestore" class="wooj-card__panel-button icon" @click="emit('restore', wooj)">
         <i class="fa fa-undo"></i>
       </span>
     </div>
@@ -90,8 +80,9 @@ onMounted(() => {
     <div
       ref="wrapper"
       class="wooj-card__wrapper"
-      :class="{ 'pinned': wooj.is_pinned, 'editable': hasEdit }"
-      @click="onClickEdit">
+      :class="{ pinned: wooj.is_pinned, editable: hasEdit }"
+      @click="onClickEdit"
+    >
       <div class="wooj-card__title">{{ title }}</div>
       <div class="wooj-card__content wooj-content" v-html="content" />
     </div>
@@ -112,7 +103,7 @@ onMounted(() => {
   align-items: stretch;
   position: relative;
   border-radius: 100px;
-  transition: all .3s;
+  transition: all 0.3s;
   @include common.card();
 
   &__panel {
@@ -125,7 +116,7 @@ onMounted(() => {
     box-shadow: rgba(16, 0, 75, 0.2) 0px 1px 2px 0px;
     overflow: hidden;
     opacity: 0;
-    transition: all .3s;
+    transition: all 0.3s;
 
     &-locker {
       position: absolute;
@@ -144,7 +135,6 @@ onMounted(() => {
       }
     }
   }
-
 
   &.clicked {
     &.active {

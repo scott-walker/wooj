@@ -1,6 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue"
 import { useRouter } from "vue-router"
+
+import type { Topic } from "@types"
 
 import { useMediaStore } from "@stores/media"
 
@@ -11,13 +13,23 @@ import Editor from "@ui/Editor/Editor.vue"
 import Skeleton from "@ui/Skeleton.vue"
 import TopicTags from "@components/TopicTags.vue"
 
-const wooj = defineModel()
+/**
+ * Пропсы для отображения вуджа
+ */
+interface WoojView {
+  id: number
+  title: string
+  content: string
+  topicIds: number[]
+}
+
+const wooj = defineModel<WoojView>()
 const emit = defineEmits(["change-content", "change-topics"])
-const props = defineProps({
-  topics: { type: Array, default: [] },
-  loaded: { type: Boolean, default: true },
-  saving: { type: Boolean, default: false },
-})
+const props = defineProps<{
+  topics: Topic[]
+  loaded: boolean
+  saving: boolean
+}>()
 
 const router = useRouter()
 const mediaStore = useMediaStore()
@@ -28,11 +40,11 @@ const hasTopics = computed(() => !!props.topics.length)
 
 const onBack = () => router.back()
 const onShowTopics = () => (isShowedTopics.value = !isShowedTopics.value)
-const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
+const onSaveTopics = (topicsMap: Record<number, number>) => emit("change-topics", topicsMap)
 </script>
 
 <template>
-  <div class="wooj">
+  <div class="wooj" v-if="wooj">
     <div v-if="props.loaded" class="wooj__board">
       <div v-if="mediaStore.isSmall" class="wooj__actions">
         <IconLink icon="arrow-left" label="Назад" :scalable="false" @click="onBack" />
@@ -55,7 +67,8 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
             v-model="wooj.title"
             :key="wooj.title"
             :max="120"
-            @change="emit('change-content', wooj)" />
+            @change="emit('change-content', wooj)"
+          />
         </div>
         <div class="wooj__content">
           <Editor v-model="wooj.content" @save="emit('change-content', wooj)" />
@@ -160,7 +173,6 @@ const onSaveTopics = (topicsMap) => emit("change-topics", topicsMap)
     gap: 10px;
   }
 }
-
 
 @include media.lg() {
   .wooj {

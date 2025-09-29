@@ -1,5 +1,5 @@
-<script setup>
-const props = defineProps({
+<script setup lang="ts">
+defineProps({
   title: { type: String, default: "Тут пусто" },
   text: { type: String, default: "Вуджей же нет" },
 })
@@ -8,8 +8,8 @@ const props = defineProps({
 <template>
   <div class="empty">
     <div class="empty__wrapper">
-      <p class="empty__title">{{ props.title }}</p>
-      <p class="empty__text">{{ props.text }}</p>
+      <p class="empty__title">{{ title }}</p>
+      <p class="empty__text">{{ text }}</p>
     </div>
   </div>
 </template>

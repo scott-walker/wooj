@@ -1,9 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import _ from "lodash"
 import { Sortable, Plugins } from "@shopify/draggable"
-import { ref, useTemplateRef, computed, onMounted, onUnmounted, watch, nextTick } from "vue"
+import { ref, useTemplateRef, computed, onMounted, onUnmounted, watch, nextTick, type PropType } from "vue"
 
 import { useMediaStore } from "@stores/media"
+import type { Wooj } from "@types"
 
 import Tag from "@ui/Tag.vue"
 import IconLink from "@ui/IconLink.vue"
@@ -13,12 +14,12 @@ import Dialog from "@ui/Dialog.vue"
 import WoojCard from "@components/WoojCard.vue"
 import Empty from "@components/Empty.vue"
 
-let sortableDriver = null
+let sortableDriver: Sortable | null = null
 
 const props = defineProps({
   id: String,
   title: String,
-  woojs: Array,
+  woojs: Array as PropType<Wooj[]>,
   emptyText: { type: String, default: "Тут пусто" },
   loaded: { type: Boolean, default: true },
   hasEditableTopic: { type: Boolean, default: false },
@@ -32,53 +33,40 @@ const props = defineProps({
 
 const mediaStore = useMediaStore()
 const items = useTemplateRef("items")
-const emit = defineEmits([
-  "sort",
-  "pin",
-  "edit",
-  "remove",
-  "restore",
-  "update-topic",
-  "delete-topic"
-])
+const emit = defineEmits(["sort", "pin", "edit", "remove", "restore", "update-topic", "delete-topic"])
 
-const getRandMargin = (i) => {
+const woojStyle = computed<Record<number, string>>(() => {
   const MIN_SIZE = 300
   const BODY_PADDING = 25
 
   if (!mediaStore.isSmall) {
-    return null
+    return {}
   }
 
-  if (mediaStore.width <= MIN_SIZE) {
+  if (mediaStore.width && mediaStore.width <= MIN_SIZE) {
     return {
       "min-width": "100%",
-      "max-width": "100%"
+      "max-width": "100%",
     }
   }
 
-  const width = mediaStore.width / 2 - BODY_PADDING + "px"
+  const width = mediaStore.width && mediaStore.width / 2 - BODY_PADDING + "px"
 
   return {
     width,
-    "max-width": width
+    "max-width": width,
   }
-}
+})
 
 const changedTitle = ref(props.title)
 const isTitleFocused = ref(false)
 const isShowedDeleteDialog = ref(false)
-const positions = ref([])
+const positions = ref<number[]>([])
 
 const title = computed(() => props.title)
 const woojs = computed(() => props.woojs)
-const nums = computed(() => woojs.value.length)
+const nums = computed(() => woojs.value && woojs.value.length)
 const isEmpty = computed(() => props.loaded && !nums.value)
-const woojStyles = computed(() => woojs.value.reduce((map, wooj) => {
-  map[wooj.id] = getRandMargin(wooj.id)
-
-  return map
-}, {}))
 
 const onUpdateTitle = () => {
   if (_.isEqual(changedTitle.value, title.value)) {
@@ -91,47 +79,56 @@ const onDeleteTopic = () => emit("delete-topic")
 const onEdit = () => (isTitleFocused.value = true)
 const onDelete = () => (isShowedDeleteDialog.value = true)
 
-
 const initSortable = () => {
   const getPositions = () => {
-    const elements = items.value ? Array.from(items.value.querySelectorAll('.wooj-list__item')) : []
+    const elements = items.value ? Array.from(items.value.querySelectorAll(".wooj-list__item")) : []
 
-    return elements.map(item => parseInt(item.dataset.id))
+    return elements.map((item) => parseInt((item as HTMLElement).dataset.id || "0"))
   }
 
-  sortableDriver = new Sortable(document.querySelectorAll('.wooj-list__items'), {
-    draggable: '.wooj-list__item',
-    handle: mediaStore.isTouched ? '.wooj-card' : '.wooj-card__mover',
+  sortableDriver = new Sortable(document.querySelectorAll(".wooj-list__items"), {
+    draggable: ".wooj-list__item",
+    handle: mediaStore.isTouched ? ".wooj-card" : ".wooj-card__mover",
     sortAnimation: {
       duration: 200,
-      easingFunction: 'ease-in-out',
+      easingFunction: "ease-in-out",
     },
     classes: {
-      'source:dragging': ['dragging'],
-      'mirror': ['dragging-mirror'],
-    },
+      "source:dragging": ["dragging"],
+      mirror: ["dragging-mirror"],
+    } as any,
     delay: mediaStore.isTouched ? 600 : 0,
-    plugins: [Plugins.SortAnimation]
-  });
+    plugins: [Plugins.SortAnimation],
+  })
 
-  sortableDriver.on('sortable:stop', () => {
-    nextTick(() => positions.value = getPositions())
+  sortableDriver.on("sortable:stop", () => {
+    nextTick(() => (positions.value = getPositions()))
   })
 
   positions.value = getPositions()
 }
 
-watch(() => props.loaded, (value) => nextTick(() => {
-  value && props.hasSort && initSortable()
-}))
-watch(() => props.title, (title) => (changedTitle.value = title))
-watch(() => positions.value, (currentPositions, prevPositions) => {
-  if (!props.hasSort || !prevPositions.length || _.isEqual(currentPositions, prevPositions)) {
-    return
-  }
+watch(
+  () => props.loaded,
+  (value) =>
+    nextTick(() => {
+      value && props.hasSort && initSortable()
+    }),
+)
+watch(
+  () => props.title,
+  (title) => (changedTitle.value = title),
+)
+watch(
+  () => positions.value,
+  (currentPositions, prevPositions) => {
+    if (!props.hasSort || !prevPositions.length || _.isEqual(currentPositions, prevPositions)) {
+      return
+    }
 
-  emit("sort", currentPositions)
-})
+    emit("sort", currentPositions)
+  },
+)
 
 onMounted(() => props.hasSort && props.loaded && initSortable())
 onUnmounted(() => sortableDriver && sortableDriver.destroy())
@@ -147,7 +144,8 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
         v-model:focused="isTitleFocused"
         :locked="!hasEditableTopic"
         :max="20"
-        @change="onUpdateTitle" />
+        @change="onUpdateTitle"
+      />
 
       <Tag v-if="nums">{{ nums }}</Tag>
 
@@ -166,12 +164,7 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
     <template v-else-if="loaded">
       <div class="wooj-list__board">
         <div class="wooj-list__items" :class="{ sortable: props.hasSort }" ref="items">
-          <div
-            class="wooj-list__item"
-            v-for="wooj of woojs"
-            :key="wooj.id"
-            :data-id="wooj.id"
-            :style="woojStyles[wooj.id]">
+          <div class="wooj-list__item" v-for="wooj of woojs" :key="wooj.id" :data-id="wooj.id" :style="woojStyle">
             <WoojCard
               :data="wooj"
               :hasMove="props.hasMove"
@@ -182,7 +175,8 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
               @pin="emit('pin', $event)"
               @edit="emit('edit', $event)"
               @remove="emit('remove', $event)"
-              @restore="emit('restore', $event)" />
+              @restore="emit('restore', $event)"
+            />
           </div>
         </div>
       </div>
@@ -190,8 +184,13 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
 
     <Skeleton v-else type="blocks" :itemsNum="8" />
 
-    <Dialog v-model="isShowedDeleteDialog" title="Удалить топик" type="danger" :center="mediaStore.isSmall"
-      @approve="onDeleteTopic">
+    <Dialog
+      v-model="isShowedDeleteDialog"
+      title="Удалить топик"
+      type="danger"
+      :center="mediaStore.isSmall"
+      @approve="onDeleteTopic"
+    >
       Ты действительно хочешь сделать это?
     </Dialog>
   </div>
@@ -218,12 +217,11 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
       border: none;
       border-bottom: 3px solid transparent;
       font-size: 32px;
-      transition: all .3s;
+      transition: all 0.3s;
       background: none;
       color: colors.$basic;
 
       &.editable {
-
         &:focus,
         &:hover {
           outline: none;
@@ -266,7 +264,7 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
     padding: 20px;
     border: 2px solid transparent;
     border-radius: 20px;
-    transition: all .5s;
+    transition: all 0.5s;
     border-color: color.change(colors.$grey, $lightness: 90%);
   }
 
@@ -281,7 +279,7 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
     &.sortable {
       .wooj-list__item {
         &.dragging {
-          opacity: .5;
+          opacity: 0.5;
           cursor: grabbing;
         }
       }

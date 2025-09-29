@@ -1,14 +1,15 @@
-<script setup>
+<script setup lang="ts">
 import _ from "lodash"
-import { computed } from "vue"
+import { computed, type PropType } from "vue"
 import Tag from "@ui/Tag.vue"
 import WoojCard from "@components/WoojCard.vue"
 import Empty from "@components/Empty.vue"
+import type { Wooj } from "@types"
 
 const props = defineProps({
   id: String,
   title: String,
-  woojs: Array,
+  woojs: Array as PropType<Wooj[]>,
   emptyText: { type: String, default: "Тут пусто" },
   hasPin: { type: Boolean, default: true },
   hasEdit: { type: Boolean, default: true },
@@ -19,8 +20,8 @@ const props = defineProps({
 const ITEMS_PER_SLIDE = 3
 
 const title = computed(() => props.title)
-const nums = computed(() => props.woojs ? props.woojs.length : 0)
-const isEmpty = computed(() => props.woojs instanceof Array && !props.woojs.length)
+const nums = computed(() => (props.woojs ? props.woojs.length : 0))
+const isEmpty = computed(() => props.woojs && !props.woojs.length)
 
 const sliderId = computed(() => `wooj-list-${props.id}`)
 const slideItems = computed(() => _.chunk(props.woojs, ITEMS_PER_SLIDE))
@@ -55,7 +56,8 @@ const slideNums = computed(() => slideItems.value.length)
                 @pin="$emit('pin', $event)"
                 @edit="$emit('edit', $event)"
                 @remove="$emit('remove', $event)"
-                @restore="$emit('restore', $event)" />
+                @restore="$emit('restore', $event)"
+              />
             </div>
           </div>
         </template>
@@ -96,7 +98,7 @@ const slideNums = computed(() => slideItems.value.length)
     padding: 20px;
     border: 2px solid transparent;
     border-radius: 20px;
-    transition: all .5s;
+    transition: all 0.5s;
 
     &:hover {
       border-color: hsla(232, 31%, 85%, 0.6);

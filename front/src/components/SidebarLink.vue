@@ -1,23 +1,23 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue"
 import { RouterLink } from "vue-router"
 
 const props = defineProps({
-  route: Object,
-  text: String,
-  icon: String
+  route: { type: Object, required: true },
+  text: { type: String, required: true },
+  icon: { type: String, required: true },
 })
 const iconClass = computed(() => `fas fa-${props.icon}`)
 </script>
 
 <template>
-  <RouterLink :to="props.route" custom v-slot="{ isActive, href, navigate }">
+  <RouterLink :to="route" custom v-slot="{ isActive, href, navigate }">
     <a class="sidebar-link" :class="isActive ? 'active' : ''" :href="href" @click="navigate">
       <span class="sidebar-link__icon">
         <i :class="iconClass"></i>
       </span>
       <span class="sidebar-link__text">
-        {{ props.text }}
+        {{ text }}
       </span>
     </a>
   </RouterLink>
