@@ -23,7 +23,9 @@ export const useWoojsStore = defineStore("woojs", () => {
 
   const topicAll = computed((): Topic | undefined => topics.value.find((topic) => topic.type === TOPIC_TYPE_ALL))
   const topicPinned = computed((): Topic | undefined => topics.value.find((topic) => topic.type === TOPIC_TYPE_PINNED))
-  const topicPublished = computed((): Topic | undefined => topics.value.find((topic) => topic.type === TOPIC_TYPE_PUBLIC))
+  const topicPublished = computed((): Topic | undefined =>
+    topics.value.find((topic) => topic.type === TOPIC_TYPE_PUBLIC),
+  )
   const customTopics = computed((): Topic[] => topics.value.filter((topic) => topic.type === TOPIC_TYPE_CUSTOM))
 
   // Нормализованные вуджи
@@ -79,14 +81,20 @@ export const useWoojsStore = defineStore("woojs", () => {
   const activeWoojId = ref<number | null>(null)
 
   const activeTopic = computed((): Topic | undefined => topics.value.find(({ id }) => id === activeTopicId.value))
-  const activeWooj = computed((): Wooj | undefined => (activeWoojId.value ? woojsMap.value[activeWoojId.value] : undefined))
-  const activeWoojs = computed((): Wooj[] => (activeTopicId.value ? topicWoojsMap.value[activeTopicId.value] || [] : []))
+  const activeWooj = computed((): Wooj | undefined =>
+    activeWoojId.value ? woojsMap.value[activeWoojId.value] : undefined,
+  )
+  const activeWoojs = computed((): Wooj[] =>
+    activeTopicId.value ? topicWoojsMap.value[activeTopicId.value] || [] : [],
+  )
   const allWoojs = computed((): Wooj[] => (topicAll.value ? topicWoojsMap.value[topicAll.value.id] || [] : []))
   const pinnedWoojs = computed((): Wooj[] => {
     const woojs = topicPinned.value ? topicWoojsMap.value[topicPinned.value.id] || [] : []
     return woojs.filter((wooj) => wooj.is_pinned)
   })
-  const publishedWoojs = computed((): Wooj[] => (topicPublished.value ? topicWoojsMap.value[topicPublished.value.id] || [] : []))
+  const publishedWoojs = computed((): Wooj[] =>
+    topicPublished.value ? topicWoojsMap.value[topicPublished.value.id] || [] : [],
+  )
   const removedWoojs = computed((): Wooj[] => normalizedWoojs.value.filter((wooj) => wooj.is_deleted))
 
   const hasActiveTopic = computed((): boolean => !!activeTopic.value?.id)
@@ -126,14 +134,14 @@ export const useWoojsStore = defineStore("woojs", () => {
   /**
    * Создать топик
    */
-  async function createTopic(fields: { name: string; type: TopicType }): Promise<Topic | null> {
+  async function createTopic(fields: { name: string }): Promise<Topic | null> {
     isCreatingTopic.value = true
     isLoadedTopics.value = false
 
     let topic: Topic | null = null
 
     try {
-      topic = await topicService.create(fields)
+      topic = await topicService.create({ ...fields, type: TOPIC_TYPE_CUSTOM })
       toastsStore.success("Вы создали новый топик 🙌🔥")
 
       await fetchAll()

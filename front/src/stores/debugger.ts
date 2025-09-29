@@ -17,7 +17,7 @@ export const useDebuggerStore = defineStore("debugger", () => {
       timestamp: Date.now(),
       type: "debug",
       message: "",
-      ...data,
+      data,
     }
 
     records.value.push(record)
