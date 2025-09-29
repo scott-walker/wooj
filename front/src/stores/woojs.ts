@@ -1,32 +1,7 @@
 import { ref, computed, inject } from "vue"
 import { defineStore } from "pinia"
 import { useToastsStore } from "@stores/toasts"
-import type { Wooj, Topic, TopicType, WoojCreateOptions, WoojUpdateOptions, TopicSortOptions } from "@types"
-
-interface WoojService {
-  getAll(): Promise<Wooj[]>
-  create(fields: WoojCreateOptions): Promise<Wooj>
-  update(woojId: number, fields: WoojUpdateOptions): Promise<Wooj>
-  delete(woojId: number): Promise<void>
-  restore(woojId: number): Promise<void>
-  pin(woojId: number): Promise<void>
-  unpin(woojId: number): Promise<void>
-  setTopics(woojId: number, topicsMap: Record<number, number>): Promise<Wooj>
-  clearTrash(): Promise<void>
-}
-
-interface TopicService {
-  getAll(): Promise<Topic[]>
-  create(fields: { name: string; type: TopicType }): Promise<Topic>
-  update(topicId: number, fields: { name?: string }): Promise<Topic>
-  delete(topicId: number): Promise<void>
-  sort(topic: string | number, positions: number[]): Promise<void>
-}
-
-interface Services {
-  woojService: WoojService
-  topicService: TopicService
-}
+import type { Wooj, Topic, TopicType, WoojCreateOptions, WoojUpdateOptions, TopicSortOptions, Services } from "@types"
 
 /**
  * Стор вуджей
@@ -54,10 +29,10 @@ export const useWoojsStore = defineStore("woojs", () => {
   // Нормализованные вуджи
   const normalizedWoojs = computed((): Wooj[] => {
     const isPinned = (wooj: Wooj): boolean => {
-      return pinnedWoojsMap.value[wooj.id] !== undefined ? pinnedWoojsMap.value[wooj.id] : wooj.is_pinned
+      return pinnedWoojsMap.value[wooj.id] !== undefined ? !!pinnedWoojsMap.value[wooj.id] : wooj.is_pinned
     }
     const isRemoved = (wooj: Wooj): boolean => {
-      return removedWoojsMap.value[wooj.id] !== undefined ? removedWoojsMap.value[wooj.id] : wooj.is_deleted
+      return removedWoojsMap.value[wooj.id] !== undefined ? !!removedWoojsMap.value[wooj.id] : wooj.is_deleted
     }
 
     return woojs.value.map((wooj) => ({

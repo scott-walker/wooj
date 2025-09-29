@@ -3,6 +3,9 @@ import { defineStore } from "pinia"
 import { useToastsStore } from "@stores/toasts"
 import type { User, AuthResponse, LoginForm, RegisterForm, Storage } from "@types"
 
+/**
+ * Сервис пользователя
+ */
 interface UserService {
   setToken(token: string | null): void
   check(): Promise<User>
@@ -14,10 +17,16 @@ interface UserService {
   resend(): Promise<void>
 }
 
+/**
+ * Утилиты
+ */
 interface Utils {
   storage: Storage
 }
 
+/**
+ * Сервисы
+ */
 interface Services {
   userService: UserService
 }
@@ -173,7 +182,8 @@ export const useUserStore = defineStore("user", () => {
 
     const tick = (): void => {
       if (resendTimer.value !== null && resendTimer.value <= 0) {
-        resendTimer.value = storage.remove("resendTimer")
+        storage.remove("resendTimer")
+        resendTimer.value = null
 
         if (timer) {
           clearInterval(timer)
