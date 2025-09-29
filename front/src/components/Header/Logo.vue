@@ -1,9 +1,9 @@
-<script setup>
+<script setup lang="ts">
 import { useRouter } from "vue-router"
 import Link from "@ui/Link.vue"
 
 const router = useRouter()
-const onHome = () => router.push({ name: 'Debug' })
+const onHome = () => router.push({ name: "Debug" })
 </script>
 
 <template>

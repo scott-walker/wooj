@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue"
 import { useMediaStore } from "@stores/media"
 import { useLayoutStore } from "@stores/layout"
@@ -22,11 +22,13 @@ const isVisibleStatus = computed(() => !mediaStore.isSmall && layoutStore.status
     </div>
 
     <div class="header-center">
-      <Tag v-if="isVisibleStatus"
+      <Tag
+        v-if="isVisibleStatus"
         class="status"
         nowrap
-        :icon="layoutStore.statusBar.icon"
-        :text="layoutStore.statusBar.title" />
+        :icon="layoutStore.statusBar?.icon"
+        :text="layoutStore.statusBar?.title"
+      />
     </div>
 
     <div class="header-right">

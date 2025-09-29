@@ -1,7 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import { useMediaStore } from "@stores/media"
 import { useLayoutStore } from "@stores/layout"
-import { useWoojs } from "@composables/woojs"
+import { useWoojs } from "@composables/woojs.ts"
 
 import IconLink from "@ui/IconLink.vue"
 
@@ -22,19 +22,18 @@ const onCreateWooj = () => createWooj()
     <IconLink
       v-if="mediaStore.isSmall || mediaStore.isTouched"
       :icon="layoutStore.isHoveredSidebar ? 'chevron-left' : 'bars'"
-      @click="layoutStore.onToggleMobileSidebar" />
+      @click="layoutStore.onToggleMobileSidebar"
+    />
     <IconLink
       v-else
       :icon="layoutStore.isHoveredBars ? 'chevron-left' : 'bars'"
       :mirror="layoutStore.isAired"
       @mouseover="onOverBars"
       @mouseleave="layoutStore.onLeaveBars"
-      @click="layoutStore.onToggleSidebar" />
+      @click="layoutStore.onToggleSidebar"
+    />
 
-    <IconLink
-      icon="plus"
-      :loading="woojStore.isCreatingWooj"
-      @click="onCreateWooj" />
+    <IconLink icon="plus" :loading="woojStore.isCreatingWooj" @click="onCreateWooj" />
   </div>
 </template>
 

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, useTemplateRef } from "vue"
 import { Cropper, CircleStencil } from "vue-advanced-cropper"
 import useUserStore from "@stores/user"
@@ -11,12 +11,12 @@ const file = useTemplateRef("file")
 const isCropping = ref(false)
 const isCroppingReady = ref(false)
 const currentAvatar = ref(userStore.avatar)
-const uploadedAvatar = ref(null)
-const uploadedAvatarBlob = ref(null)
+const uploadedAvatar = ref<string | null>(null)
+const uploadedAvatarBlob = ref<Blob | null>(null)
 
-const onSelectPhoto = () => file.value.click()
-const onUploadPhoto = (event) => {
-  const image = event.target.files[0]
+const onSelectPhoto = () => file.value?.click()
+const onUploadPhoto = (event: Event) => {
+  const image = (event.target as HTMLInputElement).files?.[0] as File
   const reader = new FileReader()
 
   reader.readAsDataURL(image)
@@ -25,10 +25,10 @@ const onUploadPhoto = (event) => {
     isCropping.value = true
 
     setTimeout(() => (isCroppingReady.value = true), 1000)
-  };
+  }
 }
-const onCroppPhoto = ({ canvas }) => {
-  canvas.toBlob(blob => {
+const onCroppPhoto = ({ canvas }: { canvas: HTMLCanvasElement }) => {
+  canvas.toBlob((blob) => {
     uploadedAvatarBlob.value = blob
   })
 }
@@ -37,7 +37,7 @@ const onCloseCropper = () => {
   isCroppingReady.value = false
 }
 const onSavePhoto = async () => {
-  await userStore.changeAvatar(uploadedAvatarBlob.value)
+  await userStore.changeAvatar(uploadedAvatarBlob.value as File)
 
   currentAvatar.value = userStore.avatar
   onCloseCropper()
@@ -61,7 +61,8 @@ const onSavePhoto = async () => {
           class="avatar__cropper-element"
           :stencil-component="CircleStencil"
           :src="uploadedAvatar"
-          @change="onCroppPhoto" />
+          @change="onCroppPhoto"
+        />
       </div>
 
       <div v-else class="avatar__preview">
@@ -69,7 +70,7 @@ const onSavePhoto = async () => {
         <div v-else class="avatar__preview-avatar default"></div>
 
         <IconLink class="avatar__preview-uploader" icon="arrow-up-from-bracket" @click="onSelectPhoto" />
-        <input class="avatar__preview-uploader-file" ref="file" type="file" @change="onUploadPhoto">
+        <input class="avatar__preview-uploader-file" ref="file" type="file" @change="onUploadPhoto" />
       </div>
     </Transition>
   </div>
@@ -101,7 +102,7 @@ const onSavePhoto = async () => {
       opacity: 0;
       position: absolute;
       background: colors.$absorbing;
-      transition: all .3s;
+      transition: all 0.3s;
 
       &-file {
         display: none;
@@ -122,7 +123,7 @@ const onSavePhoto = async () => {
     position: relative;
     min-width: 200px;
     min-height: 200px;
-    transition: all .3s;
+    transition: all 0.3s;
     background: color.adjust(colors.$grey, $lightness: -10%);
     border-radius: 10px;
     overflow: hidden;
@@ -165,15 +166,14 @@ const onSavePhoto = async () => {
 }
 
 .avatar-transition {
-
   &-enter-active,
   &-leave-active {
-    transition: all .15s ease;
+    transition: all 0.15s ease;
   }
 
   &-enter-from,
   &-leave-to {
-    opacity: .2;
+    opacity: 0.2;
   }
 }
 </style>

@@ -1,5 +1,6 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue"
+import type { User } from "@types"
 
 import { useMediaStore } from "@stores/media"
 import useUserStore from "@stores/user"
@@ -26,7 +27,7 @@ const onUpdateName = () => userStore.update({ name: name.value })
 const onUpdatePassword = async () => {
   isUpdatingPassword.value = true
 
-  await userStore.update({ password: password.value })
+  await userStore.update({ password: password.value } as Partial<User>)
 
   isUpdatingPassword.value = false
   password.value = ""
@@ -68,7 +69,8 @@ const onLogout = () => {
             :disabled="disabledSavePassword"
             text="Сохранить пароль"
             :loading="isUpdatingPassword"
-            @click="onUpdatePassword" />
+            @click="onUpdatePassword"
+          />
         </form>
 
         <div v-if="mediaStore.isSmall" class="profile__logout">
@@ -98,7 +100,7 @@ const onLogout = () => {
     height: 100%;
     padding: 0 15px;
     cursor: pointer;
-    transition: all .3s;
+    transition: all 0.3s;
 
     &:hover {
       background-color: colors.$primary;
@@ -135,8 +137,6 @@ const onLogout = () => {
   min-width: 300px;
   max-width: 600px;
   padding: 40px;
-
-  &__avatar {}
 
   &__name {
     margin-top: 25px;
