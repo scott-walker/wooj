@@ -5,7 +5,14 @@ import axios, {
   type AxiosError,
   type InternalAxiosRequestConfig,
 } from "axios"
-import type { HttpClient as IHttpClient, HttpClientOptions, HttpClientError, HttpClientErrorResponse } from "@types"
+
+import type {
+  HttpClient as IHttpClient,
+  HttpClientOptions,
+  HttpClientError,
+  HttpClientErrorResponse,
+  HttpClientResponse,
+} from "@types"
 
 /**
  * HTTP клиент
@@ -123,7 +130,7 @@ export default class HttpClient implements IHttpClient {
   /**
    * GET запрос
    */
-  async get<T = AxiosRequestConfig>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  async get<T = AxiosRequestConfig>(url: string, config?: AxiosRequestConfig): Promise<HttpClientResponse<T>> {
     try {
       return await this.instance.get(url, config)
     } catch (error: unknown) {
@@ -134,7 +141,11 @@ export default class HttpClient implements IHttpClient {
   /**
    * POST запрос
    */
-  async post<T = AxiosRequestConfig>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
+  async post<T = AxiosRequestConfig>(
+    url: string,
+    data?: unknown,
+    config?: AxiosRequestConfig,
+  ): Promise<HttpClientResponse<T>> {
     try {
       return await this.instance.post(url, data, config)
     } catch (error: unknown) {
@@ -145,7 +156,7 @@ export default class HttpClient implements IHttpClient {
   /**
    * PUT запрос
    */
-  async put<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
+  async put<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<HttpClientResponse<T>> {
     try {
       return await this.instance.put(url, data, config)
     } catch (error: unknown) {
@@ -156,7 +167,7 @@ export default class HttpClient implements IHttpClient {
   /**
    * DELETE запрос
    */
-  async delete<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  async delete<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<HttpClientResponse<T>> {
     try {
       return await this.instance.delete(url, config)
     } catch (error: unknown) {
