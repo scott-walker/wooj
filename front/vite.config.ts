@@ -7,8 +7,12 @@ import vueDevTools from "vite-plugin-vue-devtools"
 const PATH_SRC = fileURLToPath(new URL("./src", import.meta.url))
 const vueOptions = {
   template: {
+    script: {
+      defineModel: true,
+      propsDestructure: true,
+    },
     compilerOptions: {
-      isCustomElement: (tag) => tag.startsWith("swiper-"),
+      isCustomElement: (tag: string) => tag.startsWith("swiper-"),
     },
   },
 }
@@ -19,7 +23,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks(id) {
+        manualChunks(id: string) {
           if (id.includes("axios")) {
             return "axios"
           } else if (id.includes("lodash")) {
@@ -48,6 +52,7 @@ export default defineConfig({
       "@views": `${PATH_SRC}/views`,
       "@assets": `${PATH_SRC}/assets`,
       "@styles": `${PATH_SRC}/assets/styles`,
+      "@types": `${PATH_SRC}/types`,
     },
   },
   // css: {
