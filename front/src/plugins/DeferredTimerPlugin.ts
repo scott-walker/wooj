@@ -1,17 +1,11 @@
 import DeferredTimer from "@utils/DeferredTimer"
+import type { App } from "vue"
 
 /**
  * Плагин отложенного таймера
  */
 export default {
-  /**
-   * Установить
-   * @param {Object} app
-   * @param {Object} options
-   */
-  install: (app, options) => {
-    options = options || {}
-
+  install: (app: App) => {
     const createDeferredTimer = () => new DeferredTimer()
 
     app.provide("createDeferredTimer", createDeferredTimer)
