@@ -1,27 +1,40 @@
-import { ref, onMounted, onUnmounted } from "vue"
+import { ref, onMounted, onUnmounted, type Ref } from "vue"
 
 /**
- * Для работы с выделенным текстом
- * @param {Object} options
- * @returns {Object}
+ * Тип для опций выделения
  */
-export const useSelection = (options) => {
-  options = options || {}
+type SelectionOptions = {
+  excludedElements?: HTMLElement[]
+}
+
+/**
+ * Тип для состояния выделения
+ */
+type SelectionState = {
+  isSelectionActive: Ref<boolean>
+  selectionTop: Ref<number>
+  selectionLeft: Ref<number>
+}
+
+/**
+ * Composable для работы с выделенным текстом
+ */
+export const useSelection = (options?: SelectionOptions): SelectionState => {
+  const config = options || {}
 
   /**
-   * @var {HTMLElement[]} excludedElements
+   * Исключенные элементы
    */
-  const excludedElements = options.excludedElements || []
+  const excludedElements: HTMLElement[] = config.excludedElements || []
 
-  const isSelectionActive = ref(false)
-  const selectionTop = ref(0)
-  const selectionLeft = ref(0)
+  const isSelectionActive = ref<boolean>(false)
+  const selectionTop = ref<number>(0)
+  const selectionLeft = ref<number>(0)
 
   /**
-   * Обновить позицию
-   * @returns {void}
+   * Обновить позицию выделения
    */
-  const updatePosition = () => {
+  const updatePosition = (): void => {
     const selection = window.getSelection()
 
     if (!selection || selection.rangeCount === 0) {
@@ -43,8 +56,12 @@ export const useSelection = (options) => {
     isSelectionActive.value = true
   }
 
-  const hide = ({ target }) => {
-    if (excludedElements.some((element) => element && element.contains(target))) return
+  /**
+   * Скрыть выделение
+   */
+  const hide = ({ target }: Event): void => {
+    const eventTarget = target as HTMLElement
+    if (excludedElements.some((element) => element && element.contains(eventTarget))) return
 
     isSelectionActive.value = false
   }
@@ -56,6 +73,7 @@ export const useSelection = (options) => {
     document.addEventListener("mousedown", hide)
     document.addEventListener("touchstart", hide)
   })
+
   onUnmounted(() => {
     document.removeEventListener("mouseup", updatePosition)
     document.removeEventListener("keyup", updatePosition)

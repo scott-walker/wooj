@@ -1,24 +1,32 @@
 import { onUnmounted } from "vue"
 
 /**
- * Для разграничения между долгим удержанием пальца и быстрым тапом
- * @param {HTMLElement} el
- * @param {Object} options
- * @returns {void}
+ * Тип для опций тапа
  */
-export const useTap = (el, { onTap, onLongTap, delay }) => {
-  onTap = onTap || (() => {})
-  onLongTap = onLongTap || (() => {})
-  delay = delay || 600
+type TapOptions = {
+  onTap?: () => void
+  onLongTap?: () => void
+  delay?: number
+}
 
-  let timer = null
+/**
+ * Composable для разграничения между долгим удержанием пальца и быстрым тапом
+ */
+export const useTap = (el: HTMLElement, options: TapOptions): void => {
+  const { onTap = () => {}, onLongTap = () => {}, delay = 600 } = options
+
+  let timer: NodeJS.Timeout | null = null
   let tapCompleted = false
 
   /**
    * Обработчик начала удержания тапа
    */
-  const onStart = () => {
-    const cb = () => (tapCompleted = true) && onLongTap()
+  const onStart = (): void => {
+    const cb = (): boolean => {
+      tapCompleted = true
+      onLongTap()
+      return true
+    }
 
     tapCompleted = false
 
@@ -29,7 +37,7 @@ export const useTap = (el, { onTap, onLongTap, delay }) => {
   /**
    * Обработчик конца удержания тапа
    */
-  const onEnd = () => {
+  const onEnd = (): void => {
     if (timer) {
       clearTimeout(timer)
       timer = null
@@ -44,7 +52,7 @@ export const useTap = (el, { onTap, onLongTap, delay }) => {
   /**
    * Обработчик движения (если есть движение, прерываем событие)
    */
-  const onMove = () => {
+  const onMove = (): void => {
     if (timer) {
       clearTimeout(timer)
       timer = null
