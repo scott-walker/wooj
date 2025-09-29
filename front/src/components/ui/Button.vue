@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue"
 import Loader from "@ui/Loader.vue"
 
@@ -22,7 +22,7 @@ const cssClass = computed(() => {
 })
 const isLocked = computed(() => props.disabled || props.loading)
 
-const onClick = () => !isLocked.value && emit('click')
+const onClick = () => !isLocked.value && emit("click")
 </script>
 
 <template>
@@ -100,8 +100,6 @@ const onClick = () => !isLocked.value && emit('click')
     }
   }
 
-  &__wrapper {}
-
   &__icon {
     position: relative;
     top: 1px;
@@ -115,7 +113,7 @@ const onClick = () => !isLocked.value && emit('click')
       box-shadow: none;
     }
 
-    opacity: .6;
+    opacity: 0.6;
   }
 
   &.loading {
@@ -130,7 +128,7 @@ const onClick = () => !isLocked.value && emit('click')
     }
   }
 
-  &.loading>&__loader {
+  &.loading > &__loader {
     position: absolute;
     left: calc(50% - 11px);
     width: 22px;

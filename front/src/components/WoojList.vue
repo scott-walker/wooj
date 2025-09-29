@@ -4,7 +4,7 @@ import { Sortable, Plugins } from "@shopify/draggable"
 import { ref, useTemplateRef, computed, onMounted, onUnmounted, watch, nextTick, type PropType } from "vue"
 
 import { useMediaStore } from "@stores/media"
-import type { Wooj } from "@types"
+import type { Wooj, Topic } from "@types"
 
 import Tag from "@ui/Tag.vue"
 import IconLink from "@ui/IconLink.vue"
@@ -17,9 +17,9 @@ import Empty from "@components/Empty.vue"
 let sortableDriver: Sortable | null = null
 
 const props = defineProps({
-  id: String,
-  title: String,
-  woojs: Array as PropType<Wooj[]>,
+  id: { type: String, required: true },
+  title: { type: String, required: true },
+  woojs: { type: Array as PropType<Wooj[]>, required: true },
   emptyText: { type: String, default: "Тут пусто" },
   loaded: { type: Boolean, default: true },
   hasEditableTopic: { type: Boolean, default: false },
@@ -159,7 +159,7 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
       </div>
     </div>
 
-    <Empty v-if="isEmpty" :title="props.emptyText" />
+    <Empty v-if="isEmpty" :title="emptyText" />
 
     <template v-else-if="loaded">
       <div class="wooj-list__board">
@@ -167,11 +167,11 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
           <div class="wooj-list__item" v-for="wooj of woojs" :key="wooj.id" :data-id="wooj.id" :style="woojStyle">
             <WoojCard
               :data="wooj"
-              :hasMove="props.hasMove"
-              :hasPin="props.hasPin"
-              :hasEdit="props.hasEdit"
-              :hasRemove="props.hasRemove"
-              :hasRestore="props.hasRestore"
+              :hasMove="hasMove"
+              :hasPin="hasPin"
+              :hasEdit="hasEdit"
+              :hasRemove="hasRemove"
+              :hasRestore="hasRestore"
               @pin="emit('pin', $event)"
               @edit="emit('edit', $event)"
               @remove="emit('remove', $event)"
@@ -188,7 +188,7 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
       v-model="isShowedDeleteDialog"
       title="Удалить топик"
       type="danger"
-      :center="mediaStore.isSmall"
+      :center="mediaStore.isSmall as boolean"
       @approve="onDeleteTopic"
     >
       Ты действительно хочешь сделать это?

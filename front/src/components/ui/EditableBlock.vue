@@ -1,6 +1,6 @@
-<script setup>
+<script setup lang="ts">
 import _ from "lodash"
-import { ref, useTemplateRef, watch } from 'vue'
+import { ref, useTemplateRef, watch } from "vue"
 
 const props = defineProps({
   placeholder: { type: String, default: "" },
@@ -18,32 +18,40 @@ const isShowedPlaceholder = ref(!text.value)
 
 /**
  * Постаивть курсор в конец поля
- * @param element 
+ * @param element
  */
-const setEndOfContent = (element) => {
+const setEndOfContent = (element: HTMLElement) => {
   const range = document.createRange()
   const selection = window.getSelection()
 
   range.selectNodeContents(element)
   range.collapse(false)
 
-  selection.removeAllRanges()
-  selection.addRange(range)
+  selection?.removeAllRanges()
+  selection?.addRange(range)
 }
 
-const onInput = (event) => {
-  const length = event.target.innerText.trim().length
+/**
+ * Обработчик изменения текста
+ */
+const onInput = (event: Event) => {
+  const target = event.target as HTMLElement
+  const length = target.innerText.trim().length
 
   if (length > props.max) {
-    event.target.innerText = event.target.innerText.substring(0, props.max)
+    target.innerText = target.innerText.substring(0, props.max)
 
-    setEndOfContent(block.value)
+    setEndOfContent(block.value as HTMLElement)
   }
 
   isShowedPlaceholder.value = !length
 }
 
-const onEnter = ({ target }) => {
+/**
+ * Обработчик нажатия Enter
+ */
+const onEnter = (event: KeyboardEvent | FocusEvent) => {
+  const target = event.target as HTMLElement
   const length = target.innerText.length
 
   if (_.isEqual(text.value, target.innerText)) {
@@ -55,28 +63,37 @@ const onEnter = ({ target }) => {
     return
   }
 
-  text.value = target.innerText.replace(/<\/?[^>]+(>|$)/g, "");
+  text.value = target.innerText.replace(/<\/?[^>]+(>|$)/g, "")
   focused.value = false
 
   emit("change", text.value)
 }
 
+/**
+ * Обработчик фокуса
+ */
 const onFocus = () => {
   focused.value = true
   isError.value = false
 }
 
-watch(() => focused.value, (focused) => {
-  if (focused) {
-    block.value.focus()
+watch(
+  () => focused.value,
+  (focused) => {
+    if (focused) {
+      block.value?.focus()
 
-    setEndOfContent(block.value)
-  } else {
-    block.value.blur()
-  }
-})
+      setEndOfContent(block.value as HTMLElement)
+    } else {
+      block.value?.blur()
+    }
+  },
+)
 
-watch(() => text.value, (text) => (isShowedPlaceholder.value = !text))
+watch(
+  () => text.value,
+  (text) => (isShowedPlaceholder.value = !text),
+)
 </script>
 
 <template>
@@ -90,7 +107,8 @@ watch(() => text.value, (text) => (isShowedPlaceholder.value = !text))
       @keydown.enter.exact.prevent="onEnter"
       @input="onInput"
       @focus="onFocus"
-      @blur="onEnter">
+      @blur="onEnter"
+    >
       {{ text }}
     </div>
   </div>
@@ -108,7 +126,7 @@ $grey: color.change(colors.$grey, $lightness: 80%);
   min-width: 100px;
   border: none;
   border-bottom: 3px solid transparent;
-  transition: all .3s;
+  transition: all 0.3s;
   background: none;
   color: colors.$basic;
   box-sizing: border-box;
@@ -123,10 +141,6 @@ $grey: color.change(colors.$grey, $lightness: 80%);
     text-wrap: nowrap;
     font-weight: normal;
     overflow: hidden;
-    // top: 0;
-    // left: 0;
-    // width: 100%;
-    // height: 100%;
     color: color.change(colors.$grey, $lightness: 70%);
   }
 
@@ -135,7 +149,6 @@ $grey: color.change(colors.$grey, $lightness: 80%);
     z-index: 2;
 
     &.editable {
-
       &:focus,
       &:hover {
         outline: none;

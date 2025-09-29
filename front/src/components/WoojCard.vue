@@ -3,16 +3,17 @@ import { ref, computed, useTemplateRef, onMounted } from "vue"
 import { useMediaStore } from "@stores/media"
 import { useTap } from "@composables/tap.ts"
 import type { Wooj } from "@types"
+import { type PropType } from "vue"
 
 const emit = defineEmits(["move", "edit", "pin", "remove", "restore", "active", "deactive"])
-const props = defineProps<{
-  data: Wooj
-  hasMove: boolean
-  hasPin: boolean
-  hasEdit: boolean
-  hasRemove: boolean
-  hasRestore: boolean
-}>()
+const props = defineProps({
+  data: { type: Object as PropType<Wooj>, required: true },
+  hasMove: { type: Boolean, default: true },
+  hasPin: { type: Boolean, default: true },
+  hasEdit: { type: Boolean, default: true },
+  hasRemove: { type: Boolean, default: true },
+  hasRestore: { type: Boolean, default: false },
+})
 
 const mediaStore = useMediaStore()
 
@@ -20,7 +21,7 @@ const card = useTemplateRef("card")
 const wrapper = useTemplateRef("wrapper")
 
 const isActive = ref(false)
-const wooj = computed(() => props.data || {})
+const wooj = computed(() => props.data as Wooj)
 const title = computed(() => wooj.value.title || "Новый WOOJ")
 const content = computed(() => wooj.value.content || "Пока еще пусто...")
 const hasPanel = computed(() => props.hasMove || props.hasPin || props.hasRemove || props.hasRestore)
