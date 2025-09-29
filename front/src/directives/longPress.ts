@@ -1,12 +1,27 @@
+import type { DirectiveBinding } from "vue"
+
+/**
+ * Обработчики долгого тапа
+ */
+type LongPressHandlers = {
+  start: (e: Event) => void
+  cancel: () => void
+}
+
+/**
+ * HTMLElement с обработчиками долгого тапа
+ */
+type HTMLElementWithLongPressHandlers = HTMLElement & { __longPressHandlers__: LongPressHandlers }
+
 export default {
-  mounted(el, binding) {
-    let timer = null
+  mounted(el: HTMLElementWithLongPressHandlers, binding: DirectiveBinding) {
+    let timer: NodeJS.Timeout | null = null
 
     const isObject = typeof binding.value === "object"
     const delay = isObject ? (binding.value.delay ?? 600) : 600
     const handler = isObject ? binding.value.onLongPress : binding.value
 
-    const start = (e) => {
+    const start = (e: Event) => {
       if (timer !== null) return
 
       //   if (el == e.target || el.contains(e.target)) {
@@ -34,8 +49,8 @@ export default {
     // el.addEventListener('mouseleave', cancel)
   },
 
-  unmounted(el) {
-    const { start, cancel } = el.__longPressHandlers__ || {}
+  unmounted(el: HTMLElementWithLongPressHandlers) {
+    const { start, cancel } = el.__longPressHandlers__
 
     el.removeEventListener("touchstart", start)
     el.removeEventListener("touchend", cancel)
@@ -45,6 +60,6 @@ export default {
     // el.removeEventListener('mouseup', cancel)
     // el.removeEventListener('mouseleave', cancel)
 
-    delete el.__longPressHandlers__
+    Reflect.deleteProperty(el, "__longPressHandlers__")
   },
 }
