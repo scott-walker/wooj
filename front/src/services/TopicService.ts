@@ -1,23 +1,24 @@
+import type { HttpClient, TopicService as ITopicService, Topic, PaginatedResponse, ItemResponse } from "@types"
+
 /**
  * Сервис для работы с топиками
- * @property {Object} httpClient
  */
-export default class TopicService {
+export default class TopicService implements ITopicService {
+  http: HttpClient
+
   /**
    * HTTP клиент
-   * @param {Object} httpClient
    */
-  constructor(httpClient) {
+  constructor(httpClient: HttpClient) {
     this.http = httpClient
   }
 
   /**
    * Получить топики
-   * @returns {Array} список топиков
    */
   async getAll() {
     try {
-      const { data } = await this.http.get("topics")
+      const { data } = await this.http.get<PaginatedResponse<Topic>>("topics")
 
       return data
     } catch {
@@ -27,12 +28,10 @@ export default class TopicService {
 
   /**
    * Получить топик по ID
-   * @param {Number} id
-   * @returns {Object} топик
    */
-  async get(id) {
+  async get(id: number) {
     try {
-      const { data } = await this.http.get(`topics/${id}`)
+      const { data } = await this.http.get<ItemResponse<Topic>>(`topics/${id}`)
 
       return data
     } catch {
@@ -42,12 +41,10 @@ export default class TopicService {
 
   /**
    * Создать топик
-   * @param {Object} data
-   * @returns {Object} топик
    */
-  async create({ name }) {
+  async create({ name }: { name: string }) {
     try {
-      const { data } = await this.http.post("topics", { name })
+      const { data } = await this.http.post<ItemResponse<Topic>>("topics", { name })
 
       return data
     } catch {
@@ -57,13 +54,10 @@ export default class TopicService {
 
   /**
    * Обновить топик
-   * @param {Number} id
-   * @param {Object} data
-   * @returns {Object} топик
    */
-  async update(id, { name }) {
+  async update(id: number, { name }: { name: string }) {
     try {
-      const { data } = await this.http.put(`topics/${id}`, { name })
+      const { data } = await this.http.put<ItemResponse<Topic>>(`topics/${id}`, { name })
 
       return data
     } catch {
@@ -73,12 +67,10 @@ export default class TopicService {
 
   /**
    * Удалить топик
-   * @param {Number} id
-   * @returns {Object} топик
    */
-  async delete(id) {
+  async delete(id: number) {
     try {
-      const { data } = await this.http.delete(`topics/${id}`)
+      const { data } = await this.http.delete<ItemResponse<Topic>>(`topics/${id}`)
 
       return data
     } catch {
@@ -88,13 +80,10 @@ export default class TopicService {
 
   /**
    * Обновить позиции вуджей в топике
-   * @param {Number|String} topic
-   * @param {Array} positions
-   * @returns {Object} топик
    */
-  async sort(topic, positions) {
+  async sort(topic: string | number, positions: number[]) {
     try {
-      const { data } = await this.http.put(`topics/${topic}/sort`, { positions })
+      const { data } = await this.http.put<ItemResponse<Topic>>(`topics/${topic}/sort`, { positions })
 
       return data
     } catch {
@@ -104,19 +93,15 @@ export default class TopicService {
 
   /**
    * Обновить позиции вуджей в топике "все"
-   * @param {Array} positions
-   * @returns {Object} топик
    */
-  async sortAll(positions) {
+  async sortAll(positions: number[]) {
     return this.sort("all", positions)
   }
 
   /**
    * Обновить позиции вуджей в топике "все"
-   * @param {Array} positions
-   * @returns {Object} топик
    */
-  async sortPinned(positions) {
+  async sortPinned(positions: number[]) {
     return this.sort("pinned", positions)
   }
 }

@@ -1,21 +1,31 @@
+import type {
+  HttpClient,
+  HttpClientError,
+  UserService as IUserService,
+  User,
+  AuthResponse,
+  ChangeAvatarResponse,
+  UpdateUserResponse,
+  CheckResponse,
+} from "@types"
+
 /**
  * Сервис для работы с пользователем
- * @property {Object} httpClient
  */
-export default class UserService {
+export default class UserService implements IUserService {
+  http: HttpClient
+
   /**
    * HTTP клиент
-   * @param {Object} httpClient
    */
-  constructor(httpClient) {
+  constructor(httpClient: HttpClient) {
     this.http = httpClient
   }
 
   /**
    * Установить токен
-   * @param {String} token
    */
-  setToken(token) {
+  setToken(token: string) {
     this.http.setToken(token)
   }
 
@@ -28,11 +38,10 @@ export default class UserService {
 
   /**
    * Проверить авторизацию (и получить пользователя)
-   * @returns {Object}
    */
   async check() {
     try {
-      const { user } = await this.http.get("check")
+      const { user } = await this.http.get<CheckResponse>("check")
 
       return user
     } catch {
@@ -42,13 +51,10 @@ export default class UserService {
 
   /**
    * Зарегистрироваться
-   * @param {String} email
-   * @param {String} password
-   * @returns {Object}
    */
-  async register(email, password) {
+  async register(email: string, password: string) {
     try {
-      const { user, token } = await this.http.post("register", {
+      const { user, token } = await this.http.post<AuthResponse>("register", {
         email,
         password,
       })
@@ -56,20 +62,17 @@ export default class UserService {
       this.setToken(token)
 
       return { user, token }
-    } catch ({ errors }) {
-      throw { message: "Не удалось зарегистрироваться", errors }
+    } catch (error: unknown) {
+      throw { message: "Не удалось зарегистрироваться", errors: (error as HttpClientError).errors }
     }
   }
 
   /**
    * Войти в систему
-   * @param {String} email
-   * @param {String} password
-   * @returns
    */
-  async login(email, password) {
+  async login(email: string, password: string) {
     try {
-      const { user, token } = await this.http.post("login", {
+      const { user, token } = await this.http.post<AuthResponse>("login", {
         email,
         password,
       })
@@ -77,8 +80,8 @@ export default class UserService {
       this.setToken(token)
 
       return { user, token }
-    } catch ({ errors }) {
-      throw { message: "Не удалось войти", errors }
+    } catch (error: unknown) {
+      throw { message: "Не удалось войти", errors: (error as HttpClientError).errors }
     }
   }
 
@@ -98,14 +101,14 @@ export default class UserService {
   /**
    * Поменять аватар
    */
-  async changeAvatar(avatar) {
+  async changeAvatar(avatar: File) {
     try {
       const formData = new FormData()
       const headers = { "Content-Type": "multipart/form-data" }
 
       formData.append("avatar", avatar)
 
-      const { user } = await this.http.post("user/avatar", formData, { headers })
+      const { user } = await this.http.post<ChangeAvatarResponse>("user/avatar", formData, { headers })
 
       return user
     } catch {
@@ -115,11 +118,10 @@ export default class UserService {
 
   /**
    * Обновить пользователя
-   * @param {Object} fields
    */
-  async update(fields) {
+  async update(fields: Partial<User>) {
     try {
-      const { user } = await this.http.put("user", fields)
+      const { user } = await this.http.put<UpdateUserResponse>("user", fields)
 
       return user
     } catch {
@@ -132,7 +134,7 @@ export default class UserService {
    */
   async resend() {
     try {
-      await this.http.post("resend")
+      await this.http.post<void>("resend")
     } catch {
       throw "Не удалось отправить сообщение"
     }

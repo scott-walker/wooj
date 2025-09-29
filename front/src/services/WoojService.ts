@@ -1,23 +1,24 @@
+import type { HttpClient, ItemResponse, WoojService as IWoojService, PaginatedResponse, Wooj } from "@types"
+
 /**
  * Сервис для работы с вуджами
- * @property {Object} httpClient
  */
-export default class WoojService {
+export default class WoojService implements IWoojService {
+  http: HttpClient
+
   /**
    * HTTP клиент
-   * @param {Object} httpClient
    */
-  constructor(httpClient) {
+  constructor(httpClient: HttpClient) {
     this.http = httpClient
   }
 
   /**
    * Получить вуджи
-   * @returns {Array} список вуджей
    */
   async getAll() {
     try {
-      const { data } = await this.http.get("woojs")
+      const { data } = await this.http.get<PaginatedResponse<Wooj>>("woojs")
 
       return data
     } catch {
@@ -27,12 +28,10 @@ export default class WoojService {
 
   /**
    * Получить вудж по ID
-   * @param {Number} id
-   * @returns {Object} вудж
    */
-  async get(id) {
+  async get(id: number) {
     try {
-      const { data } = await this.http.get(`woojs/${id}`)
+      const { data } = await this.http.get<ItemResponse<Wooj>>(`woojs/${id}`)
 
       return data
     } catch {
@@ -42,11 +41,10 @@ export default class WoojService {
 
   /**
    * Получить вуджи из корзины
-   * @returns {Array} список вуджей
    */
   async getTrash() {
     try {
-      const { data } = await this.http.get("woojs/trash")
+      const { data } = await this.http.get<ItemResponse<Wooj[]>>(`woojs/trash`)
 
       return data
     } catch {
@@ -56,11 +54,10 @@ export default class WoojService {
 
   /**
    * Получить закрепленные вуджи
-   * @returns {Array} список вуджей
    */
   async getPinned() {
     try {
-      const { data } = await this.http.get("woojs/pinned")
+      const { data } = await this.http.get<ItemResponse<Wooj[]>>(`woojs/pinned`)
 
       return data
     } catch {
@@ -70,12 +67,10 @@ export default class WoojService {
 
   /**
    * Получить вуджи по топику
-   * @param {Number} id
-   * @returns {Array} список вуджей
    */
-  async getByTopic(id) {
+  async getByTopic(id: number) {
     try {
-      const { data } = await this.http.get(`woojs/topic/${id}`)
+      const { data } = await this.http.get<ItemResponse<Wooj[]>>(`woojs/topic/${id}`)
 
       return data
     } catch {
@@ -85,15 +80,13 @@ export default class WoojService {
 
   /**
    * Создать вудж
-   * @param {Object} data
-   * @returns {Object} вудж
    */
-  async create({ title, content }) {
+  async create({ title, content }: { title: string; content: string }) {
     title = title || ""
     content = content || ""
 
     try {
-      const { data } = await this.http.post("woojs", { title, content })
+      const { data } = await this.http.post<ItemResponse<Wooj>>("woojs", { title, content })
 
       return data
     } catch {
@@ -103,13 +96,10 @@ export default class WoojService {
 
   /**
    * Обновить вудж
-   * @param {Number} id
-   * @param {Object} data
-   * @returns {Object} вудж
    */
-  async update(id, { title, content }) {
+  async update(id: number, { title, content }: { title: string; content: string }) {
     try {
-      const { data } = await this.http.put(`woojs/${id}`, { title, content })
+      const { data } = await this.http.put<ItemResponse<Wooj>>(`woojs/${id}`, { title, content })
 
       return data
     } catch {
@@ -119,12 +109,10 @@ export default class WoojService {
 
   /**
    * Отправить вудж в корзину
-   * @param {Number} id
-   * @returns {Object} вудж
    */
-  async delete(id) {
+  async delete(id: number) {
     try {
-      const { data } = await this.http.delete(`woojs/${id}`)
+      const { data } = await this.http.delete<ItemResponse<Wooj>>(`woojs/${id}`)
 
       return data
     } catch {
@@ -134,12 +122,10 @@ export default class WoojService {
 
   /**
    * Восстановить вудж из корзины
-   * @param {Number} id
-   * @returns {Object} вудж
    */
-  async restore(id) {
+  async restore(id: number) {
     try {
-      const { data } = await this.http.put(`woojs/${id}/restore`)
+      const { data } = await this.http.put<ItemResponse<Wooj>>(`woojs/${id}/restore`)
 
       return data
     } catch {
@@ -160,12 +146,10 @@ export default class WoojService {
 
   /**
    * Закрепить вудж
-   * @param {Number} id
-   * @returns {Object} вудж
    */
-  async pin(id) {
+  async pin(id: number) {
     try {
-      const { data } = await this.http.put(`woojs/${id}/pin`)
+      const { data } = await this.http.put<ItemResponse<Wooj>>(`woojs/${id}/pin`)
 
       return data
     } catch {
@@ -175,12 +159,10 @@ export default class WoojService {
 
   /**
    * Открепить вудж
-   * @param {Number} id
-   * @returns {Object} вудж
    */
-  async unpin(id) {
+  async unpin(id: number) {
     try {
-      const { data } = await this.http.put(`woojs/${id}/unpin`)
+      const { data } = await this.http.put<ItemResponse<Wooj>>(`woojs/${id}/unpin`)
 
       return data
     } catch {
@@ -190,12 +172,10 @@ export default class WoojService {
 
   /**
    * Установить топики для вуджа
-   * @param {Number} id
-   * @returns {Object} вудж
    */
-  async setTopics(id, map) {
+  async setTopics(id: number, map: Record<number, number>) {
     try {
-      const { data } = await this.http.put(`woojs/${id}/set-topics`, { map })
+      const { data } = await this.http.put<ItemResponse<Wooj>>(`woojs/${id}/set-topics`, { map })
 
       return data
     } catch {
