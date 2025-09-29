@@ -1,29 +1,6 @@
 import { ref, inject } from "vue"
 import { defineStore } from "pinia"
-
-interface MediaDetector {
-  width: number
-  height: number
-  viewportWidth: number
-  viewportHeight: number
-  isXs(): boolean
-  isSm(): boolean
-  isMd(): boolean
-  isLg(): boolean
-  isXl(): boolean
-  isPortrait(): boolean
-  isLandscape(): boolean
-  isMobileScreen(): boolean
-  isTabletScreen(): boolean
-  isDesctopScreen(): boolean
-  isTouched(): boolean
-  onResize(key: string, callback: () => void): void
-  onOrientation(key: string, callback: () => void): void
-}
-
-interface Utils {
-  mediaDetector: MediaDetector
-}
+import type { Utils } from "@types"
 
 /**
  * Стор для работы с размерами экрана (и устройствами)

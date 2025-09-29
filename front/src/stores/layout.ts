@@ -2,21 +2,7 @@ import { ref, computed, inject } from "vue"
 import { defineStore } from "pinia"
 import { useMediaStore } from "@stores/media"
 import { useRouter } from "vue-router"
-import type { Storage } from "@types"
-
-interface StatusBar {
-  title?: string
-  icon?: string
-}
-
-interface StatusBarOptions {
-  title?: string
-  icon?: string
-}
-
-interface Utils {
-  storage: Storage
-}
+import type { Utils, StatusBarOptions, StatusBar } from "@types"
 
 /**
  * Стор для работы с макетом

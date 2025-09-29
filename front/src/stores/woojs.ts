@@ -1,7 +1,7 @@
 import { ref, computed, inject } from "vue"
 import { defineStore } from "pinia"
 import { useToastsStore } from "@stores/toasts"
-import type { Wooj, Topic, TopicType, WoojCreateOptions, WoojUpdateOptions, TopicSortOptions, Services } from "@types"
+import type { Wooj, Topic, TopicType, WoojCreateOptions, WoojUpdateOptions, Services } from "@types"
 
 /**
  * Стор вуджей

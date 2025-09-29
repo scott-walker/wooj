@@ -1,13 +1,6 @@
 import { ref } from "vue"
 import { defineStore } from "pinia"
-
-export interface DebugRecord {
-  id: string
-  timestamp: number
-  type: "info" | "warning" | "error" | "debug"
-  message: string
-  data?: any
-}
+import type { DebugRecord } from "@types"
 
 /**
  * Стор для отладки
@@ -20,7 +13,7 @@ export const useDebuggerStore = defineStore("debugger", () => {
    */
   const push = (data: Partial<DebugRecord>): void => {
     const record: DebugRecord = {
-      id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
       timestamp: Date.now(),
       type: "debug",
       message: "",
@@ -33,21 +26,21 @@ export const useDebuggerStore = defineStore("debugger", () => {
   /**
    * Добавить информационную запись
    */
-  const info = (message: string, data?: any): void => {
+  const info = (message: string, data?: unknown): void => {
     push({ type: "info", message, data })
   }
 
   /**
    * Добавить предупреждение
    */
-  const warning = (message: string, data?: any): void => {
+  const warning = (message: string, data?: unknown): void => {
     push({ type: "warning", message, data })
   }
 
   /**
    * Добавить ошибку
    */
-  const error = (message: string, data?: any): void => {
+  const error = (message: string, data?: unknown): void => {
     push({ type: "error", message, data })
   }
 

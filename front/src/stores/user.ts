@@ -1,35 +1,7 @@
 import { ref, computed, inject } from "vue"
 import { defineStore } from "pinia"
 import { useToastsStore } from "@stores/toasts"
-import type { User, AuthResponse, LoginForm, RegisterForm, Storage } from "@types"
-
-/**
- * Сервис пользователя
- */
-interface UserService {
-  setToken(token: string | null): void
-  check(): Promise<User>
-  register(email: string, password: string): Promise<AuthResponse>
-  login(email: string, password: string): Promise<AuthResponse>
-  logout(): Promise<void>
-  changeAvatar(avatar: File): Promise<User>
-  update(fields: Partial<User>): Promise<User>
-  resend(): Promise<void>
-}
-
-/**
- * Утилиты
- */
-interface Utils {
-  storage: Storage
-}
-
-/**
- * Сервисы
- */
-interface Services {
-  userService: UserService
-}
+import type { User, LoginForm, Utils, Services } from "@types"
 
 /**
  * Стор для пользователя
