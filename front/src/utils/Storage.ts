@@ -1,22 +1,13 @@
+import type { Storage as IStorage } from "@types"
+
 /**
  * Утилита для работы с локальным хранилищем
  */
-export default class Storage {
-  /**
-   * Инициализировать хранилище
-   * @param {Object} options
-   */
-  constructor(options) {
-    this.options = options || {}
-  }
-
+export default class Storage implements IStorage {
   /**
    * Установить данные в хранилище
-   * @param {String} key
-   * @param {*} value
-   * @returns {*}
    */
-  set(key, value) {
+  set(key: string, value: any): any {
     localStorage.setItem(key, JSON.stringify(value))
 
     return value
@@ -24,29 +15,26 @@ export default class Storage {
 
   /**
    * Получить данные из хранилища
-   * @param {String} key
-   * @param {*} defaultValue
    */
-  get(key, defaultValue) {
+  get(key: string, defaultValue: any): any {
     defaultValue = defaultValue || null
 
-    const value = JSON.parse(localStorage.getItem(key))
+    const value = JSON.parse(localStorage.getItem(key) || "null")
 
     return value !== null ? value : defaultValue
   }
 
   /**
    * Удалить данные из хранилища
-   * @param {String} key
    */
-  remove(key) {
+  remove(key: string): void {
     localStorage.removeItem(key)
   }
 
   /**
    * Очистить хранилище
    */
-  clear(key) {
-    localStorage.clear(key)
+  clear(): void {
+    localStorage.clear()
   }
 }
