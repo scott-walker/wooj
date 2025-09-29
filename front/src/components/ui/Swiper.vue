@@ -1,10 +1,11 @@
-<script setup>
+<script lang="ts" setup>
 import { onMounted } from "vue"
+import type { Swiper } from "swiper"
 
 const props = defineProps({
   id: String,
   itemsNum: Number,
-  options: { type: Object, default: null }
+  options: { type: Object, default: null },
 })
 
 const COLOR_PRIMARY = "#d4ff38"
@@ -12,9 +13,9 @@ const COLOR_BG = "#d5dce5"
 
 const init = () => {
   const options = props.options || {}
-  const swiper = document.querySelector(`#${props.id}`)
+  const element = document.querySelector(`#${props.id}`) as HTMLElement
 
-  Object.assign(swiper, {
+  Object.assign(element, {
     slidesPerView: 1,
     // grid: {
     //   rows: 2,
@@ -27,7 +28,8 @@ const init = () => {
       //   return `<span class="${className}">${index + 1}</span>`;
       // },
     },
-    injectStyles: [`
+    injectStyles: [
+      `
       .swiper-pagination {
         position: relative;
         margin-top: 40px;
@@ -46,7 +48,8 @@ const init = () => {
       .swiper-pagination-bullet-active {
         background: ${COLOR_PRIMARY};
       }
-    `],
+    `,
+    ],
     breakpoints: {
       940: {
         slidesPerView: 2,
@@ -72,7 +75,9 @@ const init = () => {
     },
   })
 
-  swiper.initialize()
+  const swiper: Swiper = element as unknown as Swiper
+
+  swiper.init()
 }
 
 onMounted(init)
@@ -89,18 +94,3 @@ onMounted(init)
     </swiper-container>
   </div>
 </template>
-
-<style lang="scss">
-@use "@styles/colors";
-
-.ui-swiper {
-  &__items {}
-
-  &__item {
-    &-content {
-      // background: rgba(16, 0, 75, 0.1);
-      // padding: 5px;
-    }
-  }
-}
-</style>
