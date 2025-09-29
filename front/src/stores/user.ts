@@ -1,22 +1,47 @@
 import { ref, computed, inject } from "vue"
 import { defineStore } from "pinia"
 import { useToastsStore } from "@stores/toasts"
+import type { User, AuthResponse, LoginForm, RegisterForm, Storage } from "@types"
+
+interface UserService {
+  setToken(token: string | null): void
+  check(): Promise<User>
+  register(email: string, password: string): Promise<AuthResponse>
+  login(email: string, password: string): Promise<AuthResponse>
+  logout(): Promise<void>
+  changeAvatar(avatar: File): Promise<User>
+  update(fields: Partial<User>): Promise<User>
+  resend(): Promise<void>
+}
+
+interface Utils {
+  storage: Storage
+}
+
+interface Services {
+  userService: UserService
+}
 
 /**
  * Стор для пользователя
  */
-export default defineStore("user", () => {
-  const { storage } = inject("utils")
-  const { userService } = inject("services")
+export const useUserStore = defineStore("user", () => {
+  const { storage } = inject<Utils>("utils")!
+  const { userService } = inject<Services>("services")!
   const toastsStore = useToastsStore()
 
-  const token = ref(null)
-  const user = ref({})
-  const resendTimer = ref(null)
-  const isLogged = computed(() => !!token.value)
-  const isVerified = computed(() => !!user.value.is_verified)
-  const avatar = computed(() => {
-    if (!user.value.avatar) {
+  const token = ref<string | null>(null)
+  const user = ref<User | Record<string, never>>({})
+  const resendTimer = ref<number | null>(null)
+
+  const isLogged = computed((): boolean => !!token.value)
+
+  const isVerified = computed((): boolean => {
+    return "is_verified" in user.value && !!user.value.is_verified
+  })
+
+  const avatar = computed((): string | null => {
+    if (!("avatar" in user.value) || !user.value.avatar) {
       return null
     }
 
@@ -26,7 +51,7 @@ export default defineStore("user", () => {
   /**
    * Инициализация
    */
-  function init() {
+  function init(): void {
     token.value = storage.get("token", null)
     resendTimer.value = storage.get("resendTimer", null)
 
@@ -36,7 +61,7 @@ export default defineStore("user", () => {
   /**
    * Проверить авторизацию (и получить пользователя)
    */
-  async function check() {
+  async function check(): Promise<void> {
     try {
       user.value = await userService.check()
     } catch {
@@ -49,9 +74,8 @@ export default defineStore("user", () => {
 
   /**
    * Зарегистрироваться
-   * @param {Object} data - email, password
    */
-  async function register({ email, password }) {
+  async function register({ email, password }: LoginForm): Promise<void> {
     try {
       const data = await userService.register(email, password)
 
@@ -59,16 +83,16 @@ export default defineStore("user", () => {
       user.value = data.user
 
       storage.set("token", data.token)
-    } catch ({ message, errors }) {
+    } catch (error: any) {
+      const { message, errors } = error
       toastsStore.alert(message, errors, 5)
     }
   }
 
   /**
    * Войти в систему
-   * @param {Object} data - email, password
    */
-  async function login({ email, password }) {
+  async function login({ email, password }: LoginForm): Promise<void> {
     try {
       const data = await userService.login(email, password)
 
@@ -76,7 +100,8 @@ export default defineStore("user", () => {
       user.value = data.user
 
       storage.set("token", data.token)
-    } catch ({ message, errors }) {
+    } catch (error: any) {
+      const { message } = error
       toastsStore.alert(message)
     }
   }
@@ -84,7 +109,7 @@ export default defineStore("user", () => {
   /**
    * Выйти из системы
    */
-  async function logout() {
+  async function logout(): Promise<void> {
     try {
       await userService.logout()
 
@@ -92,7 +117,7 @@ export default defineStore("user", () => {
       user.value = {}
 
       storage.clear()
-    } catch (message) {
+    } catch (message: any) {
       toastsStore.alert(message)
     }
   }
@@ -100,11 +125,11 @@ export default defineStore("user", () => {
   /**
    * Поменять аватар
    */
-  async function changeAvatar(avatar) {
+  async function changeAvatar(avatar: File): Promise<void> {
     try {
       user.value = await userService.changeAvatar(avatar)
       toastsStore.success("Успешно поменяли аватар")
-    } catch (message) {
+    } catch (message: any) {
       toastsStore.alert(message)
     }
   }
@@ -112,11 +137,11 @@ export default defineStore("user", () => {
   /**
    * Обновить пользователя
    */
-  async function update(fields) {
+  async function update(fields: Partial<User>): Promise<void> {
     try {
       user.value = await userService.update(fields)
       toastsStore.success("Данные сохранены")
-    } catch (message) {
+    } catch (message: any) {
       toastsStore.alert(message)
     }
   }
@@ -124,14 +149,16 @@ export default defineStore("user", () => {
   /**
    * Отправить сообщение с подтверждением email заново
    */
-  async function resend() {
+  async function resend(): Promise<void> {
     resendTimer.value = storage.set("resendTimer", 60)
     startResendTimer()
 
     try {
       await userService.resend()
-      toastsStore.success(`Сообщение отправлено повторно на <b>${user.email}</b>`)
-    } catch (message) {
+
+      const userEmail = "email" in user.value ? user.value.email : "неизвестный email"
+      toastsStore.success(`Сообщение отправлено повторно на <b>${userEmail}</b>`)
+    } catch (message: any) {
       toastsStore.alert(message)
     }
   }
@@ -139,20 +166,24 @@ export default defineStore("user", () => {
   /**
    * Запустить таймер переотправки email с верификацией
    */
-  function startResendTimer() {
+  function startResendTimer(): void {
     if (!resendTimer.value) return
 
-    let timer = null
+    let timer: NodeJS.Timeout | null = null
 
-    const tick = () => {
-      if (resendTimer.value <= 0) {
+    const tick = (): void => {
+      if (resendTimer.value !== null && resendTimer.value <= 0) {
         resendTimer.value = storage.remove("resendTimer")
 
-        clearInterval(timer)
+        if (timer) {
+          clearInterval(timer)
+        }
         return
       }
 
-      resendTimer.value = storage.set("resendTimer", --resendTimer.value)
+      if (resendTimer.value !== null) {
+        resendTimer.value = storage.set("resendTimer", resendTimer.value - 1)
+      }
     }
 
     timer = setInterval(tick, 1000)
@@ -179,3 +210,6 @@ export default defineStore("user", () => {
     startResendTimer,
   }
 })
+
+// Экспорт по умолчанию для совместимости
+export default useUserStore
