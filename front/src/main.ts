@@ -6,11 +6,11 @@ import { createPinia } from "pinia"
 
 import App from "./App.vue"
 import router from "./router"
-import initUtils from "@utils"
-import initServices from "@services"
-import directives from "@directives"
+import initUtils from "./utils"
+import initServices from "./services"
+import directives from "./directives"
 import InjectPlugin from "@plugins/InjectPlugin"
-import SwiperPlugin from "@plugins/SwiperPlugin"
+// import SwiperPlugin from "@plugins/SwiperPlugin"
 import DeferredTimerPlugin from "@plugins/DeferredTimerPlugin"
 
 const utils = initUtils({
@@ -22,7 +22,7 @@ const services = initServices(utils)
 const app = createApp(App)
 
 app.use(InjectPlugin, { utils, services, directives })
-app.use(SwiperPlugin)
+// app.use(SwiperPlugin)
 app.use(DeferredTimerPlugin)
 
 app.use(createPinia())

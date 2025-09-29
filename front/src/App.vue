@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import { ref, computed, onBeforeMount, watchEffect } from "vue"
 import { RouterView } from "vue-router"
 
