@@ -1,19 +1,6 @@
 import type { User } from "./entities"
 
 /**
- * API ответ
- *
- * @property {T} data - Данные
- * @property {string} message - Сообщение
- * @property {string[]} errors - Ошибки
- */
-export interface ApiResponse<T = any> {
-  data: T
-  message?: string
-  errors?: string[]
-}
-
-/**
  * Авторизация
  *
  * @property {string} token - Токен
@@ -35,10 +22,51 @@ export interface AuthResponse {
  */
 export interface PaginatedResponse<T> {
   data: T[]
-  current_page: number
-  last_page: number
-  per_page: number
-  total: number
+  links: Record<string, string>
+  meta: {
+    current_page: number
+    last_page: number
+    per_page: number
+    from: number
+    to: number
+    total: number
+  }
+}
+
+/**
+ * Ответ на получение одного элемента
+ *
+ * @property {T} data - Данные
+ */
+export interface ItemResponse<T> {
+  data: T
+}
+
+/**
+ * Ответ на проверку авторизации
+ *
+ * @property {User} user - Пользователь
+ */
+export interface CheckResponse {
+  user: User
+}
+
+/**
+ * Ответ на изменение аватара
+ *
+ * @property {User} user - Пользователь
+ */
+export interface ChangeAvatarResponse {
+  user: User
+}
+
+/**
+ * Ответ на обновление пользователя
+ *
+ * @property {User} user - Пользователь
+ */
+export interface UpdateUserResponse {
+  user: User
 }
 
 /**

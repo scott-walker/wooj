@@ -60,10 +60,24 @@ export interface HttpClient {
   options: HttpClientOptions
   instance: AxiosInstance
   token?: string | null
-  get<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T>
-  post<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T>
-  put<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T>
-  delete<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T>
+  setToken(token: string): void
+  unsetToken(): void
+  get<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<HttpClientResponse<T>>
+  post<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<HttpClientResponse<T>>
+  put<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<HttpClientResponse<T>>
+  delete<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<HttpClientResponse<T>>
+}
+
+/**
+ * Ответ HTTP клиента
+ *
+ * @property {T} data - Данные
+ * @property {number} status - Статус
+ * @property {string} statusText - Статус текст
+ * @property {Record<string, string>} headers - Заголовки
+ */
+export type HttpClientResponse<T = unknown> = {
+  [key in keyof T]: T[key]
 }
 
 /**
@@ -113,21 +127,6 @@ export interface HttpClientOptions {
  */
 export interface HttpClientConfig {
   headers?: Record<string, string>
-}
-
-/**
- * Ответ HTTP клиента
- *
- * @property {T} data - Данные
- * @property {number} status - Статус
- * @property {string} statusText - Статус текст
- * @property {Record<string, string>} headers - Заголовки
- */
-export interface HttpClientResponse<T = unknown> {
-  data: T
-  status: number
-  statusText: string
-  headers: Record<string, string>
 }
 
 /**

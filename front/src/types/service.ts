@@ -1,5 +1,5 @@
 import type { Wooj, Topic, TopicType, User } from "./entities"
-import type { AuthResponse, WoojCreateOptions, WoojUpdateOptions } from "./api"
+import type { AuthResponse, PaginatedResponse, WoojCreateOptions, WoojUpdateOptions } from "./api"
 
 /**
  * Сервисы
@@ -54,10 +54,10 @@ export interface WoojService {
   getAll(): Promise<Wooj[]>
   create(fields: WoojCreateOptions): Promise<Wooj>
   update(woojId: number, fields: WoojUpdateOptions): Promise<Wooj>
-  delete(woojId: number): Promise<void>
-  restore(woojId: number): Promise<void>
-  pin(woojId: number): Promise<void>
-  unpin(woojId: number): Promise<void>
+  delete(woojId: number): Promise<Wooj>
+  restore(woojId: number): Promise<Wooj>
+  pin(woojId: number): Promise<Wooj>
+  unpin(woojId: number): Promise<Wooj>
   setTopics(woojId: number, topicsMap: Record<number, number>): Promise<Wooj>
   clearTrash(): Promise<void>
 }
@@ -70,11 +70,15 @@ export interface WoojService {
  * @property {function} update - Обновить топик
  * @property {function} delete - Удалить топик
  * @property {function} sort - Сортировать топик
+ * @property {function} sortAll - Сортировать топик "все"
+ * @property {function} sortPinned - Сортировать топик "избранное"
  */
 export interface TopicService {
   getAll(): Promise<Topic[]>
   create(fields: { name: string; type: TopicType }): Promise<Topic>
   update(topicId: number, fields: { name?: string }): Promise<Topic>
-  delete(topicId: number): Promise<void>
-  sort(topic: string | number, positions: number[]): Promise<void>
+  delete(topicId: number): Promise<Topic>
+  sort(topic: string | number, positions: number[]): Promise<Topic>
+  sortAll(positions: number[]): Promise<Topic>
+  sortPinned(positions: number[]): Promise<Topic>
 }
