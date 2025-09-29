@@ -1,17 +1,24 @@
-import axios from "axios"
+import axios, {
+  type AxiosInstance,
+  type AxiosRequestConfig,
+  type AxiosResponse,
+  type AxiosError,
+  type InternalAxiosRequestConfig,
+} from "axios"
+import type { HttpClient as IHttpClient, HttpClientOptions, HttpClientError, HttpClientErrorResponse } from "@types"
 
 /**
  * HTTP клиент
- * @property instance {AxiosInstance}
- * @property options {Object}
- * @property token {String}
  */
-export default class HttpClient {
+export default class HttpClient implements IHttpClient {
+  options: HttpClientOptions
+  instance!: AxiosInstance
+  token: string | null
+
   /**
    * Инициализировать HTTP клиент
-   * @param {Object} options
    */
-  constructor(options) {
+  constructor(options: HttpClientOptions) {
     this.options = options || {}
     this.token = options.token || null
 
@@ -22,13 +29,13 @@ export default class HttpClient {
   /**
    * Инициализировать axios
    */
-  init() {
+  init(): void {
     const headers = this.options.headers || {}
 
     headers["Content-Type"] = headers["Content-Type"] || "application/json"
 
-    const options = {
-      baseURL: this.options.baseUrl || null,
+    const options: AxiosRequestConfig = {
+      baseURL: this.options.baseUrl || undefined,
       timeout: this.options.timeout || 0,
       withCredentials: this.options.credentials || false,
       headers,
@@ -46,7 +53,7 @@ export default class HttpClient {
    * Установить токен
    * @param {String|null} token
    */
-  setToken(token) {
+  setToken(token: string | null): void {
     this.token = token || null
     this.instance.defaults.headers.common["Authorization"] = this.token ? `Bearer ${this.token}` : null
   }
@@ -54,26 +61,24 @@ export default class HttpClient {
   /**
    * Сбросить токен
    */
-  unsetToken() {
+  unsetToken(): void {
     this.setToken(null)
   }
 
   /**
    * Обработчик запросов
-   * @param {Object} config
    */
-  handleRequest(config) {
+  handleRequest(config: AxiosRequestConfig): InternalAxiosRequestConfig {
     // console.log("XHR REQUEST")
     // console.log(config)
 
-    return config
+    return config as InternalAxiosRequestConfig
   }
 
   /**
    * Обработчик ответа
-   * @param {Object} response
    */
-  handleResponse(response) {
+  handleResponse(response: AxiosResponse): AxiosResponse {
     // console.log("XHR RESPONSE")
     // console.log(response)
 
@@ -82,9 +87,8 @@ export default class HttpClient {
 
   /**
    * Обработчик ошибки запроса
-   * @param {Object} error
    */
-  handleRequestError(error) {
+  handleRequestError(error: AxiosError): Promise<AxiosError> {
     // console.log("XHR REQUEST ERROR")
     // console.log(error)
 
@@ -93,9 +97,8 @@ export default class HttpClient {
 
   /**
    * Обработчик ошибки ответа
-   * @param {Object} error
    */
-  handleResponseError(error) {
+  handleResponseError(error: AxiosError): Promise<AxiosError> {
     // console.log("XHR RESPONSE ERROR")
     // console.log(error)
 
@@ -104,11 +107,10 @@ export default class HttpClient {
 
   /**
    * Сформировать сообщение для исключения
-   * @param {Object} response
-   * @returns {Object}
    */
-  makeError(response) {
-    const message = response?.data?.message || "Ошибка запроса к серверу"
+  makeError({ response }: HttpClientErrorResponse): HttpClientError {
+    const message = response?.data?.message || ("Ошибка запроса к серверу" as string)
+
     let errors = response?.data?.errors
 
     if (errors) {
@@ -120,53 +122,45 @@ export default class HttpClient {
 
   /**
    * GET запрос
-   * @param  {...any} params
-   * @returns {Promise}
    */
-  async get(...params) {
+  async get<T = AxiosRequestConfig>(url: string, config?: AxiosRequestConfig): Promise<T> {
     try {
-      return await this.instance.get(...params)
-    } catch ({ response }) {
-      throw this.makeError(response)
+      return await this.instance.get(url, config)
+    } catch (error: unknown) {
+      throw this.makeError(error as HttpClientErrorResponse)
     }
   }
 
   /**
    * POST запрос
-   * @param  {...any} params
-   * @returns {Promise}
    */
-  async post(...params) {
+  async post<T = AxiosRequestConfig>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     try {
-      return await this.instance.post(...params)
-    } catch ({ response }) {
-      throw this.makeError(response)
+      return await this.instance.post(url, data, config)
+    } catch (error: unknown) {
+      throw this.makeError(error as HttpClientErrorResponse)
     }
   }
 
   /**
    * PUT запрос
-   * @param  {...any} params
-   * @returns {Promise}
    */
-  async put(...params) {
+  async put<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     try {
-      return await this.instance.put(...params)
-    } catch ({ response }) {
-      throw this.makeError(response)
+      return await this.instance.put(url, data, config)
+    } catch (error: unknown) {
+      throw this.makeError(error as HttpClientErrorResponse)
     }
   }
 
   /**
    * DELETE запрос
-   * @param  {...any} params
-   * @returns {Promise}
    */
-  async delete(...params) {
+  async delete<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T> {
     try {
-      return await this.instance.delete(...params)
-    } catch ({ response }) {
-      throw this.makeError(response)
+      return await this.instance.delete(url, config)
+    } catch (error: unknown) {
+      throw this.makeError(error as HttpClientErrorResponse)
     }
   }
 }

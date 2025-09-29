@@ -1,9 +1,19 @@
-import type { Storage as IStorage } from "@types"
+import type { Storage as IStorage, StorageOptions } from "@types"
 
 /**
  * Утилита для работы с локальным хранилищем
  */
 export default class Storage implements IStorage {
+  options: StorageOptions
+
+  /**
+   * Конструктор
+   * @param {Storage} options - Опции
+   */
+  constructor(options: StorageOptions) {
+    this.options = options
+  }
+
   /**
    * Установить данные в хранилище
    */

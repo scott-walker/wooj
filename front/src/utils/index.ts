@@ -1,4 +1,4 @@
-import HttpClient from "./HttpClient"
+import HttpClient from "./httpClient"
 import Storage from "./Storage"
 import MediaDetector from "./MediaDetector"
 
@@ -6,7 +6,7 @@ import MediaDetector from "./MediaDetector"
  * Инициализировать утилиты
  * @param {Object} config конфигурация
  */
-export default (config) => {
+export default (config: Record<string, any>) => {
   config = config || {}
 
   const httpClient = new HttpClient(config.httpClient || {})

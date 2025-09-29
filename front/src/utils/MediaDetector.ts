@@ -1,3 +1,5 @@
+import type { MediaDetector as IMediaDetector, MediaDetectorOptions } from "@types"
+
 /**
  * Определяет устройство или размеры/режимы экрана
  *
@@ -14,11 +16,26 @@
  * @property {Number} WIDTH_XL
  * @property {Number} WIDTH_XXL
  */
-export default class MediaDetector {
+export default class MediaDetector implements IMediaDetector {
+  options: MediaDetectorOptions
+
+  resizeListenersMap: Record<string, () => void>
+  orientationListenersMap: Record<string, () => void>
+  scrollListenersMap: Record<string, () => void>
+
+  WIDTH_XS: number
+  WIDTH_SM: number
+  WIDTH_MD: number
+  WIDTH_LG: number
+  WIDTH_XL: number
+  WIDTH_XXL: number
+
   /**
    * Инициализация
    */
-  constructor() {
+  constructor(options: MediaDetectorOptions) {
+    this.options = options
+
     this.resizeListenersMap = {}
     this.orientationListenersMap = {}
     this.scrollListenersMap = {}
@@ -33,7 +50,6 @@ export default class MediaDetector {
 
   /**
    * Ширина окна
-   * @returns {Number}
    */
   get width() {
     return window.innerWidth
@@ -41,7 +57,6 @@ export default class MediaDetector {
 
   /**
    * Высота окна
-   * @returns {Number}
    */
   get height() {
     return window.innerHeight
@@ -49,7 +64,6 @@ export default class MediaDetector {
 
   /**
    * Ширина экрана
-   * @returns {Number}
    */
   get screenWidth() {
     return screen.width
@@ -57,7 +71,6 @@ export default class MediaDetector {
 
   /**
    * Высота экрана
-   * @returns {Number}
    */
   get screenHeight() {
     return screen.height
@@ -65,27 +78,22 @@ export default class MediaDetector {
 
   /**
    * Ширина видимости экрана
-   * @returns {Number}
    */
   get viewportWidth() {
-    return window.visualViewport.width
+    return window.visualViewport?.width || window.innerWidth
   }
 
   /**
    * Высота видимости экрана
-   * @returns {Number}
    */
   get viewportHeight() {
-    return window.visualViewport.height
+    return window.visualViewport?.height || window.innerHeight
   }
 
   /**
    * Подписаться на изменения размеров окна
-   * @param {String} id
-   * @param {Function} cb
-   * @returns {void}
    */
-  onResize(id, cb) {
+  onResize(id: string, cb: () => void): void {
     if (this.resizeListenersMap[id]) {
       throw `ID "${id}" для слушателя изменений размеров окна уже занят`
     }
@@ -100,10 +108,8 @@ export default class MediaDetector {
 
   /**
    * Отписаться от изменений размеров окна
-   * @param {String} id
-   * @returns {void}
    */
-  offResize(id) {
+  offResize(id: string): void {
     const cb = this.resizeListenersMap[id]
 
     if (cb) {
@@ -120,11 +126,8 @@ export default class MediaDetector {
 
   /**
    * Подписаться на изменения ориентации экрана
-   * @param {String} id
-   * @param {Function} cb
-   * @returns {void}
    */
-  onOrientation(id, cb) {
+  onOrientation(id: string, cb: () => void): void {
     if (this.orientationListenersMap[id]) {
       throw `ID "${id}" для слушателя изменений ориентации экрана уже занят`
     }
@@ -135,10 +138,8 @@ export default class MediaDetector {
 
   /**
    * Отписаться от изменений ориентации экрана
-   * @param {String} id
-   * @returns {void}
    */
-  offOrientation(id) {
+  offOrientation(id: string): void {
     const cb = this.orientationListenersMap[id]
 
     if (cb) {
@@ -151,11 +152,8 @@ export default class MediaDetector {
 
   /**
    * Подписаться на изменения позиции окна (скролл)
-   * @param {String} id
-   * @param {Function} cb
-   * @returns {void}
    */
-  onScroll(id, cb) {
+  onScroll(id: string, cb: () => void): void {
     if (this.scrollListenersMap[id]) {
       throw `ID "${id}" для слушателя изменений позиции окна уже занят`
     }
@@ -166,10 +164,8 @@ export default class MediaDetector {
 
   /**
    * Отписаться от изменений позиции окна (от скролла)
-   * @param {String} id
-   * @returns {void}
    */
-  offScroll(id) {
+  offScroll(id: string): void {
     const cb = this.scrollListenersMap[id]
 
     if (cb) {
@@ -182,138 +178,121 @@ export default class MediaDetector {
 
   /**
    * Это сенсорный экран
-   * @returns {Boolean}
    */
-  isTouched() {
+  isTouched(): boolean {
     return window.matchMedia("(pointer: coarse)").matches
   }
 
   /**
    * Это портретная ориентация
-   * @returns {Boolean}
    */
-  isPortrait() {
+  isPortrait(): boolean {
     return window.matchMedia("(orientation: portrait)").matches
   }
 
   /**
    * Это ориентация пейзажа
-   * @returns {Boolean}
    */
-  isLandscape() {
+  isLandscape(): boolean {
     return window.matchMedia("(orientation: landscape)").matches
   }
 
   /**
    * Это UserAgent планшета
-   * @returns {Boolean}
    */
-  isTabletUserAgent() {
+  isTabletUserAgent(): boolean {
     return /iPad|Tablet|Nexus 7|Nexus 10|KFAPWI/i.test(navigator.userAgent)
   }
 
   /**
    * Это UserAgent смартфона
-   * @returns {Boolean}
    */
-  isMobileUserAgent() {
+  isMobileUserAgent(): boolean {
     return /Mobi|Android|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
   }
 
   /**
    * Это экран планшета
-   * @returns {Boolean}
    */
-  isTabletScreen() {
+  isTabletScreen(): boolean {
     return this.screenWidth >= this.WIDTH_MD && this.screenWidth <= this.WIDTH_LG
   }
 
   /**
    * Это экран смартфона
-   * @returns {Boolean}
    */
-  isMobileScreen() {
+  isMobileScreen(): boolean {
     return this.screenWidth < this.WIDTH_MD
   }
 
   /**
    * Это экран десктопа
-   * @returns {Boolean}
    */
-  isDesctopScreen() {
+  isDesctopScreen(): boolean {
     return this.screenWidth > this.WIDTH_LG
   }
 
   /**
    * Это планшет
-   * @returns {Boolean}
    */
-  isTablet() {
+  isTablet(): boolean {
     return this.isTouched() && (this.isTabletUserAgent() || this.isTabletScreen())
   }
 
   /**
    * Это смартфон
-   * @returns {Boolean}
    */
-  isMobile() {
+  isMobile(): boolean {
     return this.isTouched() && (this.isMobileUserAgent() || this.isMobileScreen())
   }
 
   /**
    * Это десктоп
-   * @returns {Boolean}
    */
-  isDesctop() {
+  isDesctop(): boolean {
     // return !this.isTablet() && !this.isMobile() && this.isDesctopScreen()
     return this.isDesctopScreen()
   }
 
   /**
    * Размер окна XS
-   * @returns {Boolean}
    */
-  isXs() {
+  isXs(): boolean {
     return this.width <= this.WIDTH_XS
   }
 
   /**
    * Размер окна SM
-   * @returns {Boolean}
    */
-  isSm() {
+  isSm(): boolean {
     return this.width <= this.WIDTH_SM
   }
 
   /**
    * Размер окна MD
-   * @returns {Boolean}
    */
-  isMd() {
+  isMd(): boolean {
     return this.width > this.WIDTH_SM && this.width <= this.WIDTH_MD
   }
 
   /**
    * Размер окна LG
-   * @returns {Boolean}
    */
-  isLg() {
+  isLg(): boolean {
     return this.width > this.WIDTH_MD && this.width <= this.WIDTH_LG
   }
 
   /**
    * Размер окна XL
-   * @returns {Boolean}
    */
-  isXl() {
+  isXl(): boolean {
     return this.width > this.WIDTH_LG && this.width <= this.WIDTH_XL
   }
 
   /**
    * Размер окна XXL
-   * @returns {Boolean}
    */
-  isXxl() {
+  isXxl(): boolean {
     // return this.width > this.WIDTH_XL && this.width <= this.WIDTH_XXL
     return this.width > this.WIDTH_XL
   }
