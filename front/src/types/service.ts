@@ -1,33 +1,56 @@
-import type { Wooj, Topic, TopicType } from "./entities"
-import type { WoojCreateOptions, WoojUpdateOptions } from "./api"
+import type { Wooj, Topic, TopicType, User } from "./entities"
+import type { AuthResponse, WoojCreateOptions, WoojUpdateOptions } from "./api"
 
 /**
  * Сервисы
  *
- * @property {any} userService - Сервис пользователя
- * @property {any} woojService - Сервис вуджа
- * @property {any} topicService - Сервис топика
+ * @property {UserService} userService - Сервис пользователя
+ * @property {WoojService} woojService - Сервис вуджа
+ * @property {TopicService} topicService - Сервис топика
  */
 export interface Services {
-  userService: any // TODO: типизировать сервисы отдельно
+  userService: UserService
   woojService: WoojService
   topicService: TopicService
 }
 
 /**
+ * Сервис пользователя
+ *
+ * @property {function} setToken - Установить токен
+ * @property {function} check - Проверить авторизацию
+ * @property {function} register - Зарегистрировать пользователя
+ * @property {function} login - Войти в систему
+ * @property {function} logout - Выйти из системы
+ * @property {function} changeAvatar - Поменять аватар
+ * @property {function} update - Обновить данные пользователя
+ * @property {function} resend - Отправить сообщение с подтверждением email заново
+ */
+export interface UserService {
+  setToken(token: string | null): void
+  check(): Promise<User>
+  register(email: string, password: string): Promise<AuthResponse>
+  login(email: string, password: string): Promise<AuthResponse>
+  logout(): Promise<void>
+  changeAvatar(avatar: File): Promise<User>
+  update(fields: Partial<User>): Promise<User>
+  resend(): Promise<void>
+}
+
+/**
  * Сервис вуджа
  *
- * @property {any} getAll - Получить все вуджи
- * @property {any} create - Создать вудж
- * @property {any} update - Обновить вудж
- * @property {any} delete - Удалить вудж
- * @property {any} restore - Восстановить вудж
- * @property {any} pin - Закрепить вудж
- * @property {any} unpin - Открепить вудж
- * @property {any} setTopics - Установить топики для вуджа
- * @property {any} clearTrash - Очистить корзину
+ * @property {function} getAll - Получить все вуджи
+ * @property {function} create - Создать вудж
+ * @property {function} update - Обновить вудж
+ * @property {function} delete - Удалить вудж
+ * @property {function} restore - Восстановить вудж
+ * @property {function} pin - Закрепить вудж
+ * @property {function} unpin - Открепить вудж
+ * @property {function} setTopics - Установить топики для вуджа
+ * @property {function} clearTrash - Очистить корзину
  */
-interface WoojService {
+export interface WoojService {
   getAll(): Promise<Wooj[]>
   create(fields: WoojCreateOptions): Promise<Wooj>
   update(woojId: number, fields: WoojUpdateOptions): Promise<Wooj>
@@ -42,13 +65,13 @@ interface WoojService {
 /**
  * Сервис топика
  *
- * @property {any} getAll - Получить все топики
- * @property {any} create - Создать топик
- * @property {any} update - Обновить топик
- * @property {any} delete - Удалить топик
- * @property {any} sort - Сортировать топик
+ * @property {function} getAll - Получить все топики
+ * @property {function} create - Создать топик
+ * @property {function} update - Обновить топик
+ * @property {function} delete - Удалить топик
+ * @property {function} sort - Сортировать топик
  */
-interface TopicService {
+export interface TopicService {
   getAll(): Promise<Topic[]>
   create(fields: { name: string; type: TopicType }): Promise<Topic>
   update(topicId: number, fields: { name?: string }): Promise<Topic>

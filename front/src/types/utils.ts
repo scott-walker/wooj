@@ -131,23 +131,6 @@ export interface HttpClientResponse<T = unknown> {
 }
 
 /**
- * Медиа точки
- *
- * @property {number} mobile - Мобильная
- * @property {number} tablet - Планшет
- * @property {number} desktop - Десктоп
- * @property {number} widescreen - widescreen
- * @property {number} fullhd - fullhd
- */
-export interface MediaBreakpoints {
-  mobile: number
-  tablet: number
-  desktop: number
-  widescreen: number
-  fullhd: number
-}
-
-/**
  * Медиа детектор
  *
  * @property {number} width - Ширина
@@ -190,9 +173,20 @@ export interface MediaDetector {
 
 /**
  * Опции медиа детектора
- *
- * @property {MediaBreakpoints} breakpoints - Медиа точки
  */
 export interface MediaDetectorOptions {
-  breakpoints: MediaBreakpoints
+  options: Record<string, unknown>
+}
+
+/**
+ * Отложенный таймер
+ *
+ * @property {NodeJS.Timeout | null} timer - Таймер
+ * @property {function} start - Запустить
+ * @property {function} stop - Остановить
+ */
+export interface DeferredTimer {
+  timer: NodeJS.Timeout | null
+  start(timeout: number, cb: () => void): void
+  stop(): void
 }
