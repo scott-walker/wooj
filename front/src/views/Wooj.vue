@@ -14,7 +14,7 @@ const props = defineProps<{
 const { woojStore, onLoaded, setRouteListeners } = useWoojs()
 const layoutStore = useLayoutStore()
 
-const wooj = reactive<WoojView>({
+const wooj = ref<WoojView>({
   id: null,
   title: "",
   content: "",
@@ -26,11 +26,11 @@ const isNotFound = ref<boolean>(false)
  * Изменение содержимого вуджа
  */
 const onChangeContent = () => {
-  if (!wooj.id) return
+  if (!wooj.value.id) return
 
-  woojStore.updateWooj(wooj.id, {
-    title: wooj.title,
-    content: wooj.content,
+  woojStore.updateWooj(wooj.value.id, {
+    title: wooj.value.title,
+    content: wooj.value.content,
   })
 }
 
@@ -38,11 +38,11 @@ const onChangeContent = () => {
  * Изменение привязанных топиков
  */
 const onChangeTopics = async (topicsMap: Record<number, number>) => {
-  if (!wooj.id) return
+  if (!wooj.value.id) return
 
-  const { topic_ids } = (await woojStore.setWoojTopics(wooj.id, topicsMap)) as WoojType
+  const { topic_ids } = (await woojStore.setWoojTopics(wooj.value.id, topicsMap)) as WoojType
 
-  wooj.topicIds = topic_ids
+  wooj.value.topicIds = topic_ids
 }
 
 /**
@@ -63,13 +63,13 @@ const init = () => {
   woojStore.activateWooj(props.woojId)
 
   if (woojStore.hasActiveWooj && woojStore.activeWooj) {
-    wooj.id = woojStore.activeWooj.id
-    wooj.title = woojStore.activeWooj.title
-    wooj.content = woojStore.activeWooj.content
-    wooj.topicIds = woojStore.activeWooj.topic_ids
+    wooj.value.id = woojStore.activeWooj.id
+    wooj.value.title = woojStore.activeWooj.title
+    wooj.value.content = woojStore.activeWooj.content
+    wooj.value.topicIds = woojStore.activeWooj.topic_ids
 
     layoutStore.setStatusBar({
-      title: wooj.title || "Новый вудж",
+      title: wooj.value.title || "Новый вудж",
       icon: "file-pen",
     })
   }
@@ -77,10 +77,10 @@ const init = () => {
 
 watch(() => props.woojId, init)
 watch(
-  () => wooj.title,
+  () => wooj.value.title,
   () => {
     layoutStore.setStatusBar({
-      title: wooj.title || "Новый вудж",
+      title: wooj.value.title || "Новый вудж",
       icon: "file-pen",
     })
   },
