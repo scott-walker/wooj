@@ -6,12 +6,14 @@ import { useWoojs } from "@composables/woojs"
 
 import WoojList from "@components/WoojList.vue"
 
-const props = defineProps(["topicId"])
+const props = defineProps<{
+  topicId: string
+}>()
 const { topicParamsMap, onLoaded, setRouteListeners } = useWoojs()
 const woojStore = useWoojsStore()
 const topic = computed(() => topicParamsMap.value.custom)
 
-const activateTopic = () => woojStore.isLoaded && woojStore.activateTopic(props.topicId)
+const activateTopic = () => woojStore.isLoaded && woojStore.activateTopic(parseInt(props.topicId))
 
 watch(
   () => props.topicId,

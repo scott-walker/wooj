@@ -137,7 +137,6 @@ onUnmounted(() => sortableDriver && sortableDriver.destroy())
 <template>
   <div class="wooj-list">
     <div class="wooj-list__header">
-      {{ changedTitle }}
       <EditableBlock
         class="wooj-list__header-title"
         :key="changedTitle"

@@ -51,7 +51,13 @@ const onInput = (event: Event) => {
  * Обработчик нажатия Enter
  */
 const onEnter = (event: KeyboardEvent | FocusEvent) => {
-  const target = event.target as HTMLElement
+  focused.value = false
+}
+
+/**
+ * Обработчик сохранения
+ */
+const onSave = ({ target }: { target: HTMLElement }) => {
   const length = target.innerText.length
 
   if (_.isEqual(text.value, target.innerText)) {
@@ -64,7 +70,6 @@ const onEnter = (event: KeyboardEvent | FocusEvent) => {
   }
 
   text.value = target.innerText.replace(/<\/?[^>]+(>|$)/g, "")
-  focused.value = false
 
   emit("change", text.value)
 }
@@ -75,6 +80,15 @@ const onEnter = (event: KeyboardEvent | FocusEvent) => {
 const onFocus = () => {
   focused.value = true
   isError.value = false
+}
+
+/**
+ * Обработчик blur
+ */
+const onBlur = (event: FocusEvent) => {
+  const target = event.target as HTMLElement
+
+  onSave({ target })
 }
 
 watch(
@@ -107,7 +121,7 @@ watch(
       @keydown.enter.exact.prevent="onEnter"
       @input="onInput"
       @focus="onFocus"
-      @blur="onEnter"
+      @blur="onBlur"
     >
       {{ text }}
     </div>
