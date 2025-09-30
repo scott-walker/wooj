@@ -1,16 +1,16 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue"
 
 const props = defineProps({
-  icon: String,
+  icon: { type: String, required: true },
   color: { type: String, default: null },
   active: { type: Boolean, default: false },
-  disabled: { type: Boolean, default: false }
+  disabled: { type: Boolean, default: false },
 })
-const buttonClass = computed(() => props.active ? 'active' : null)
+const buttonClass = computed(() => (props.active ? "active" : null))
 const iconClass = computed(() => `fas fa-${props.icon}`)
 const colorStyle = computed(() => ({
-  color: props.color
+  color: props.color,
 }))
 </script>
 
@@ -29,7 +29,7 @@ const colorStyle = computed(() => ({
   background: colors.$absorbing;
   border: 2px solid transparent;
   border-radius: 10px;
-  transition: all .1s;
+  transition: all 0.1s;
   color: colors.$basic;
   cursor: pointer;
   outline: none;

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue"
 
 const props = defineProps({
@@ -9,7 +9,7 @@ const style = computed(() => {
 
   return {
     width: `${props.size}px`,
-    height: `${props.size}px`
+    height: `${props.size}px`,
   }
 })
 </script>

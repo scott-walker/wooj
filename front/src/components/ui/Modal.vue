@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { reactive, computed, watch, useTemplateRef, nextTick, watchEffect } from "vue"
 import { useLockers } from "@composables/lockers"
 import { usePosition } from "@composables/position"
@@ -15,10 +15,10 @@ const props = defineProps({
 const { lockTouchMove } = useLockers()
 const { pX, pY } = usePosition()
 
-const modal = useTemplateRef("modal")
+const modal = useTemplateRef<HTMLDivElement>("modal")
 
 const pointerPosition = reactive({ x: 0, y: 0 })
-const contentPosition = computed(() => {
+const contentPosition = computed<Record<string, string> | null>(() => {
   const OFFSET_FACTOR = 30
 
   if (props.center) {
@@ -27,7 +27,7 @@ const contentPosition = computed(() => {
 
   return {
     top: `${pointerPosition.y + OFFSET_FACTOR}px`,
-    left: `${pointerPosition.x + OFFSET_FACTOR}px`
+    left: `${pointerPosition.x + OFFSET_FACTOR}px`,
   }
 })
 
@@ -38,20 +38,20 @@ watchEffect(() => {
   pointerPosition.y = pY.value
 })
 
-watch(isShowed, (isShowed) => isShowed && nextTick(() => lockTouchMove(modal.value)))
+watch(isShowed, (isShowed) => isShowed && nextTick(() => lockTouchMove(modal.value!)))
 
-const onClose = () => isShowed.value = false
+const onClose = () => (isShowed.value = false)
 </script>
 
 <template>
   <Teleport v-if="isShowed" to="body">
-    <div ref="modal" class="ui-modal" :class="props.class">
-      <div class=" ui-modal__background" @click="onClose"></div>
+    <div ref="modal" class="ui-modal" :class="class">
+      <div class="ui-modal__background" @click="onClose"></div>
 
       <div class="ui-modal__content" :style="contentPosition">
         <div class="ui-modal__content-header">
-          <div v-if="props.title" class="ui-modal__content-header-title">
-            {{ props.title }}
+          <div v-if="title" class="ui-modal__content-header-title">
+            {{ title }}
           </div>
           <IconLink icon="xmark" type="default" @click="onClose" />
         </div>
@@ -93,14 +93,14 @@ const onClose = () => isShowed.value = false
     width: 100%;
     height: 100%;
     background: color.change(colors.$basic, $alpha: 30%);
-    animation: fade .3s ease forwards;
+    animation: fade 0.3s ease forwards;
   }
 
   &__content {
     position: absolute;
     z-index: 10;
     @include common.card();
-    animation: scale .15s ease forwards;
+    animation: scale 0.15s ease forwards;
 
     &-header {
       display: flex;
@@ -162,7 +162,7 @@ const onClose = () => isShowed.value = false
 
 @keyframes scale {
   0% {
-    transform: scale(.8);
+    transform: scale(0.8);
   }
 
   100% {

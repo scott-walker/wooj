@@ -1,13 +1,13 @@
-<script setup>
+<script setup lang="ts">
 const props = defineProps({
   type: { type: String, default: "lines" },
-  itemsNum: { type: Number, default: 6 }
+  itemsNum: { type: Number, default: 6 },
 })
 </script>
 
 <template>
-  <div class="ui-skeleton" :class="props.type">
-    <div v-for="i of props.itemsNum" class="ui-skeleton__item"></div>
+  <div class="ui-skeleton" :class="type">
+    <div v-for="i of itemsNum" class="ui-skeleton__item"></div>
   </div>
 </template>
 
@@ -66,7 +66,7 @@ const props = defineProps({
   }
 
   50% {
-    opacity: .3;
+    opacity: 0.3;
   }
 
   100% {

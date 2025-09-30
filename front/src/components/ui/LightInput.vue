@@ -1,5 +1,6 @@
-<script setup>
-import { inject, useTemplateRef, onMounted, nextTick } from 'vue'
+<script setup lang="ts">
+import { inject, useTemplateRef, onMounted, nextTick } from "vue"
+import type { DeferredTimer } from "@types"
 
 const props = defineProps({
   fieldClass: { type: String, default: "" },
@@ -9,8 +10,8 @@ const props = defineProps({
 })
 const content = defineModel()
 const emit = defineEmits(["update", "save"])
-const input = useTemplateRef('input')
-const deferredTimer = inject("createDeferredTimer")()
+const input = useTemplateRef<HTMLInputElement>("input")
+const deferredTimer = inject<DeferredTimer>("createDeferredTimer")!
 
 const onChange = () => {
   emit("update", content.value)
@@ -19,7 +20,7 @@ const onChange = () => {
 }
 
 onMounted(() => {
-  nextTick(() => props.focused && input.value.focus())
+  nextTick(() => props.focused && input.value?.focus())
 })
 </script>
 
@@ -33,7 +34,8 @@ onMounted(() => {
       v-model="content"
       :placeholder="props.placeholder"
       :maxlength="props.max"
-      @input="onChange" />
+      @input="onChange"
+    />
   </div>
 </template>
 
@@ -51,7 +53,7 @@ $grey: color.change(colors.$grey, $lightness: 80%);
     border: none;
     border-bottom: 2px solid transparent;
     box-sizing: border-box;
-    transition: all .3s;
+    transition: all 0.3s;
     width: 100%;
     color: colors.$basic;
     border-color: colors.$grey;

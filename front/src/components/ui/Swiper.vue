@@ -1,11 +1,11 @@
-<script lang="ts" setup>
-import { onMounted } from "vue"
+<script setup lang="ts">
+import { onMounted, type PropType } from "vue"
 import type { Swiper } from "swiper"
 
 const props = defineProps({
-  id: String,
-  itemsNum: Number,
-  options: { type: Object, default: null },
+  id: { type: String, required: true },
+  itemsNum: { type: Number, required: true },
+  options: { type: Object as PropType<Record<string, unknown>>, default: null },
 })
 
 const COLOR_PRIMARY = "#d4ff38"

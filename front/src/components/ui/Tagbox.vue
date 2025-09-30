@@ -1,15 +1,17 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch } from "vue"
 import IconLink from "@ui/IconLink.vue"
+
+type Position = { x: number; y: number }
 
 const show = defineModel()
 const props = defineProps({
   title: { type: String, default: "" },
   center: { type: Boolean, default: false },
 })
-const mousePosition = ref(null)
+const mousePosition = ref<Position | null>(null)
 const contentPosition = computed(() => {
-  const { x, y } = mousePosition.value || {}
+  const { x, y } = mousePosition.value || ({} as Position)
   const OFFSET_FACTOR = 20
 
   if (props.center || !x || !y) {
@@ -18,7 +20,7 @@ const contentPosition = computed(() => {
 
   return {
     top: `${y + OFFSET_FACTOR}px`,
-    left: `${x + OFFSET_FACTOR}px`
+    left: `${x + OFFSET_FACTOR}px`,
   }
 })
 
@@ -28,13 +30,16 @@ watch(show, (value) => {
   }
 })
 
-const onCheckPosition = ({ x, y }) => {
+/**
+ * Проверить позицию мыши
+ */
+const onCheckPosition = ({ x, y }: Position) => {
   if (mousePosition.value) return
 
   mousePosition.value = { x, y }
 }
 
-const onClose = () => show.value = false
+const onClose = () => (show.value = false)
 </script>
 
 <template>
@@ -42,8 +47,8 @@ const onClose = () => show.value = false
     <div class="ui-modal__background" @click="onClose"></div>
     <div class="ui-modal__content" :style="contentPosition">
       <div class="ui-modal__content-header">
-        <div v-if="props.title" class="ui-modal__content-header-title">
-          {{ props.title }}
+        <div v-if="title" class="ui-modal__content-header-title">
+          {{ title }}
         </div>
         <IconLink icon="xmark" @click="onClose" />
       </div>
@@ -81,7 +86,7 @@ const onClose = () => show.value = false
     width: 100%;
     height: 100%;
     background: color.change(colors.$basic, $alpha: 30%);
-    animation: fade .3s ease forwards;
+    animation: fade 0.3s ease forwards;
   }
 
   &__content {
@@ -89,7 +94,7 @@ const onClose = () => show.value = false
     z-index: 10;
     // min-width: 50%;
     @include common.card();
-    animation: scale .3s ease forwards;
+    animation: scale 0.3s ease forwards;
 
     &-header {
       display: flex;
@@ -126,7 +131,7 @@ const onClose = () => show.value = false
 
 @keyframes scale {
   0% {
-    transform: scale(.3);
+    transform: scale(0.3);
   }
 
   100% {

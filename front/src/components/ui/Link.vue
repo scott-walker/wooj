@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue"
 
 const props = defineProps({
@@ -19,12 +19,12 @@ const cssClass = computed(() => {
   return classes
 })
 
-const onClick = () => !props.loading && emit('click')
+const onClick = () => !props.loading && emit("click")
 </script>
 
 <template>
   <a class="ui-link" :class="cssClass" @click="onClick">
-    <i v-if="props.loading" class="ui-link__loader fa-solid fa-spinner"></i>
+    <i v-if="loading" class="ui-link__loader fa-solid fa-spinner"></i>
     <slot v-else />
   </a>
 </template>
@@ -54,7 +54,7 @@ const onClick = () => !props.loading && emit('click')
 
     &.danger {
       background-color: colors.$danger;
-      color: colors.$absorbing
+      color: colors.$absorbing;
     }
 
     &.scalable {
@@ -66,7 +66,7 @@ const onClick = () => !props.loading && emit('click')
     cursor: default;
   }
 
-  &.loading>&__loader {
+  &.loading > &__loader {
     animation: rotating 1.5s linear infinite;
   }
 }

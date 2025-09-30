@@ -1,4 +1,4 @@
-import { ref, computed, onBeforeUnmount, inject } from "vue"
+import { ref, computed, onBeforeUnmount, inject, type EmitFn, type ModelRef } from "vue"
 
 // tiptap
 import { Color } from "@tiptap/extension-color"
@@ -8,13 +8,28 @@ import Underline from "@tiptap/extension-underline"
 import Placeholder from "@tiptap/extension-placeholder"
 import StarterKit from "@tiptap/starter-kit"
 
-import Editor from "./CustomEditor"
+import { CustomEditor as Editor, type ICustomEditor } from "./CustomEditor"
+import type { DeferredTimer } from "@types"
 
-export const useEditor = ({ content, emit, props }) => {
-  const deferredTimer = inject("createDeferredTimer")()
+/**
+ * Пропсы для useEditor
+ */
+interface UseEditorProps {
+  content: ModelRef<string | undefined>
+  emit: EmitFn<["update", "save"]>
+  props: {
+    placeholder: string
+  }
+}
 
-  const isPanelFocused = ref(false)
-  const isContentFocused = ref(false)
+/**
+ * Хук для редактора
+ */
+export const useEditor = ({ content, emit, props }: UseEditorProps) => {
+  const deferredTimer = inject<DeferredTimer>("createDeferredTimer")
+
+  const isPanelFocused = ref<boolean>(false)
+  const isContentFocused = ref<boolean>(false)
 
   const isFocused = computed(() => isPanelFocused.value || isContentFocused.value)
   const placeholder = computed(() => {
@@ -28,7 +43,7 @@ export const useEditor = ({ content, emit, props }) => {
   const editor = new Editor({
     extensions: [
       Color.configure({ types: [TextStyle.name, ListItem.name] }),
-      TextStyle.configure({ types: [ListItem.name] }),
+      TextStyle,
       Placeholder.configure({
         placeholder: placeholder.value,
       }),
@@ -42,19 +57,21 @@ export const useEditor = ({ content, emit, props }) => {
     },
     content: content.value,
     onUpdate({ editor }) {
-      content.value = editor.getContent()
+      content.value = (editor as ICustomEditor).getContent()
 
       emit("update", content.value)
 
-      deferredTimer.start(1000, () => emit("save", content.value))
+      deferredTimer?.start(1000, () => emit("save", content.value))
     },
-    onFocus({ editor, event }) {
+    onFocus({ editor }) {
+      ;(editor as ICustomEditor).setExtensionOptions("placeholder", { placeholder: placeholder.value })
+
       isContentFocused.value = true
-      editor.setExtensionOptions("placeholder", { placeholder: placeholder.value })
     },
-    onBlur({ editor, event }) {
+    onBlur({ editor }) {
+      ;(editor as ICustomEditor).setExtensionOptions("placeholder", { placeholder: placeholder.value })
+
       isContentFocused.value = false
-      editor.setExtensionOptions("placeholder", { placeholder: placeholder.value })
     },
   })
 

@@ -2,28 +2,27 @@ import { ref, computed, onMounted, onUnmounted } from "vue"
 
 /**
  * Отслеживание направления скроллинга (и движения по тач-скрину)
- * @returns {Object}
  */
 export function useMoveDirection() {
   const OFFSET_FACTOR = 0
   const DIRECTION_DOWN = "down"
   const DIRECTION_UP = "up"
 
-  const scrollDirection = ref(null)
+  const scrollDirection = ref<string | null>(null)
   const isScrollingDown = computed(() => scrollDirection.value === DIRECTION_DOWN)
   const isScrollingUp = computed(() => scrollDirection.value === DIRECTION_UP)
 
-  const toucheMoveDirection = ref(null)
+  const toucheMoveDirection = ref<string | null>(null)
   const isTouchMovingDown = computed(() => toucheMoveDirection.value === DIRECTION_DOWN)
   const isTouchMovingUp = computed(() => toucheMoveDirection.value === DIRECTION_UP)
 
   const getScrollTop = () => window.scrollY || document.documentElement.scrollTop
 
   let lastScrollPosition = getScrollTop()
-  let lastTouchPosition = null
+  let lastTouchPosition: number | null = null
 
-  const prevPosition = ref(null)
-  const currentPosition = ref(null)
+  const prevPosition = ref<number | null>(null)
+  const currentPosition = ref<number | null>(null)
 
   /**
    * Обработчик скролла
@@ -48,14 +47,14 @@ export function useMoveDirection() {
   /**
    * Обработчик тач-старта
    */
-  const onTouchStart = ({ touches }) => (lastTouchPosition = touches[0].clientY)
+  const onTouchStart = ({ touches }: { touches: TouchList }) => (lastTouchPosition = touches[0]?.clientY ?? null)
 
   /**
    * Обработчик тач-движения
    */
-  const onTouchMove = ({ touches }) => {
-    const newTouchPosition = touches[0].clientY
-    const delta = newTouchPosition - lastTouchPosition
+  const onTouchMove = ({ touches }: { touches: TouchList }) => {
+    const newTouchPosition = touches[0]?.clientY ?? 0
+    const delta = newTouchPosition - (lastTouchPosition ?? 0)
 
     // if (Math.abs(delta) < 10) return // игнорируем мелкие движения
 

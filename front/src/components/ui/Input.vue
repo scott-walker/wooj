@@ -1,5 +1,6 @@
-<script setup>
-import { inject, useTemplateRef, onMounted } from 'vue'
+<script setup lang="ts">
+import { inject, useTemplateRef, onMounted } from "vue"
+import type { DeferredTimer } from "@types"
 
 const props = defineProps({
   type: { type: String, default: "text" },
@@ -11,8 +12,8 @@ const props = defineProps({
 })
 const content = defineModel()
 const emit = defineEmits(["update", "save"])
-const input = useTemplateRef('input')
-const deferredTimer = inject("createDeferredTimer")()
+const input = useTemplateRef<HTMLInputElement>("input")
+const deferredTimer = inject<DeferredTimer>("createDeferredTimer")!
 
 const onChange = () => {
   emit("update", content.value)
@@ -21,7 +22,7 @@ const onChange = () => {
 }
 
 onMounted(() => {
-  props.focused && input.value.focus()
+  props.focused && input.value?.focus()
 })
 </script>
 
@@ -36,7 +37,8 @@ onMounted(() => {
       :placeholder="props.placeholder"
       :maxlength="props.max"
       :autocomplete="props.autocomplete ? 'on' : 'off'"
-      @input="onChange" />
+      @input="onChange"
+    />
   </div>
 </template>
 
@@ -54,7 +56,7 @@ $grey: color.change(colors.$grey, $lightness: 80%);
     border: none;
     border-bottom: 2px solid $grey;
     box-sizing: border-box;
-    transition: all .2s;
+    transition: all 0.2s;
     width: 100%;
     color: colors.$basic;
     font-size: 18px;

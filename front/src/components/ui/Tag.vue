@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue"
 
 const checked = defineModel()
@@ -30,8 +30,8 @@ const onCheck = () => {
 <template>
   <span class="ui-tag" :class="cssClass" @click="onCheck">
     <span class="ui-tag__wrap">
-      <i v-if="props.icon" class="ui-tag__icon" :class="['fa-solid', `fa-${props.icon}`]"></i>
-      <span v-if="props.text" class="ui-tag__text">{{ props.text }}</span>
+      <i v-if="icon" class="ui-tag__icon" :class="['fa-solid', `fa-${icon}`]"></i>
+      <span v-if="text" class="ui-tag__text">{{ text }}</span>
       <slot v-else />
     </span>
   </span>
@@ -91,7 +91,7 @@ const onCheck = () => {
 
   &.clickable {
     background: none;
-    transition: all .3s;
+    transition: all 0.3s;
     cursor: pointer;
   }
 

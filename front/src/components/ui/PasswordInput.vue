@@ -1,6 +1,8 @@
-<script setup>
-import { ref, computed, watch } from 'vue'
-import Input from '@ui/Input.vue'
+<script setup lang="ts">
+import { ref, computed, watch } from "vue"
+import Input from "@ui/Input.vue"
+
+type Level = { type: number; text: string; pattern: RegExp }
 
 const props = defineProps({
   placeholder: { type: String, default: "Пароль" },
@@ -10,8 +12,8 @@ const props = defineProps({
 const password = defineModel()
 const emit = defineEmits(["update", "save"])
 const isVisinle = ref(false)
-const level = ref(null)
-const type = computed(() => isVisinle.value ? "text" : "password")
+const level = ref<Level | null>(null)
+const type = computed(() => (isVisinle.value ? "text" : "password"))
 
 const levels = [
   { type: 1, text: "Слабый", pattern: /^[a-zа-я0-9]{1,8}$/ },
@@ -20,15 +22,18 @@ const levels = [
   { type: 3, text: "Сильный", pattern: /^[A-Za-zА-Яа-я0-9]{8,}$/ },
   { type: 3, text: "Сильный", pattern: /^.{8,}$/ },
 ]
-const onToggleVisible = () => isVisinle.value = !isVisinle.value
+const onToggleVisible = () => (isVisinle.value = !isVisinle.value)
 
-watch(() => password.value, value => {
-  if (!props.withChecker) {
-    return
-  }
+watch(
+  () => password.value,
+  (value) => {
+    if (!props.withChecker) {
+      return
+    }
 
-  level.value = levels.find(({ pattern }) => pattern.test(password.value))
-})
+    level.value = levels.find(({ pattern }) => pattern.test(password.value as string)) as Level
+  },
+)
 </script>
 
 <template>
@@ -39,11 +44,14 @@ watch(() => password.value, value => {
         v-model="password"
         :type="type"
         :autocomplete="props.autocomplete"
-        :placeholder="props.placeholder" />
+        :placeholder="props.placeholder"
+      />
 
-      <i class="ui-password-input__icon fa-solid"
+      <i
+        class="ui-password-input__icon fa-solid"
         :class="{ 'fa-eye': !isVisinle, 'fa-eye-slash': isVisinle }"
-        @click="onToggleVisible"></i>
+        @click="onToggleVisible"
+      ></i>
     </div>
     <div v-if="props.withChecker && level" class="ui-password-input__level" :class="`level-${level.type}`">
       {{ level.text }}

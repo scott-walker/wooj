@@ -1,5 +1,5 @@
-<script setup>
-import { computed, useTemplateRef } from 'vue'
+<script setup lang="ts">
+import { computed, useTemplateRef } from "vue"
 import { useSelection } from "@composables/selection"
 import Panel from "@ui/Editor/Panel.vue"
 
@@ -9,8 +9,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits(["mouseover", "close"])
-const wrapper = useTemplateRef("wrapper")
-const { selectionTop } = useSelection({ excludedElements: [wrapper.value] })
+const wrapper = useTemplateRef<HTMLDivElement>("wrapper")
+const { selectionTop } = useSelection({ excludedElements: [wrapper.value!] })
 
 const wrapperStyle = computed(() => {
   if (!wrapper.value || !props.visible) return {}
@@ -32,7 +32,8 @@ const wrapperStyle = computed(() => {
       class="ui-editor-bouble-pamel"
       :class="{ visible }"
       :style="wrapperStyle"
-      @mouseover="emit('mouseover', $event)">
+      @mouseover="emit('mouseover', $event)"
+    >
       <div class="ui-editor-bouble-pamel__wrapper">
         <Panel :editor="editor" :hasClose="true" @close="emit('close')" />
       </div>
@@ -52,7 +53,7 @@ const wrapperStyle = computed(() => {
   top: 0;
   left: 0;
   width: 100%;
-  transition: all .15s;
+  transition: all 0.15s;
   opacity: 0;
   transform: translateX(100vw);
 

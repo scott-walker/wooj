@@ -1,12 +1,12 @@
-<script setup>
+<script setup lang="ts">
 import { useMediaStore } from "@stores/media"
-import { useEditor } from "./lib/useEditor"
+import { useEditor } from "./lib/useEditor.ts"
 
 import EditorPanel from "./Panel.vue"
 import EditorBoublePanel from "./BoublePanel.vue"
 import { EditorContent } from "@tiptap/vue-3"
 
-const content = defineModel()
+const content = defineModel<string | undefined>()
 const emit = defineEmits(["update", "save"])
 const props = defineProps({
   placeholder: { type: String, default: null },
@@ -22,23 +22,15 @@ const { editor, isFocused, onPanelOver, onPanelLeave } = useEditor({
 </script>
 
 <template>
-  <div
-    class="ui-editor"
-    :class="{ focused: isFocused }"
-    @mouseover="onPanelOver"
-    @mouseleave="onPanelLeave">
-
+  <div class="ui-editor" :class="{ focused: isFocused }" @mouseover="onPanelOver" @mouseleave="onPanelLeave">
     <EditorBoublePanel
       v-if="mediaStore.isSmall"
       :visible="isFocused"
       :editor="editor"
       @mouseover="onPanelOver"
-      @close="onPanelLeave" />
-    <EditorPanel
-      v-else
-      class="ui-editor__panel"
-      :class="{ 'hidden': !isFocused }"
-      :editor="editor" />
+      @close="onPanelLeave"
+    />
+    <EditorPanel v-else class="ui-editor__panel" :class="{ hidden: !isFocused }" :editor="editor" />
 
     <EditorContent class="ui-editor__content wooj-content" :editor="editor" />
   </div>
@@ -54,7 +46,7 @@ const { editor, isFocused, onPanelOver, onPanelLeave } = useEditor({
   border: 2px solid transparent;
   border-top: none;
   border-radius: 5px;
-  transition: all .2s;
+  transition: all 0.2s;
 
   &.focused {
     border-color: colors.$grey;
@@ -71,7 +63,7 @@ const { editor, isFocused, onPanelOver, onPanelLeave } = useEditor({
     margin-top: -2px;
     transform: translateY(0px);
     opacity: 1;
-    transition: all .3s;
+    transition: all 0.3s;
 
     &.hidden {
       height: 0;
@@ -84,7 +76,7 @@ const { editor, isFocused, onPanelOver, onPanelLeave } = useEditor({
   &__content {
     .tiptap {
       padding: 20px;
-      transition: all .2s;
+      transition: all 0.2s;
 
       &.ProseMirror-focused {
         outline: none;
@@ -115,7 +107,6 @@ const { editor, isFocused, onPanelOver, onPanelLeave } = useEditor({
 }
 
 @include media.sm() {
-
   .ui-editor {
     &__panel {
       position: sticky;

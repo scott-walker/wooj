@@ -1,9 +1,9 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue"
 import Link from "@ui/Link.vue"
 
 const props = defineProps({
-  icon: String,
+  icon: { type: String, required: true },
   type: { type: String, default: "primary" },
   label: { type: String, default: "" },
   active: { type: Boolean, default: false },
@@ -23,9 +23,9 @@ const iconClass = computed(() => {
 </script>
 
 <template>
-  <Link class="ui-icon-link" :type="props.type" :active="props.active" :scalable="props.scalable">
-  <i class="ui-icon-link__icon" :class="iconClass"></i>
-  <span v-if="props.label" class="ui-icon-link__label">{{ props.label }}</span>
+  <Link class="ui-icon-link" :type="type" :active="active" :scalable="scalable">
+    <i class="ui-icon-link__icon" :class="iconClass"></i>
+    <span v-if="label" class="ui-icon-link__label">{{ label }}</span>
   </Link>
 </template>
 
