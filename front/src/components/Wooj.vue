@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from "vue"
+import { ref, computed, type ComputedRef } from "vue"
 import { useRouter } from "vue-router"
 
 import type { Topic } from "@types"
@@ -35,8 +35,8 @@ const router = useRouter()
 const mediaStore = useMediaStore()
 
 const isShowedTopics = ref(false)
-// const isShowedShare = ref(false)
 const hasTopics = computed(() => !!props.topics.length)
+const isSmall: ComputedRef<boolean> = computed(() => !!mediaStore.isSmall)
 
 const onBack = () => router.back()
 const onShowTopics = () => (isShowedTopics.value = !isShowedTopics.value)
@@ -45,8 +45,8 @@ const onSaveTopics = (topicsMap: Record<number, number>) => emit("change-topics"
 
 <template>
   <div class="wooj" v-if="wooj">
-    <div v-if="props.loaded" class="wooj__board">
-      <div v-if="mediaStore.isSmall" class="wooj__actions">
+    <div v-if="loaded" class="wooj__board">
+      <div v-if="isSmall" class="wooj__actions">
         <IconLink icon="arrow-left" label="Назад" :scalable="false" @click="onBack" />
         <IconLink v-if="hasTopics" icon="tags" label="Топики" :scalable="false" @click="onShowTopics" />
         <!-- <IconLink icon="link" @click="isShowedShare = !isShowedShare" /> -->
@@ -78,7 +78,7 @@ const onSaveTopics = (topicsMap: Record<number, number>) => emit("change-topics"
 
     <Skeleton v-else type="block-list" :itemsNum="1" class="wooj__skeleton" />
 
-    <Modal v-model="isShowedTopics" title="Топики" :center="mediaStore.isSmall">
+    <Modal v-model="isShowedTopics" title="Топики" :center="isSmall">
       <TopicTags :topics="topics" v-model="wooj.topicIds" @save="onSaveTopics" />
     </Modal>
     <!-- <Modal v-model="isShowedShare" title="Публиковать вуддж">
