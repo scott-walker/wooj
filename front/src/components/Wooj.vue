@@ -16,8 +16,8 @@ import TopicTags from "@components/TopicTags.vue"
 /**
  * Пропсы для отображения вуджа
  */
-interface WoojView {
-  id: number
+export interface WoojView {
+  id: number | null
   title: string
   content: string
   topicIds: number[]
