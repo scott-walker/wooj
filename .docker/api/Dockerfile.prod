@@ -63,9 +63,6 @@ RUN mkdir -p /var/www/storage/logs \
     && mkdir -p /var/www/storage/framework/views \
     && mkdir -p /var/www/bootstrap/cache
 
-# Переключение на пользователя приложения
-USER app
-
 # Открытие портов
 EXPOSE 80
 

@@ -2,7 +2,6 @@
 set -e
 
 # Установка прав доступа
-chown -R app:app /var/www
 chmod -R 755 /var/www
 chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
