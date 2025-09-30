@@ -5,6 +5,8 @@ set -e
 chmod -R 755 /var/www
 chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
+cp /var/www/.env.example /var/www/.env
+
 # Генерация ключа приложения
 php artisan key:generate --force
 
