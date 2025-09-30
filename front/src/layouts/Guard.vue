@@ -57,21 +57,19 @@
 }
 
 .view-transition {
-
   &-enter-active,
   &-leave-active {
-    transition: all .1s ease;
+    transition: all 0.1s ease;
   }
 
   &-enter-from,
   &-leave-to {
     opacity: 0.5;
-    transform: scale(.9);
+    transform: scale(0.9);
   }
 }
 
 @include media.sm() {
-
   .layout-guard {
     &-brand {
       padding: 20px 10px;
@@ -87,6 +85,5 @@
       }
     }
   }
-
 }
 </style>

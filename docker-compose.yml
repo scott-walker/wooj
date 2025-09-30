@@ -1,52 +1,53 @@
 services:
   db:
-    build: .docker/db
+    container_name: wooj-db-dev
+    build:
+      context: ./db
+      dockerfile: ./db/.docker/Dockerfile
     ports:
       - ${DB_PORT}:5432
     volumes:
-      - .docker/db/data:/var/lib/postgresql/data
+      - ./db/.docker/data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASS}
       POSTGRES_DB: ${DB_NAME}
 
   api:
-    build: .docker/api
+    container_name: wooj-api-dev
+    build:
+      context: ./api
+      dockerfile: ./api/.docker/dev/Dockerfile
     ports:
       - ${API_PORT}:80
     volumes:
       - ./api:/var/www
-      - .docker/api/php/php.ini:/usr/local/etc/php/php.ini
-      - .docker/api/php/docker.conf:/usr/local/etc/php-fpm.d/docker.conf
-      - .docker/api/nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - .docker/api/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - .docker/api/.bashrc:/root/.bashrc
+      - ./api/.docker/dev/php/php.ini:/usr/local/etc/php/php.ini
+      - ./api/.docker/dev/php/docker.conf:/usr/local/etc/php-fpm.d/docker.conf
+      - ./api/.docker/dev/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./api/.docker/dev/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./api/.docker/dev/.bashrc:/root/.bashrc
     depends_on:
       - db
 
   front:
-    build: .docker/front
+    container_name: wooj-front-dev
+    build:
+      context: ./front
+      dockerfile: ./front/.docker/dev/Dockerfile
     ports:
-      - ${FRONT_BUILD_PORT}:80
       - ${FRONT_DEV_PORT}:5173
     volumes:
       - ./front:/var/www
-      - .docker/front/nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - .docker/front/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - .docker/front/.bashrc:/root/.bashrc
+      - ./front/.docker/dev/.bashrc:/root/.bashrc
     depends_on:
       - api
 
   mail:
-    build: .docker/mail
+    container_name: wooj-mail-dev
+    build:
+      context: ./mail
+      dockerfile: ./mail/.docker/Dockerfile
     ports:
       - ${MAIL_INTERFACE_PORT}:80
       - ${MAIL_PORT}:25
-
-  # redis:
-  #     image: redis:latest
-  #     command: redis-server --appendonly yes
-  #     volumes:
-  #     - .docker/redis/data:/data
-  #     ports:
-  #     - 6379:6379

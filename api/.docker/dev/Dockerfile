@@ -1,6 +1,6 @@
 FROM php:8.4-fpm
 
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY .docker/dev/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 RUN apt-get update && apt-get install -y \
