@@ -1,6 +1,6 @@
 {
   "$schema": "https://getcomposer.org/schema.json",
-  "name": "wooj",
+  "name": "wooj/api",
   "type": "project",
   "description": "WOOJ",
   "keywords": [
