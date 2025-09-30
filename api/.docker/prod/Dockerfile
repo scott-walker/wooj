@@ -40,7 +40,7 @@ WORKDIR /var/www/html
 COPY . .
 COPY .docker/prod/entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY .docker/prod/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY .docker/prod/nginx/default.conf /tmp/nginx.env.conf
+COPY .docker/prod/nginx/default.conf /etc/nginx/http.d/default.conf
 COPY .docker/prod/php/php.ini /usr/local/etc/php/php.ini
 COPY .docker/prod/php/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
 
