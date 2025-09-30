@@ -1,60 +1,54 @@
-FROM php:8.4-fpm
+FROM php:8.4-fpm-alpine
 
-COPY .docker/dev/entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
-
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    zlib1g-dev \
+RUN apk add --no-cache \
+    build-base \
+    zlib-dev \
     nginx \
     curl \
-    gnupg \
-    procps \
-    vim \
     git \
     unzip \
     libzip-dev \
-    libpq-dev \
+    postgresql-dev \
     && docker-php-ext-install zip pdo_pgsql
 
 # intl
-RUN apt-get install -y libicu-dev \
+RUN apk add --no-cache icu-dev \
   && docker-php-ext-configure intl \
   && docker-php-ext-install intl
 
 # gd
-RUN apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev && \
-docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ && \
-docker-php-ext-install gd
-
-# redis
-RUN pecl install redis && docker-php-ext-enable redis
-
-# pcov
-RUN pecl install pcov && docker-php-ext-enable pcov
+RUN apk add --no-cache freetype-dev libjpeg-turbo-dev libpng-dev \
+  && docker-php-ext-configure gd --with-freetype --with-jpeg \
+  && docker-php-ext-install gd
 
 # pcntl
 RUN docker-php-ext-install pcntl
 
-# Xdebug
-# RUN pecl install xdebug \
-# && docker-php-ext-enable xdebug \
-# && echo ";zend_extension=xdebug" > /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-
 # Composer
-RUN curl https://getcomposer.org/installer > /tmp/composer-install.php
-RUN php /tmp/composer-install.php
-RUN rm -rf /tmp/composer-install.php
-RUN mv composer.phar /usr/local/bin/composer
+RUN curl https://getcomposer.org/installer > /tmp/composer-install.php \
+    && php /tmp/composer-install.php \
+    && rm -rf /tmp/composer-install.php \
+    && mv composer.phar /usr/local/bin/composer
 
-ENV COMPOSER_ALLOW_SUPERUSER 1
-ENV COMPOSER_HOME /composer
-ENV PATH $PATH:/composer/vendor/bin
+ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV COMPOSER_HOME=/composer
+ENV PATH=$PATH:/composer/vendor/bin
 RUN composer config --global process-timeout 3600
-RUN composer global require "laravel/installer"
 
-WORKDIR /root
-RUN git clone https://github.com/seebi/dircolors-solarized
+WORKDIR /var/www/html
 
-WORKDIR /var/www
+COPY . .
+COPY .docker/dev/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY .docker/dev/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY .docker/dev/nginx/default.conf /etc/nginx/http.d/default.conf
+COPY .docker/dev/php/php.ini /usr/local/etc/php/php.ini
+COPY .docker/dev/php/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
+
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Чтобы было удобно 🙃😇
+RUN apk add --no-cache bash && echo "alias ll='ls -lah'" >> /root/.bashrc
+
+EXPOSE 80
+
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

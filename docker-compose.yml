@@ -3,11 +3,13 @@ services:
     container_name: wooj-db-dev
     build:
       context: ./db
-      dockerfile: ./db/.docker/Dockerfile
+      dockerfile: .docker/Dockerfile
+      tags:
+        - wooj-db
     ports:
       - ${DB_PORT}:5432
     volumes:
-      - ./db/.docker/data:/var/lib/postgresql/data
+      - ${PWD}/db/data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASS}
@@ -17,16 +19,37 @@ services:
     container_name: wooj-api-dev
     build:
       context: ./api
-      dockerfile: ./api/.docker/dev/Dockerfile
+      dockerfile: .docker/dev/Dockerfile
+      tags:
+        - wooj-api-dev
     ports:
       - ${API_PORT}:80
+    environment:
+      APP_URL: http://localhost:${API_PORT}
+      APP_FRONT_URL: http://localhost:${FRONT_PORT}
+      APP_ENV: local
+      APP_DEBUG: true
+
+      DB_HOST: ${DB_HOST}
+      DB_PORT: 5432
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_NAME: ${DB_NAME}
+
+      MAIL_MAILER: smtp
+      MAIL_SCHEME: smtp
+      MAIL_HOST: mail
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USERNAME: null
+      MAIL_PASSWORD: null
+      MAIL_FROM_ADDRESS: hello@wooj
     volumes:
-      - ./api:/var/www
-      - ./api/.docker/dev/php/php.ini:/usr/local/etc/php/php.ini
-      - ./api/.docker/dev/php/docker.conf:/usr/local/etc/php-fpm.d/docker.conf
-      - ./api/.docker/dev/nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - ./api/.docker/dev/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./api/.docker/dev/.bashrc:/root/.bashrc
+      - ./api:/var/www/html
+      - ${PWD}/api/.docker/dev/entrypoint.sh:/usr/local/bin/entrypoint.sh
+      - ${PWD}/api/.docker/dev/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ${PWD}/api/.docker/dev/nginx/default.conf:/etc/nginx/http.d/default.conf
+      - ${PWD}/api/.docker/dev/php/php.ini:/usr/local/etc/php/php.ini
+      - ${PWD}/api/.docker/dev/php/php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf
     depends_on:
       - db
 
@@ -34,12 +57,13 @@ services:
     container_name: wooj-front-dev
     build:
       context: ./front
-      dockerfile: ./front/.docker/dev/Dockerfile
+      dockerfile: .docker/dev/Dockerfile
+      tags:
+        - wooj-front-dev
     ports:
-      - ${FRONT_DEV_PORT}:5173
+      - ${FRONT_PORT}:5173
     volumes:
-      - ./front:/var/www
-      - ./front/.docker/dev/.bashrc:/root/.bashrc
+      - ${PWD}/front:/app
     depends_on:
       - api
 
@@ -47,7 +71,9 @@ services:
     container_name: wooj-mail-dev
     build:
       context: ./mail
-      dockerfile: ./mail/.docker/Dockerfile
+      dockerfile: .docker/Dockerfile
+      tags:
+        - wooj-mail
     ports:
       - ${MAIL_INTERFACE_PORT}:80
       - ${MAIL_PORT}:25

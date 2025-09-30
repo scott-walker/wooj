@@ -1,13 +1,13 @@
 include .env
 export
 
-# Переменные окружения (можно переопределить через .env файл)
+# Порты
 API_PORT ?= 8000
-FRONT_BUILD_PORT ?= 3000
-FRONT_DEV_PORT ?= 5173
+FRONT_PORT ?= 5173
 MAIL_INTERFACE_PORT ?= 1080
 MAIL_PORT ?= 1025
 
+# Переменные к БД
 DB_PORT ?= 5432
 DB_USER ?= wooj
 DB_PASS ?= wooj
@@ -19,9 +19,27 @@ API_CONTAINER = wooj-api
 FRONT_CONTAINER = wooj-front
 MAIL_CONTAINER = wooj-mail
 
+# Имена образов
+DB_IMAGE = wooj-db
+API_IMAGE = wooj-api
+FRONT_IMAGE = wooj-front
+MAIL_IMAGE = wooj-mail
+
 # Сеть для контейнеров
 NETWORK = wooj-network
 
+
+# Docker compose
+
+up:
+	@docker compose up -d
+
+down:
+	@docker compose down
+
+restart:
+	@docker compose down
+	@docker compose up -d
 
 # NETWORK
 
@@ -47,13 +65,37 @@ run-db:
 # API
 
 build-api:
-	@docker build -t wooj-api -f ./api/.docker/prod/Dockerfile ./api
+	@docker build -D --no-cache \
+		-f ./api/.docker/prod/Dockerfile \
+		-t wooj-api \
+		./api
+	
+build-api-dev:
+	@docker build -D --no-cache \
+		-f ./api/.docker/dev/Dockerfile \
+		-t wooj-api-dev \
+		./api
 
 run-api:
 	@docker run -d \
-		--name wooj-api \
-		--network wooj-network \
-		--link wooj-db:db \
+		--name $(API_CONTAINER) \
+		--network $(NETWORK) \
+		-p $(API_PORT):80 \
+		-e DB_HOST=$(DB_CONTAINER) \
+		-e DB_PORT=5432 \
+		-e DB_USER=$(DB_USER) \
+		-e DB_PASS=$(DB_PASS) \
+		-e DB_NAME=$(DB_NAME) \
+		-e APP_URL=$(APP_URL) \
+		-e APP_FRONT_URL=$(APP_FRONT_URL) \
+		-e APP_ENV=production \
+		-e APP_DEBUG=false \
+		wooj-api
+
+run-api-dev:
+	@docker run -d \
+		--name $(API_CONTAINER)-dev \
+		--network $(NETWORK) \
 		-p $(API_PORT):80 \
 		-e DB_HOST=$(DB_CONTAINER) \
 		-e DB_PORT=5432 \
@@ -64,7 +106,20 @@ run-api:
 		-e APP_FRONT_URL=$(APP_FRONT_URL) \
 		-e APP_ENV=local \
 		-e APP_DEBUG=true \
-		wooj-api
+		-e MAIL_MAILER=smtp \
+		-e MAIL_SCHEME=http \
+		-e MAIL_HOST=mail \
+		-e MAIL_PORT=$(MAIL_PORT) \
+		-e MAIL_USERNAME=null \
+		-e MAIL_PASSWORD=null \
+		-e MAIL_FROM_ADDRESS=hello@wooj \
+		-v $(PWD)/api:/var/www/html \
+		-v $(PWD)/api/.docker/dev/entrypoint.sh /usr/local/bin/entrypoint.sh \
+		-v $(PWD)/api/.docker/dev/nginx/nginx.conf /etc/nginx/nginx.conf \
+		-v $(PWD)/api/.docker/dev/nginx/default.conf /etc/nginx/http.d/default.conf \
+		-v $(PWD)/api/.docker/dev/php/php.ini /usr/local/etc/php/php.ini \
+		-v $(PWD)/api/.docker/dev/php/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf \
+		wooj-api-dev
 
 # FRONT
 
@@ -82,87 +137,31 @@ build-front-dev:
 
 run-front:
 	@docker run -d \
-		--name wooj-front \
-		--network wooj-network \
-		-p 8080:80 \
+		--name $(FRONT_CONTAINER) \
+		--network $(NETWORK) \
+		-p $(FRONT_PORT):80 \
 		wooj-front
 
 run-front-dev:
 	@docker run -d \
-		--name wooj-front-dev \
-		--network wooj-network \
-		-p 5173:5173 \
+		--name $(FRONT_CONTAINER)-dev \
+		--network $(NETWORK) \
+		-p $(FRONT_PORT):5173 \
 		-v $(PWD)/front:/app \
 		wooj-front-dev
 
+# MAIL
+
 build-mail:
-	@docker build -t wooj-mail -f ./mail/.docker/Dockerfile ./mail
+	@docker build -D --no-cache \
+		-f ./mail/.docker/Dockerfile \
+		-t wooj-mail \
+		./mail
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# run-api: create-network
-# 	@echo "Запуск API..."
-# 	@docker run -d \
-# 		--name $(API_CONTAINER) \
-# 		--network $(NETWORK) \
-# 		-p $(API_PORT):80 \
-# 		-v $(PWD)/api:/var/www \
-# 		-v $(PWD)/.docker/api/php/php.ini:/usr/local/etc/php/php.ini \
-# 		-v $(PWD)/.docker/api/php/docker.conf:/usr/local/etc/php-fpm.d/docker.conf \
-# 		-v $(PWD)/.docker/api/nginx/default.conf:/etc/nginx/conf.d/default.conf \
-# 		-v $(PWD)/.docker/api/nginx/nginx.conf:/etc/nginx/nginx.conf \
-# 		-v $(PWD)/.docker/api/.bashrc:/root/.bashrc \
-# 		--link $(DB_CONTAINER):db \
-# 		wooj-api
-
-# run-api-prod: create-network
-# 	@echo "Запуск production API..."
-# 	@docker run -d \
-# 		--name $(API_CONTAINER)-prod \
-# 		--network $(NETWORK) \
-# 		-p $(API_PORT):80 \
-# 		-e DB_HOST=$(DB_CONTAINER) \
-# 		-e DB_PORT=5432 \
-# 		-e DB_USER=$(DB_USER) \
-# 		-e DB_PASS=$(DB_PASS) \
-# 		-e DB_NAME=$(DB_NAME) \
-# 		-e APP_ENV=production \
-# 		-e APP_DEBUG=false \
-# 		--link $(DB_CONTAINER):db \
-# 		wooj-api-prod
-
-# run-front: create-network
-# 	@echo "Запуск фронтенда..."
-# 	@docker run -d \
-# 		--name $(FRONT_CONTAINER) \
-# 		--network $(NETWORK) \
-# 		-p $(FRONT_BUILD_PORT):80 \
-# 		-p $(FRONT_DEV_PORT):5173 \
-# 		-v $(PWD)/front:/var/www \
-# 		-v $(PWD)/.docker/front/nginx/default.conf:/etc/nginx/conf.d/default.conf \
-# 		-v $(PWD)/.docker/front/nginx/nginx.conf:/etc/nginx/nginx.conf \
-# 		-v $(PWD)/.docker/front/.bashrc:/root/.bashrc \
-# 		--link $(API_CONTAINER):api \
-# 		wooj-front
-
-# run-mail: create-network
-# 	@echo "Запуск почтового сервера..."
-# 	@docker run -d \
-# 		--name $(MAIL_CONTAINER) \
-# 		--network $(NETWORK) \
-# 		-p $(MAIL_INTERFACE_PORT):80 \
-# 		-p $(MAIL_PORT):25 \
-# 		wooj-mail
+run-mail:
+	@docker run -d \
+		--name $(MAIL_CONTAINER) \
+		--network $(NETWORK) \
+		-p $(MAIL_INTERFACE_PORT):80 \
+		-p $(MAIL_PORT):25 \
+		wooj-mail

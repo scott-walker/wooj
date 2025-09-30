@@ -7,8 +7,7 @@ COPY package*.json ./
 RUN npm install
 
 # Чтобы было удобно 🙃😇
-RUN apk add --no-cache bash
-RUN echo "alias ll='ls -lah'" >> /root/.bashrc
+RUN apk add --no-cache bash && echo "alias ll='ls -lah'" >> /root/.bashrc
 
 EXPOSE 8080
 
