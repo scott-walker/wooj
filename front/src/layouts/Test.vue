@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { onBeforeMount, onMounted } from "vue"
 
 import { useWoojsStore } from "@stores/woojs"
@@ -27,12 +27,3 @@ onBeforeMount(() => woojsStore.fetchAll())
     </div> -->
   </div>
 </template>
-
-<style lang="scss" scoped>
-.layout {
-  // position: relative;
-  // width: 100%;
-  // height: 100%;
-  // overflow-y: auto;
-}
-</style>

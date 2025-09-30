@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, useTemplateRef } from "vue"
 
 import { useLayoutStore } from "@stores/layout"
@@ -9,17 +9,17 @@ import Sidebar from "@components/Sidebar.vue"
 
 const layoutStore = useLayoutStore()
 
-const header = useTemplateRef("header")
-const sidebar = useTemplateRef("sidebar")
-const content = useTemplateRef("content")
+const header = useTemplateRef<HTMLDivElement>("header")
+const sidebar = useTemplateRef<HTMLDivElement>("sidebar")
+const content = useTemplateRef<HTMLDivElement>("content")
 
 const { lockTouchMove } = useLockers()
 
 onMounted(() => {
   layoutStore.setContentElement(content.value)
 
-  lockTouchMove(header.value)
-  lockTouchMove(sidebar.value)
+  lockTouchMove(header.value!)
+  lockTouchMove(sidebar.value!)
 })
 </script>
 
@@ -36,10 +36,11 @@ onMounted(() => {
         ref="sidebar"
         class="layout-main__body-sidebar"
         :class="{
-          'aired': layoutStore.isAired,
-          'hovered': layoutStore.isHoveredSidebar
+          aired: layoutStore.isAired,
+          hovered: layoutStore.isHoveredSidebar,
         }"
-        @mouseover="layoutStore.onOverSidebar">
+        @mouseover="layoutStore.onOverSidebar"
+      >
         <div class="layout-main__body-sidebar-separator"></div>
         <Sidebar />
       </div>
@@ -47,8 +48,9 @@ onMounted(() => {
       <div
         ref="content"
         class="layout-main__body-content"
-        :class="{ 'aired': layoutStore.isAired }"
-        @mouseover="layoutStore.onLeaveSidebar">
+        :class="{ aired: layoutStore.isAired }"
+        @mouseover="layoutStore.onLeaveSidebar"
+      >
         <Transition name="view-transition" mode="out-in">
           <slot />
         </Transition>
@@ -83,7 +85,8 @@ onMounted(() => {
     width: 100%;
     height: $header-height;
 
-    &-content {}
+    &-content {
+    }
   }
 
   &__body {
@@ -144,24 +147,21 @@ onMounted(() => {
 }
 
 .view-transition {
-
   &-enter-active,
   &-leave-active {
-    transition: all .1s ease;
+    transition: all 0.1s ease;
   }
 
   &-enter-from,
   &-leave-to {
-    opacity: .3;
-    transform: translateY(5px)
+    opacity: 0.3;
+    transform: translateY(5px);
   }
 }
-
 
 @include media.lg() {
   .layout-main {
     &__body {
-
       &-sidebar {
         padding-top: 10px;
 
