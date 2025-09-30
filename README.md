@@ -44,9 +44,9 @@ wooj/
 ### Backend (Laravel 12)
 
 - **API**: RESTful API с Laravel Sanctum для аутентификации
-- **Модели**: User, Wooj, Topic, WoojTopic (связи многие-ко-многим)
+- **Модели**: User, Wooj, Topic, WoojTopic
 - **База данных**: PostgreSQL с миграциями
-- **Сервисы**: WoojService, TopicService, UserService для бизнес-логики
+- **Сервисы**: WoojService, TopicService, UserService (бизнес-логика)
 
 ### Frontend (Vue.js 3)
 
@@ -72,9 +72,9 @@ wooj/
 - **State Management**: Pinia 3.x
 - **Routing**: Vue Router 4.x
 - **Editor**: TipTap 2.x
-- **Styles**: Bulma + SCSS
+- **Styles**: SCSS
 - **Icons**: Font Awesome
-- **Additional**: Swiper.js, Lodash, Advanced Cropper
+- **Additional**: Swiper.js, Lodash, Advanced Cropper, Draggable
 
 ### DevOps
 
@@ -238,7 +238,6 @@ npm run format       # Форматирование кода
 
 ### Стили и UI
 
-- [Bulma CSS](https://bulma.io/documentation/)
 - [Font Awesome](https://docs.fontawesome.com/web/setup/get-started)
 - [Google Fonts](https://fonts.google.com/?lang=ru_Cyrl&script=Cyrl)
 
@@ -249,12 +248,6 @@ npm run format       # Форматирование кода
 - [Vue Advanced Cropper](https://advanced-cropper.github.io)
 - [Draggable](https://shopify.github.io/draggable/)
 - [Lodash](https://lodash.com/)
-
-### Инструменты разработки
-
-- [Sass Documentation](https://sass-lang.com/documentation/)
-- [CSS Gradient Generator](https://cssgradient.io/)
-- [Flexbox Guide](https://angrytools.com/css-flex/)
 
 ## 📝 Лицензия
 
