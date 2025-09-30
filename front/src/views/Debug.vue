@@ -1,11 +1,11 @@
-<script setup>
+<script setup lang="ts">
 import _ from "lodash"
 import { onMounted, onUnmounted } from "vue"
 
+import type { ToastType } from "@types"
 import { useLayoutStore } from "@stores/layout"
 import { useMediaStore } from "@stores/media"
 import { useToastsStore } from "@stores/toasts"
-
 import Button from "@ui/Button.vue"
 
 const layoutStore = useLayoutStore()
@@ -17,14 +17,18 @@ const onAddToast = () => {
   const j = _.random(0, 2)
   const k = _.random(0, 2)
 
-  const messages = ['Новое уведомление', 'Новое уведомление Новое уведомление', 'Новое уведомление Новое уведомление Новое уведомление']
-  const types = ['info', 'success', 'alert']
+  const messages = [
+    "Новое уведомление",
+    "Новое уведомление Новое уведомление",
+    "Новое уведомление Новое уведомление Новое уведомление",
+  ]
+  const types = ["info", "success", "alert"]
   const durations = [3, 4, 5]
 
   toastsStore.add({
     message: "Новое уведомление",
-    type: types[i],
-    duration: 10
+    type: types[i] as ToastType,
+    duration: 10,
   })
 }
 
@@ -54,7 +58,7 @@ onUnmounted(() => layoutStore.unsetStatusBar())
       <div>isLandscape: {{ mediaStore.isLandscape }}</div>
       <div>isMobile: {{ mediaStore.isMobile }}</div>
       <div>isTablet: {{ mediaStore.isTablet }}</div>
-      <div>isDesctop: {{ mediaStore.isDesctop }}</div>
+      <div>isDesctop: {{ mediaStore.isDesktop }}</div>
       <div>isXs: {{ mediaStore.isXs }}</div>
       <div>isSmall: {{ mediaStore.isSmall }}</div>
       <div>isMiddle: {{ mediaStore.isMiddle }}</div>

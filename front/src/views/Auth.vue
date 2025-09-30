@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed, reactive } from "vue"
 import useUserStore from "@stores/user"
 import Button from "@ui/Button.vue"
@@ -20,7 +20,7 @@ const isDissqbledLoginButton = computed(() => !loginForm.email || !loginForm.pas
 const isDissqbledRegisterButton = computed(() => !registerForm.email || !registerForm.password)
 
 // Для Transition
-const tabKey = computed(() => isShowedLogin.value ? 'login' : 'register')
+const tabKey = computed(() => (isShowedLogin.value ? "login" : "register"))
 
 const onLogin = () => userStore.login(loginForm)
 const onRegister = () => userStore.register(registerForm)
@@ -29,9 +29,7 @@ const onRegister = () => userStore.register(registerForm)
 <template>
   <div class="view-auth auth" :key="tabKey">
     <div class="auth-tabs">
-      <a class="auth-tabs__item" :class="{ active: isShowedLogin }" @click="isShowedLogin = true">
-        Войти
-      </a>
+      <a class="auth-tabs__item" :class="{ active: isShowedLogin }" @click="isShowedLogin = true"> Войти </a>
       <a class="auth-tabs__item" :class="{ active: isShowedRegister }" @click="isShowedLogin = false">
         Зарегистрироваться
       </a>
@@ -85,7 +83,7 @@ const onRegister = () => userStore.register(registerForm)
       text-align: center;
       border-bottom: 2px solid color.change(colors.$grey, $lightness: 80%);
       color: colors.$basic;
-      transition: all .3s;
+      transition: all 0.3s;
       user-select: none;
       cursor: pointer;
 

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { computed, onBeforeMount } from "vue"
 import WoojList from "@components/WoojList.vue"
 import { useWoojs } from "@composables/woojs"
@@ -20,6 +20,7 @@ onBeforeMount(() => setRouteListeners())
       @sort="topic.sort"
       @pin="topic.togglePin"
       @edit="topic.edit"
-      @remove="topic.remove" />
+      @remove="topic.remove"
+    />
   </div>
 </template>

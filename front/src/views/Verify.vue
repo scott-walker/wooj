@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted } from "vue"
 import useUserStore from "@stores/user"
 import Button from "@ui/Button.vue"
@@ -16,10 +16,7 @@ onMounted(() => userStore.startResendTimer())
     Подтверди свою почту <b>{{ userStore.user.email }}</b>
 
     <div class="view-verify__buttons">
-      <Button
-        v-if="userStore.resendTimer"
-        disabled
-        :text="`Повторно отправить через ${userStore.resendTimer} сек.`" />
+      <Button v-if="userStore.resendTimer" disabled :text="`Повторно отправить через ${userStore.resendTimer} сек.`" />
       <Button v-else class="view-verify__button" text="Выслать письмо повторно" @click="onResend" />
 
       <Button class="view-verify__button" type="default" text="Выйти" @click="onLogout" />

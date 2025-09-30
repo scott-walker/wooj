@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { computed, watch, onBeforeMount } from "vue"
 
 import { useWoojsStore } from "@stores/woojs"
@@ -13,7 +13,10 @@ const topic = computed(() => topicParamsMap.value.custom)
 
 const activateTopic = () => woojStore.isLoaded && woojStore.activateTopic(props.topicId)
 
-watch(() => props.topicId, () => activateTopic())
+watch(
+  () => props.topicId,
+  () => activateTopic(),
+)
 
 onLoaded(() => activateTopic())
 onBeforeMount(() => {
@@ -36,6 +39,7 @@ onBeforeMount(() => {
       @edit="topic.edit"
       @remove="topic.remove"
       @update-topic="topic.update"
-      @delete-topic="topic.delete" />
+      @delete-topic="topic.delete"
+    />
   </div>
 </template>

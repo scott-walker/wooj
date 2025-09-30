@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 // import Loader from "@ui/Loader.vue"
 </script>
 
@@ -11,7 +11,6 @@
 </template>
 
 <style lang="scss" scoped>
-@use "sass:color";
 @use "@styles/colors";
 
 .view-loading {
@@ -22,9 +21,5 @@
   background-color: colors.$grey;
   width: 100vw;
   height: 100vh;
-
-  // &__center {
-  //   width: 100px;
-  // }
 }
 </style>

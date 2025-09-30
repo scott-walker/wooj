@@ -1,5 +1,5 @@
-<script setup>
-import { ref, computed, onBeforeMount } from "vue"
+<script setup lang="ts">
+import { ref, computed, onBeforeMount, type ComputedRef } from "vue"
 
 import { useMediaStore } from "@stores/media"
 import { useWoojs } from "@composables/woojs"
@@ -10,10 +10,11 @@ import WoojList from "@components/WoojList.vue"
 
 const mediaStore = useMediaStore()
 const { topicParamsMap, setRouteListeners } = useWoojs()
-
 const topic = computed(() => topicParamsMap.value.trash)
-const isShowedButton = computed(() => topic.value.woojs.length)
-const isShowedDeleteDialog = ref(false)
+
+const isSmall: ComputedRef<boolean> = computed(() => !!mediaStore.isSmall)
+const isShowedButton: ComputedRef<boolean> = computed(() => !!topic.value.woojs.length)
+const isShowedDeleteDialog = ref<boolean>(false)
 
 const onClear = () => (isShowedDeleteDialog.value = true)
 
@@ -35,22 +36,25 @@ onBeforeMount(() => setRouteListeners())
       :hasRemove="false"
       :hasRestore="true"
       emptyText="Корзина пуста"
-      @restore="topic.restore">
+      @restore="topic.restore"
+    >
       <template #panel>
         <Button
           v-if="isShowedButton"
-          :text="mediaStore.isSmall ? 'Очистить' : 'Очистить корзину'"
-          :size="mediaStore.isSmall ? 'small' : 'default'"
-          :icon="mediaStore.isSmall ? null : 'times'"
+          :text="isSmall ? 'Очистить' : 'Очистить корзину'"
+          :size="isSmall ? 'small' : 'default'"
+          :icon="isSmall ? undefined : 'times'"
           type="danger"
-          @click="onClear" />
+          @click="onClear"
+        />
 
         <Dialog
           v-model="isShowedDeleteDialog"
           title="Очистить корзину"
           type="danger"
-          :center="mediaStore.isSmall"
-          @approve="topic.clearTrash">
+          :center="isSmall"
+          @approve="topic.clearTrash"
+        >
           Ты действительно хочешь очистить корзину?
         </Dialog>
       </template>

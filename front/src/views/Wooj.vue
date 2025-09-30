@@ -1,38 +1,46 @@
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, watch, onBeforeMount, onUnmounted } from "vue"
+import type { Wooj as WoojType } from "@types"
 
 import { useLayoutStore } from "@stores/layout"
 import { useWoojs } from "@composables/woojs"
 
-import Wooj from "@components/Wooj.vue"
+import Wooj, { type WoojView } from "@components/Wooj.vue"
 import Empty from "@components/Empty.vue"
 
-const props = defineProps(["woojId"])
+const props = defineProps<{
+  woojId: number
+}>()
 const { woojStore, onLoaded, setRouteListeners } = useWoojs()
 const layoutStore = useLayoutStore()
 
-const wooj = reactive({
+const wooj = reactive<WoojView>({
   id: null,
   title: "",
   content: "",
   topicIds: [],
 })
-const isNotFound = ref(false)
+const isNotFound = ref<boolean>(false)
 
 /**
  * Изменение содержимого вуджа
  */
-const onChangeContent = () =>
+const onChangeContent = () => {
+  if (!wooj.id) return
+
   woojStore.updateWooj(wooj.id, {
     title: wooj.title,
     content: wooj.content,
   })
+}
 
 /**
  * Изменение привязанных топиков
  */
-const onChangeTopics = async (topicsMap) => {
-  const { topic_ids } = await woojStore.setWoojTopics(wooj.id, topicsMap)
+const onChangeTopics = async (topicsMap: Record<number, number>) => {
+  if (!wooj.id) return
+
+  const { topic_ids } = (await woojStore.setWoojTopics(wooj.id, topicsMap)) as WoojType
 
   wooj.topicIds = topic_ids
 }
@@ -54,7 +62,7 @@ const setNotFound = () => {
 const init = () => {
   woojStore.activateWooj(props.woojId)
 
-  if (woojStore.hasActiveWooj) {
+  if (woojStore.hasActiveWooj && woojStore.activeWooj) {
     wooj.id = woojStore.activeWooj.id
     wooj.title = woojStore.activeWooj.title
     wooj.content = woojStore.activeWooj.content
@@ -101,7 +109,7 @@ onUnmounted(() => {
   <div class="view-wooj">
     <Empty v-if="isNotFound" title="Вудж не найден" text="Используй поиск" />
     <Wooj
-      v-else
+      v-else-if="wooj.id"
       v-model="wooj"
       :key="wooj.id"
       :loaded="woojStore.isLoaded"
@@ -112,9 +120,3 @@ onUnmounted(() => {
     />
   </div>
 </template>
-
-<style lang="scss" scoped>
-.view-wooj {
-  // height: calc(100% - 40px);
-}
-</style>
