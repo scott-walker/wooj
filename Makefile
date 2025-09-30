@@ -80,7 +80,8 @@ run-api:
 	@docker run -d \
 		--name $(API_CONTAINER) \
 		--network $(NETWORK) \
-		-p $(API_PORT):80 \
+		-p $(API_PORT):$(API_PORT) \
+		-e HTTP_PORT=$(API_PORT) \
 		-e DB_HOST=$(DB_CONTAINER) \
 		-e DB_PORT=5432 \
 		-e DB_USER=$(DB_USER) \
@@ -90,6 +91,7 @@ run-api:
 		-e APP_FRONT_URL=$(APP_FRONT_URL) \
 		-e APP_ENV=production \
 		-e APP_DEBUG=false \
+		-v ${PWD}/api/.docker/prod/entrypoint.sh:/usr/local/bin/entrypoint.sh \
 		wooj-api
 
 run-api-dev:
@@ -114,11 +116,11 @@ run-api-dev:
 		-e MAIL_PASSWORD=null \
 		-e MAIL_FROM_ADDRESS=hello@wooj \
 		-v $(PWD)/api:/var/www/html \
-		-v $(PWD)/api/.docker/dev/entrypoint.sh /usr/local/bin/entrypoint.sh \
-		-v $(PWD)/api/.docker/dev/nginx/nginx.conf /etc/nginx/nginx.conf \
-		-v $(PWD)/api/.docker/dev/nginx/default.conf /etc/nginx/http.d/default.conf \
-		-v $(PWD)/api/.docker/dev/php/php.ini /usr/local/etc/php/php.ini \
-		-v $(PWD)/api/.docker/dev/php/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf \
+		-v ${PWD}/api/.docker/dev/entrypoint.sh:/usr/local/bin/entrypoint.sh \
+		-v ${PWD}/api/.docker/dev/nginx/nginx.conf:/etc/nginx/nginx.conf \
+		-v ${PWD}/api/.docker/dev/nginx/default.conf:/etc/nginx/http.d/default.conf \
+		-v ${PWD}/api/.docker/dev/php/php.ini:/usr/local/etc/php/php.ini \
+		-v ${PWD}/api/.docker/dev/php/php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf \
 		wooj-api-dev
 
 # FRONT
