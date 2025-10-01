@@ -46,6 +46,21 @@ restart:
 create-network:
 	@docker network create $(NETWORK) 2>/dev/null || true
 
+# Test
+
+build-test:
+	@docker build -D --no-cache \
+		-f ./api/.docker/test/Dockerfile \
+		-t wooj-api-test \
+		./api
+		
+run-test:
+	@docker run -d --rm \
+		--name wooj-api-test \
+		-p 8080:10000 \
+		-v ./api/tests/other:/test \
+		wooj-api-test
+
 # DB
 
 build-db:
