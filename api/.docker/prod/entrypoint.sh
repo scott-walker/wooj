@@ -10,14 +10,13 @@ chmod -R 755 /var/www/html
 chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # .env
-rm -f .env
-cp .env.example .env
+cp -f .env.example .env
 
 # Подставляем переменные окружения в конфигурационный файл
-sed -i "s/\${HTTP_PORT}/$HTTP_PORT/g" /etc/nginx/http.d/default.conf
+sed -i "s/\$HTTP_PORT/$HTTP_PORT/g" /etc/nginx/http.d/default.conf
 
-# php artisan key:generate
-php artisan migrate
+php artisan key:generate --force
+php artisan migrate --force
 
 # Запуск nginx в фоне
 nginx -g 'daemon off;' &
