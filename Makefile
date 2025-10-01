@@ -50,15 +50,15 @@ create-network:
 
 build-test:
 	@docker build -D --no-cache \
-		-f ./api/.docker/test/Dockerfile \
+		-f ./test/.docker/Dockerfile \
 		-t wooj-api-test \
-		./api
-		
+		./test
+
 run-test:
 	@docker run -d --rm \
 		--name wooj-api-test \
 		-p 8080:10000 \
-		-v ./api/tests/other:/test \
+		-e DB_PORT=123123123123123 \
 		wooj-api-test
 
 # DB
