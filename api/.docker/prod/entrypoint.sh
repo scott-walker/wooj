@@ -2,7 +2,7 @@
 set -e
 
 # Установка переменных по умолчанию
-HTTP_PORT=${HTTP_PORT:-80}
+HTTP_PORT=10000 #${HTTP_PORT:-80}
 
 # Установка прав доступа
 chown -R www-data:www-data /var/www/html
